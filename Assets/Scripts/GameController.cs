@@ -14,43 +14,46 @@ public class GameController : MonoBehaviour {
      * Ball Bounce: 6
      * Puzzle:      7
      */
-    GameObject cam, camOrbit, colorcube;
-    public string[] cubeNames = { "Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "Ball Bounce", "Puzzle" };
-    public int[] levelUnlocks = new int[32];
-    public int currentLevel;
-    public int currentCube;
-    public int selectState;
+
+    // General
+    GameObject colorCube;
     public GameObject[] cubes;
+    Text cubeSelect;
+    public int currentCube;
+    public int selectState; // 0 = Cubes | 1 = Levels
+    public int[] levelUnlocks = new int[8];
+    public int[] levelSelects = new int[8];
+    public string[] cubeNames = { "Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "Ball Bounce", "Puzzle" };
+    public float selectCubeCooldown;
+    public bool selectStateCooldown;
+    // Camera
+    GameObject cam;
+    GameObject camOrbit;
     public int camLookSpeed = 10;
     public int camMoveSpeed = 500;
     public int camDistance = 80;
     public int camRotateSpeed = 10;
-    Text cubeSelect;
+    public bool camIsMoving;
     IEnumerator lookAtCubeCoroutine;
     IEnumerator rotateCamOrbitCoroutine;
-    public float selectCubeCooldown;
-    public bool selectStateCooldown;
-    public bool camIsMoving;
 
     // Start is called before the first frame update
     void Start() {
-        for (int i = 0; i < levelUnlocks.Length; i += 4)
-            levelUnlocks[i] = 1;
-        cam = GameObject.FindWithTag("MainCamera");
-        camOrbit = GameObject.Find("CameraOrbit");
-        colorcube = GameObject.Find("ColorCube");
+        colorCube = GameObject.Find("ColorCube");
         cubes = GameObject.FindGameObjectsWithTag("Cube");
         foreach (GameObject cube in cubes)
             cube.transform.rotation = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
         cubeSelect = GameObject.Find("CubeSelect").GetComponent<Text>();
-
-        cam.transform.rotation = Quaternion.LookRotation(cubes[0].transform.position - cam.transform.position);
         cubeSelect.text = cubeNames[0];
-    }
 
+        cam = GameObject.FindWithTag("MainCamera");
+        camOrbit = GameObject.Find("CameraOrbit");
+        cam.transform.rotation = Quaternion.LookRotation(cubes[0].transform.position - cam.transform.position);
+    }
     // Update is called once per frame
     void Update()
     {
+        // Switch Cube/Level
         if (Input.GetAxisRaw("Horizontal") != 0) {
             if (SelectCubeCooldown()) {
                 if (selectState == 0)
@@ -62,6 +65,7 @@ public class GameController : MonoBehaviour {
         else
             selectCubeCooldown = 0;
 
+        // Select Cube/Level
         if (Input.GetAxisRaw("Action 1") != 0) {
             if (!selectStateCooldown) {
                 Invoke("SelectStateCooldown", 0.5f);
@@ -73,6 +77,7 @@ public class GameController : MonoBehaviour {
             }
         }
     }
+    // Switch through cubes
     void SelectCube(float direction) {
         if (direction < 0)
             currentCube = currentCube - 1 < 0 ? 7 : --currentCube;
@@ -86,17 +91,19 @@ public class GameController : MonoBehaviour {
         lookAtCubeCoroutine = LookAtCube(currentCube);
         StartCoroutine(lookAtCubeCoroutine);
     }
+    // Switch through levels
     void SelectLevel(float direction) {
         if (direction < 0)
-            currentLevel = currentLevel - 1 < 0 ? 3 : --currentLevel;
+            levelSelects[currentCube] = levelSelects[currentCube] - 1 < 0 ? 3 : --levelSelects[currentCube];
         else
-            currentLevel = currentLevel + 1 > 3 ? 0 : ++currentLevel;
+            levelSelects[currentCube] = levelSelects[currentCube] + 1 > 3 ? 0 : ++levelSelects[currentCube];
         
         if (rotateCamOrbitCoroutine != null)
             StopCoroutine(rotateCamOrbitCoroutine);
-        rotateCamOrbitCoroutine = RotateCamOrbit(currentLevel);
+        rotateCamOrbitCoroutine = RotateCamOrbit(levelSelects[currentCube]);
         StartCoroutine(rotateCamOrbitCoroutine);
     }
+    // Camera looks at selected cube
     IEnumerator LookAtCube(int whichCube) {
         camIsMoving = true;
         Quaternion camRotation = Quaternion.LookRotation(cubes[whichCube].transform.position - cam.transform.position);
@@ -111,6 +118,7 @@ public class GameController : MonoBehaviour {
             yield return null;
         }
     }
+    // Camera moves to selected cube
     IEnumerator MoveToCube(int whichCube) {
         camIsMoving = true;
         camOrbit.transform.rotation = cam.transform.rotation * Quaternion.Euler(Vector3.up * 180);
@@ -126,6 +134,7 @@ public class GameController : MonoBehaviour {
             yield return null;
         }
     }
+    // Camera looks at level side
     IEnumerator RotateCamOrbit(int whichLevel) {
         camIsMoving = true;
         Quaternion camRotation = Quaternion.Euler(0, whichLevel * -90, 0);
@@ -141,6 +150,7 @@ public class GameController : MonoBehaviour {
         }
 
     }
+    // Orients camera to cube
     IEnumerator FixCamRotation() {
         cam.transform.SetParent(camOrbit.transform);
         Quaternion camRotation = Quaternion.Euler(Vector3.zero);
@@ -155,6 +165,7 @@ public class GameController : MonoBehaviour {
             yield return null;
         }
     }
+    // Prevents fast select when held down
     bool SelectCubeCooldown() {
         if (selectCubeCooldown <= 0) {
             selectCubeCooldown = 0.5f;
@@ -165,6 +176,7 @@ public class GameController : MonoBehaviour {
             return false;
         }
     }
+    // Prevents selection spam
     void SelectStateCooldown() {
         selectStateCooldown = false;
     }
