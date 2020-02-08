@@ -24,7 +24,7 @@ public class GameController : MonoBehaviour {
     public int selectState; // 0 = Cubes | 1 = Levels | 2 = How To
     public int[] levelUnlocks = new int[8];
     public int[] levelSelects = new int[8];
-    public string[] cubeNames = { "Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "Ball Bounce", "Puzzle" };
+    public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "Ball Bounce", "Puzzle"};
     public float selectCubeCooldown;
     public bool selectStateCooldown;
     // Camera
@@ -46,6 +46,7 @@ public class GameController : MonoBehaviour {
         cubes = GameObject.FindGameObjectsWithTag("Cube");
         foreach (GameObject cube in cubes)
             cube.transform.rotation = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+
         cubeSelectText = GameObject.Find("CubeSelect").GetComponent<Text>();
         cubeSelectText.text = "<- " + cubeNames[0] + " ->";
         controlsText = GameObject.Find("Controls").GetComponent<Text>();
@@ -54,8 +55,6 @@ public class GameController : MonoBehaviour {
         cam = GameObject.FindWithTag("MainCamera");
         camOrbit = GameObject.Find("CameraOrbit");
         cam.transform.rotation = Quaternion.LookRotation(cubes[0].transform.position - cam.transform.position);
-
-
     }
     // Update is called once per frame
     void Update()
@@ -92,8 +91,7 @@ public class GameController : MonoBehaviour {
         // Select Cube/Level
         if (Input.GetAxisRaw("Action 1") != 0) {
             if (selectState == 0 && !camIsLooking && !camIsMoving && !camIsRotating) {
-                selectState = 1;
-                    
+                selectState = 1;                 
                 StartCoroutine(MoveToCube(currentCube));
             }
         }
@@ -129,6 +127,7 @@ public class GameController : MonoBehaviour {
             levelSelects[currentCube] = levelSelects[currentCube] + 1 > 3 ? 0 : ++levelSelects[currentCube];
 
         CheckIfLocked();
+
         if (rotateCamOrbitCoroutine != null)
             StopCoroutine(rotateCamOrbitCoroutine);
         rotateCamOrbitCoroutine = RotateCamOrbit(levelSelects[currentCube]);
