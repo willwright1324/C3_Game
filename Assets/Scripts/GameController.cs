@@ -33,6 +33,7 @@ public class GameController : MonoBehaviour {
     public int camMoveSpeed = 500;
     public int camDistance = 80;
     public int camRotateSpeed = 10;
+    public bool camIsLooking;
     public bool camIsMoving;
     IEnumerator lookAtCubeCoroutine;
     IEnumerator rotateCamOrbitCoroutine;
@@ -58,7 +59,7 @@ public class GameController : MonoBehaviour {
             if (SelectCubeCooldown()) {
                 if (selectState == 0)
                     SelectCube(Input.GetAxisRaw("Horizontal"));
-                if (selectState == 1)
+                if (selectState == 1 && !camIsLooking)
                     SelectLevel(Input.GetAxisRaw("Horizontal"));
             }
         }
@@ -70,12 +71,24 @@ public class GameController : MonoBehaviour {
             if (!selectStateCooldown) {
                 Invoke("SelectStateCooldown", 0.5f);
                 selectStateCooldown = true;
-                if (selectState == 0 && camIsMoving == false) {
+                if (selectState == 0 && !camIsLooking && !camIsMoving) {
                     selectState = 1;
                     StartCoroutine(MoveToCube(currentCube));
                 }
             }
         }
+
+        if (Input.GetAxisRaw("Action 2") != 0) {
+            if (!selectStateCooldown) {
+                Invoke("SelectStateCooldown", 0.5f);
+                selectStateCooldown = true;
+                if (selectState == 1 && !camIsLooking && !camIsMoving) {
+                    selectState = 0;
+                    StartCoroutine(LookAtCenter());
+                }
+            }
+        }
+
     }
     // Switch through cubes
     void SelectCube(float direction) {
@@ -105,14 +118,14 @@ public class GameController : MonoBehaviour {
     }
     // Camera looks at selected cube
     IEnumerator LookAtCube(int whichCube) {
-        camIsMoving = true;
+        camIsLooking = true;
         Quaternion camRotation = Quaternion.LookRotation(cubes[whichCube].transform.position - cam.transform.position);
 
         while (Quaternion.Angle(cam.transform.rotation, camRotation) > 0.1f) {
             cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, camRotation, Time.deltaTime * camLookSpeed);
             if (Quaternion.Angle(cam.transform.rotation, camRotation) <= 0.1f) {
                 cam.transform.rotation = camRotation;
-                camIsMoving = false;
+                camIsLooking = false;
                 yield break;
             }
             yield return null;
@@ -120,7 +133,7 @@ public class GameController : MonoBehaviour {
     }
     // Camera moves to selected cube
     IEnumerator MoveToCube(int whichCube) {
-        camIsMoving = true;
+        camIsLooking = true;
         camOrbit.transform.rotation = cam.transform.rotation * Quaternion.Euler(Vector3.up * 180);
         camOrbit.transform.position = cubes[whichCube].transform.position;
         camOrbit.transform.SetParent(cubes[whichCube].transform);
@@ -159,7 +172,42 @@ public class GameController : MonoBehaviour {
             camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.deltaTime * camRotateSpeed);
             if (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) <= 0.1f) {
                 camOrbit.transform.localRotation = camRotation;
-                camIsMoving = false;
+                camIsLooking = false;
+                yield break;
+            }
+            yield return null;
+        }
+    }
+    // Camera Orbit points back to center
+    IEnumerator LookAtCenter() {
+        camIsLooking = true;
+        camOrbit.transform.SetParent(null);
+        Quaternion camRotation = Quaternion.LookRotation(Vector3.zero - camOrbit.transform.position);
+
+        while (Quaternion.Angle(camOrbit.transform.rotation, camRotation) > 0.1f)
+        {
+            camOrbit.transform.rotation = Quaternion.Slerp(camOrbit.transform.rotation, camRotation, Time.deltaTime * camRotateSpeed);
+            if (Quaternion.Angle(camOrbit.transform.rotation, camRotation) <= 0.1f)
+            {
+                camOrbit.transform.rotation = camRotation;
+                StartCoroutine(MoveToCenter());
+                yield break;
+            }
+            yield return null;
+        }
+    }
+    // Camera moves back to center
+    IEnumerator MoveToCenter() {
+        cam.transform.SetParent(null);
+
+        while (Vector3.Distance(cam.transform.position, Vector3.zero) > 5)
+        {
+            print(Vector3.Distance(cam.transform.position, Vector3.zero));
+            cam.transform.position -= cam.transform.forward * Time.deltaTime * camMoveSpeed;
+            if (Vector3.Distance(cam.transform.position, Vector3.zero) <= 5)
+            {
+                cam.transform.position = Vector3.zero;
+                camIsLooking = false;
                 yield break;
             }
             yield return null;
