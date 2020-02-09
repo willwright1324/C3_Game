@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Cube
+  - Ground
+  - Wall
+  - Spike
   layers:
   - Default
   - TransparentFX

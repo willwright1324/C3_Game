@@ -22,6 +22,7 @@ public class GameController : MonoBehaviour {
     Text cubeSelectText;
     Text controlsText;
     public int currentCube;
+    public int gameState; // 0 = Menu | 1 = Game
     public int selectState; // 0 = Cubes | 1 = Levels | 2 = How To
     public int[] levelUnlocks = new int[8];
     public int[] levelSelects = new int[8];
@@ -41,6 +42,31 @@ public class GameController : MonoBehaviour {
     IEnumerator lookAtCubeCoroutine;
     IEnumerator rotateCamOrbitCoroutine;
 
+    // Singleton
+    private static GameController instance = null;
+    public static GameController Instance {
+        get {
+            if (instance == null) {
+                instance = FindObjectOfType<GameController>();
+                if (instance == null) {
+                    GameObject gc = new GameObject();
+                    gc.name = "GameController";
+                    instance = gc.AddComponent<GameController>();
+                    DontDestroyOnLoad(gc);
+                }
+            }
+            return instance;
+        }
+    }
+    void Awake() {
+        if (instance == null) {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else {
+            Destroy(gameObject);
+        }
+    }
     // Start is called before the first frame update
     void Start() {
         colorCube = GameObject.Find("ColorCube");
@@ -58,59 +84,61 @@ public class GameController : MonoBehaviour {
         cam.transform.rotation = Quaternion.LookRotation(cubes[0].transform.position - cam.transform.position);
     }
     // Update is called once per frame
-    void Update()
-    {
-        // Switch Cube/Level
-        if (Input.GetAxisRaw("Horizontal") != 0 && selectState != 2) {
-            if (SelectCubeCooldown() && !camIsMoving) {
-                if (selectState == 0)
-                    SelectCube(Input.GetAxisRaw("Horizontal"));
-                if (selectState == 1)
-                    SelectLevel(Input.GetAxisRaw("Horizontal"));
-            }
-        }
-        else
-            selectCubeCooldown = 0;
-
-        // Switch to How To and back
-        if (Input.GetAxisRaw("Vertical") != 0) {
-            if (!selectStateCooldown && !camIsLooking && !camIsMoving && !camIsRotating && (selectState == 1 || selectState == 2)) {
-                Invoke("SelectStateCooldown", 0.5f);
-                selectStateCooldown = true;
-                if (Input.GetAxisRaw("Vertical") == -1 && selectState == 1) {
-                    selectState = 2;
-                    cubeSelectText.text = "How To Play";
-                    StartCoroutine(HowToCamOrbit(currentCube));
-                }
-                if (Input.GetAxisRaw("Vertical") == 1 && selectState == 2) {
-                    CheckIfLocked();
-                    StartCoroutine(FixCamRotation(levelSelects[currentCube]));
-                }
-            }
-        }
-
-        // Select Cube/Level
-        if (Input.GetAxisRaw("Action 1") != 0) {
-            if (!camIsLooking && !camIsMoving && !camIsRotating) {
-                if (selectState == 0) {
-                    selectState = 1;                 
-                    StartCoroutine(MoveToCube(currentCube));
-                }
-                else {
+    void Update() {
+        if (gameState == 0) {
+            // Switch Cube/Level
+            if (Input.GetAxisRaw("Horizontal") != 0 && selectState != 2) {
+                if (SelectCubeCooldown() && !camIsMoving) {
+                    if (selectState == 0)
+                        SelectCube(Input.GetAxisRaw("Horizontal"));
                     if (selectState == 1)
-                        SceneManager.LoadScene(currentCube + 1);
+                        SelectLevel(Input.GetAxisRaw("Horizontal"));
+                }
+            }
+            else
+                selectCubeCooldown = 0;
+
+            // Switch to How To and back
+            if (Input.GetAxisRaw("Vertical") != 0) {
+                if (!selectStateCooldown && !camIsLooking && !camIsMoving && !camIsRotating && (selectState == 1 || selectState == 2)) {
+                    Invoke("SelectStateCooldown", 0.5f);
+                    selectStateCooldown = true;
+                    if (Input.GetAxisRaw("Vertical") == -1 && selectState == 1) {
+                        selectState = 2;
+                        cubeSelectText.text = "How To Play";
+                        StartCoroutine(HowToCamOrbit(currentCube));
+                    }
+                    if (Input.GetAxisRaw("Vertical") == 1 && selectState == 2) {                       
+                        if (CheckIfUnlocked())
+                            StartCoroutine(FixCamRotation(levelSelects[currentCube]));
+                    }
+                }
+            }
+
+            // Select Cube/Level
+            if (Input.GetAxisRaw("Action 1") != 0) {
+                if (!camIsLooking && !camIsMoving && !camIsRotating) {
+                    if (selectState == 0) {
+                        selectState = 1;                 
+                        StartCoroutine(MoveToCube(currentCube));
+                    }
+                    else {
+                        if (selectState == 1) {
+                            SceneManager.LoadScene(currentCube + 1);
+                            gameState = 1;
+                        }
+                    }
+                }
+            }
+
+            // Go Back
+            if (Input.GetAxisRaw("Action 2") != 0) {
+                if (selectState == 1 && !camIsLooking && !camIsMoving && !camIsRotating) {
+                    selectState = 0;
+                    StartCoroutine(LookAtCenter());
                 }
             }
         }
-
-        // Go Back
-        if (Input.GetAxisRaw("Action 2") != 0) {
-            if (selectState == 1 && !camIsLooking && !camIsMoving && !camIsRotating) {
-                selectState = 0;
-                StartCoroutine(LookAtCenter());
-            }
-        }
-
     }
     // Switch through cubes
     void SelectCube(float direction) {
@@ -133,7 +161,7 @@ public class GameController : MonoBehaviour {
         else
             levelSelects[currentCube] = levelSelects[currentCube] + 1 > 3 ? 0 : ++levelSelects[currentCube];
 
-        CheckIfLocked();
+        CheckIfUnlocked();
 
         if (rotateCamOrbitCoroutine != null)
             StopCoroutine(rotateCamOrbitCoroutine);
@@ -166,7 +194,7 @@ public class GameController : MonoBehaviour {
             cam.transform.position += cam.transform.forward * Time.deltaTime * camMoveSpeed;
             if (Vector3.Distance(cam.transform.position, camOrbit.transform.position) <= camDistance) {
                 SetControlsText(1);
-                CheckIfLocked();
+                CheckIfUnlocked();
                 StartCoroutine(FixCamRotation(levelSelects[whichCube]));
                 yield break;
             }
@@ -283,11 +311,15 @@ public class GameController : MonoBehaviour {
         */
     }
     // Checks if selected level is unlocked
-    void CheckIfLocked() {
-        if (levelUnlocks[currentCube] >= levelSelects[currentCube])
+    bool CheckIfUnlocked() {
+        if (levelUnlocks[currentCube] >= levelSelects[currentCube]) {
             cubeSelectText.text = "<- Level " + (levelSelects[currentCube] + 1) + " ->";
-        else
+            return true;
+        }
+        else {
             cubeSelectText.text = "<- Locked ->";
+            return false;
+        }
     }
     // Change controls
     void SetControlsText(int whichText) {
@@ -302,5 +334,8 @@ public class GameController : MonoBehaviour {
                 controlsText.text = "Z: Select \nX: Back \nUp: Level Select";
                 break;
         }
+    }
+    public void Reset() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
