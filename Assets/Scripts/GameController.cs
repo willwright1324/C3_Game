@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
     /* 
@@ -90,9 +91,15 @@ public class GameController : MonoBehaviour {
 
         // Select Cube/Level
         if (Input.GetAxisRaw("Action 1") != 0) {
-            if (selectState == 0 && !camIsLooking && !camIsMoving && !camIsRotating) {
-                selectState = 1;                 
-                StartCoroutine(MoveToCube(currentCube));
+            if (!camIsLooking && !camIsMoving && !camIsRotating) {
+                if (selectState == 0) {
+                    selectState = 1;                 
+                    StartCoroutine(MoveToCube(currentCube));
+                }
+                else {
+                    if (selectState == 1)
+                        SceneManager.LoadScene(currentCube + 1);
+                }
             }
         }
 
