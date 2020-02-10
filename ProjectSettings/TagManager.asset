@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Wall
   - Spike
+  - PowerCube
   layers:
   - Default
   - TransparentFX
