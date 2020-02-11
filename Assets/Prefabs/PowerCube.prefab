@@ -13,7 +13,7 @@ GameObject:
   m_Layer: 0
   m_Name: PowerCube
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -42,7 +42,7 @@ Halo:
   m_Enabled: 1
   m_Color:
     serializedVersion: 2
-    rgba: 4286611584
+    rgba: 4294967295
   m_Size: 25
 --- !u!1 &2594888519937406314
 GameObject:

@@ -5,9 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class LevelSelectController : MonoBehaviour {
+    public GameState gameState;
+    public SelectState selectState;
     public int currentCube;
-    public int gameState; // 0 = Menu | 1 = Game
-    public int selectState; // 0 = Cubes | 1 = Levels | 2 = How To
     public int[] levelUnlocks = null;
     public int[] levelSelects = null;
 
@@ -29,6 +29,7 @@ public class LevelSelectController : MonoBehaviour {
     public bool camIsRotating;
     IEnumerator lookAtCubeCoroutine;
     IEnumerator rotateCamOrbitCoroutine;
+
     // Start is called before the first frame update
     void Start() {
         currentCube = GameController.Instance.currentCube;
@@ -54,13 +55,13 @@ public class LevelSelectController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (gameState == 0) {
+        if (gameState == GameState.LEVEL_SELECT) {
             // Switch Cube/Level
-            if (Input.GetAxisRaw("Horizontal") != 0 && selectState != 2) {
+            if (Input.GetAxisRaw("Horizontal") != 0 && selectState != SelectState.HOW_TO) {
                 if (SelectCubeCooldown() && !camIsMoving) {
-                    if (selectState == 0)
+                    if (selectState == SelectState.CUBES)
                         SelectCube(Input.GetAxisRaw("Horizontal"));
-                    if (selectState == 1)
+                    if (selectState == SelectState.LEVELS)
                         SelectLevel(Input.GetAxisRaw("Horizontal"));
                 }
             }
@@ -69,15 +70,15 @@ public class LevelSelectController : MonoBehaviour {
 
             // Switch to How To and back
             if (Input.GetAxisRaw("Vertical") != 0) {
-                if (!selectStateCooldown && !camIsLooking && !camIsMoving && !camIsRotating && (selectState == 1 || selectState == 2)) {
+                if (!selectStateCooldown && !camIsLooking && !camIsMoving && !camIsRotating && (selectState == SelectState.LEVELS || selectState == SelectState.HOW_TO)) {
                     Invoke("SelectStateCooldown", 0.5f);
                     selectStateCooldown = true;
-                    if (Input.GetAxisRaw("Vertical") == -1 && selectState == 1) {
-                        selectState = 2;
+                    if (Input.GetAxisRaw("Vertical") == -1 && selectState == SelectState.LEVELS) {
+                        selectState = SelectState.HOW_TO;
                         cubeSelectText.text = "How To Play";
                         StartCoroutine(HowToCamOrbit(currentCube));
                     }
-                    if (Input.GetAxisRaw("Vertical") == 1 && selectState == 2) {
+                    if (Input.GetAxisRaw("Vertical") == 1 && selectState == SelectState.HOW_TO) {
                         if (CheckIfUnlocked())
                             StartCoroutine(FixCamRotation(levelSelects[currentCube]));
                     }
@@ -87,14 +88,15 @@ public class LevelSelectController : MonoBehaviour {
             // Select Cube/Level
             if (Input.GetAxisRaw("Action 1") != 0) {
                 if (!camIsLooking && !camIsMoving && !camIsRotating) {
-                    if (selectState == 0) {
-                        selectState = 1;
+                    if (selectState == SelectState.CUBES) {
+                        selectState = SelectState.LEVELS;
                         StartCoroutine(MoveToCube(currentCube));
                     }
                     else {
-                        if (selectState == 1) {
+                        if (selectState == SelectState.LEVELS) {
+                            gameState = GameState.GAME;
+                            SaveToGameController();
                             SceneManager.LoadScene(currentCube + 1);
-                            gameState = 1;
                         }
                     }
                 }
@@ -102,8 +104,8 @@ public class LevelSelectController : MonoBehaviour {
 
             // Go Back
             if (Input.GetAxisRaw("Action 2") != 0) {
-                if (selectState == 1 && !camIsLooking && !camIsMoving && !camIsRotating) {
-                    selectState = 0;
+                if (selectState == SelectState.LEVELS && !camIsLooking && !camIsMoving && !camIsRotating) {
+                    selectState = SelectState.CUBES;
                     StartCoroutine(LookAtCenter());
                 }
             }
@@ -144,13 +146,10 @@ public class LevelSelectController : MonoBehaviour {
 
         while (Quaternion.Angle(cam.transform.rotation, camRotation) > 0.1f) {
             cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, camRotation, Time.deltaTime * camLookSpeed);
-            if (Quaternion.Angle(cam.transform.rotation, camRotation) <= 0.1f) {
-                cam.transform.rotation = camRotation;
-                camIsLooking = false;
-                yield break;
-            }
             yield return null;
         }
+        cam.transform.rotation = camRotation;
+        camIsLooking = false;
     }
     // Camera moves to selected cube
     IEnumerator MoveToCube(int whichCube) {
@@ -161,14 +160,11 @@ public class LevelSelectController : MonoBehaviour {
 
         while (Vector3.Distance(cam.transform.position, camOrbit.transform.position) > camDistance) {
             cam.transform.position += cam.transform.forward * Time.deltaTime * camMoveSpeed;
-            if (Vector3.Distance(cam.transform.position, camOrbit.transform.position) <= camDistance) {
-                SetControlsText(1);
-                CheckIfUnlocked();
-                StartCoroutine(FixCamRotation(levelSelects[whichCube]));
-                yield break;
-            }
             yield return null;
         }
+        SetControlsText(1);
+        CheckIfUnlocked();
+        StartCoroutine(FixCamRotation(levelSelects[whichCube]));
     }
     // Camera looks at level side
     IEnumerator RotateCamOrbit(int whichLevel) {
@@ -177,14 +173,10 @@ public class LevelSelectController : MonoBehaviour {
 
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
             camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.deltaTime * camRotateSpeed);
-            if (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) <= 0.1f) {
-                camOrbit.transform.localRotation = camRotation;
-                camIsRotating = false;
-                yield break;
-            }
             yield return null;
         }
-
+        camOrbit.transform.localRotation = camRotation;
+        camIsRotating = false;
     }
     // Camera looks at How To
     IEnumerator HowToCamOrbit(int whichCube) {
@@ -197,14 +189,11 @@ public class LevelSelectController : MonoBehaviour {
 
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
             camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.deltaTime * camRotateSpeed);
-            if (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) <= 0.1f) {
-                SetControlsText(2);
-                camOrbit.transform.localRotation = camRotation;
-                camIsRotating = false;
-                yield break;
-            }
             yield return null;
         }
+        SetControlsText(2);
+        camOrbit.transform.localRotation = camRotation;
+        camIsRotating = false;
     }
     // Orients camera to cube's last selected level
     IEnumerator FixCamRotation(int whichLevel) {
@@ -213,17 +202,14 @@ public class LevelSelectController : MonoBehaviour {
 
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
             camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.deltaTime * camRotateSpeed);
-            if (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) <= 0.1f) {
-                camOrbit.transform.localRotation = camRotation;
-                if (selectState == 2) {
-                    SetControlsText(1);
-                    selectState = 1;
-                }
-                camIsMoving = false;
-                yield break;
-            }
             yield return null;
         }
+        camOrbit.transform.localRotation = camRotation;
+        if (selectState == SelectState.HOW_TO) {
+            SetControlsText(1);
+            selectState = SelectState.LEVELS;
+        }
+        camIsMoving = false;
     }
     // Camera Orbit points back to center
     IEnumerator LookAtCenter() {
@@ -233,15 +219,12 @@ public class LevelSelectController : MonoBehaviour {
 
         while (Quaternion.Angle(camOrbit.transform.rotation, camRotation) > 0.1f) {
             camOrbit.transform.rotation = Quaternion.Slerp(camOrbit.transform.rotation, camRotation, Time.deltaTime * camRotateSpeed);
-            if (Quaternion.Angle(camOrbit.transform.rotation, camRotation) <= 0.1f) {
-                camOrbit.transform.rotation = camRotation;
-                SetControlsText(0);
-                cubeSelectText.text = "<- " + GameController.Instance.cubeNames[currentCube] + " ->";
-                StartCoroutine(MoveToCenter());
-                yield break;
-            }
             yield return null;
         }
+        camOrbit.transform.rotation = camRotation;
+        SetControlsText(0);
+        cubeSelectText.text = "<- " + GameController.Instance.cubeNames[currentCube] + " ->";
+        StartCoroutine(MoveToCenter());
     }
     // Camera moves back to center
     IEnumerator MoveToCenter() {
@@ -249,13 +232,10 @@ public class LevelSelectController : MonoBehaviour {
 
         while (Vector3.Distance(cam.transform.position, Vector3.zero) > 5) {
             cam.transform.position -= cam.transform.forward * Time.deltaTime * camMoveSpeed;
-            if (Vector3.Distance(cam.transform.position, Vector3.zero) <= 5) {
-                cam.transform.position = Vector3.zero;
-                camIsMoving = false;
-                yield break;
-            }
             yield return null;
         }
+        cam.transform.position = Vector3.zero;
+        camIsMoving = false;
     }
     // Prevents fast select when held down
     bool SelectCubeCooldown() {
@@ -309,7 +289,5 @@ public class LevelSelectController : MonoBehaviour {
         GameController.Instance.currentCube = currentCube;
         GameController.Instance.gameState = gameState;
         GameController.Instance.selectState = selectState;
-        GameController.Instance.levelUnlocks = levelUnlocks;
-        GameController.Instance.levelSelects = levelSelects;
     }
 }

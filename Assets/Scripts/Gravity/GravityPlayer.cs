@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class GravityPlayer : MonoBehaviour {
     public Rigidbody2D rb;
@@ -28,6 +29,8 @@ public class GravityPlayer : MonoBehaviour {
         else {
            rb.AddForce(Vector3.up * gravity);
         }
+        if (gameObject.transform.position.x < GravityController.Instance.camScroll.transform.position.x - GravityController.Instance.camDistance)
+            rb.AddForce(Vector3.right * 110);
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, 0, cf.force.x), rb.velocity.y);
     }
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -35,7 +38,12 @@ public class GravityPlayer : MonoBehaviour {
             canFlip = true;
         if (collision.gameObject.tag == "Spike")
             GameController.Instance.ResetLevel();
-        
+    }
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.name == "WinTrigger") {
+            GravityController.Instance.DoWinTrigger(gameObject);
+            GravityController.Instance.DoWinTrigger(GravityController.Instance.camScroll);
+        }
     }
     private void OnTriggerExit2D(Collider2D other) {
         if (other.gameObject.name == "OutOfBounds")

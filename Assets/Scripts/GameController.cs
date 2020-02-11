@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public enum GameState { LEVEL_SELECT, GAME, PAUSED }
+public enum SelectState { CUBES, LEVELS, HOW_TO }
 public class GameController : MonoBehaviour {
     /* 
      * Racing:      0
@@ -16,9 +18,9 @@ public class GameController : MonoBehaviour {
      * Puzzle:      7
      */
 
+    public GameState gameState;
+    public SelectState selectState;
     public int currentCube;
-    public int gameState; // 0 = Menu | 1 = Game
-    public int selectState; // 0 = Cubes | 1 = Levels | 2 = How To
     public int[] levelUnlocks = new int[8];
     public int[] levelSelects = new int[8];
     public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "Ball Bounce", "Puzzle"};
@@ -43,20 +45,19 @@ public class GameController : MonoBehaviour {
         if (instance == null) {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            //InitMenu();
         }
         else {
             Destroy(gameObject);
             return;
         }
     }
+    // Player completes a level
     public void CompleteLevel() {
-        gameState = 0;
-        selectState = 0;
+        gameState = GameState.LEVEL_SELECT;
+        selectState = SelectState.CUBES;
         SceneManager.LoadScene(0);
-        //getObjects = false;
-        //InitMenu();
     }
+    // Reset the level
     public void ResetLevel() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

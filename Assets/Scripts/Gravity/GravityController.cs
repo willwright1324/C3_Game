@@ -5,10 +5,12 @@ using UnityEngine;
 public class GravityController : MonoBehaviour {
     public GameObject player;
     GameObject cam;
-    GameObject camScroll;
+    public GameObject camScroll;
     GameObject arrow;
+    public GameObject powerCube;
     public Rigidbody2D rb;
     public ConstantForce2D cf;
+    public int camDistance = 50;
     bool getComponents;
     IEnumerator flipArrowCoroutine;
 
@@ -20,10 +22,12 @@ public class GravityController : MonoBehaviour {
         cam = GameObject.FindWithTag("MainCamera");
         camScroll = GameObject.Find("CamScroll");
         arrow = GameObject.Find("Arrow");
+        powerCube = GameObject.FindWithTag("PowerCube");
+
         rb = camScroll.GetComponent<Rigidbody2D>();
         cf = camScroll.GetComponent<ConstantForce2D>();
 
-        camScroll.transform.position = new Vector3(player.transform.position.x + 50, cam.transform.position.y, cam.transform.position.z);
+        camScroll.transform.position = new Vector3(player.transform.position.x + camDistance, cam.transform.position.y, cam.transform.position.z);
     }
     // Update is called once per frame
     void Update() {
@@ -35,6 +39,23 @@ public class GravityController : MonoBehaviour {
     }
     private void FixedUpdate() {
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, 0, cf.force.x), rb.velocity.y);
+    }
+    public void DoWinTrigger(GameObject obj) {
+        //cf.enabled = false;
+        StartCoroutine(WinTrigger(obj));
+    }
+    IEnumerator WinTrigger(GameObject obj) {
+        ConstantForce2D cf = obj.GetComponent<ConstantForce2D>();
+        cf.enabled = false;
+        Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
+        Transform t = obj.GetComponent<Transform>();
+
+        while (t.position.x < powerCube.transform.position.x) {
+            rb.velocity = new Vector2(rb.velocity.x - Time.deltaTime * 100, rb.velocity.y);
+            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, 30, rb.velocity.x), rb.velocity.y);
+            yield return null;
+        }
+        rb.velocity = new Vector2(0, rb.velocity.y);
     }
     public void DoFlipArrow(bool flipped) {
         if (flipArrowCoroutine != null)
