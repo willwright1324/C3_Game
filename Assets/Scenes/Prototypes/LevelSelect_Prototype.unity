@@ -378,7 +378,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 375.9, y: -254.2}
+  m_AnchoredPosition: {x: 288, y: -187}
   m_SizeDelta: {x: 473.8, y: 276.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &303365215
@@ -821,6 +821,7 @@ MonoBehaviour:
   currentCube: 0
   levelUnlocks: 
   levelSelects: 
+  cubeNames: []
   cubes: []
   selectCubeCooldown: 0
   selectStateCooldown: 0
@@ -1050,7 +1051,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000015259, y: -298}
+  m_AnchoredPosition: {x: 0, y: -298}
   m_SizeDelta: {x: 761.6, y: 91.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1572662261
@@ -1581,6 +1582,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6688495287562289013, guid: 0e20f7cf022c6654487435cb2e97ff20,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8740267806910592465, guid: 0e20f7cf022c6654487435cb2e97ff20,
         type: 3}
       propertyPath: m_Name

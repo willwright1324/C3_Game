@@ -7,7 +7,7 @@ public class GravityPlayer : MonoBehaviour {
     public float gravity = 1000;
     public bool canFlip = true;
     public bool flipped;
-    public Vector3 vel;
+
     // Start is called before the first frame update
     void Start() {
         rb = GetComponent<Rigidbody2D>();
@@ -15,7 +15,9 @@ public class GravityPlayer : MonoBehaviour {
     }
     // Update is called once per frame
     void Update() {
-        vel = rb.velocity;
+        if (Time.timeScale == 0)
+            return;
+
         if(Input.GetButtonDown("Action 1") && canFlip) {
             flipped = !flipped;
             canFlip = false;

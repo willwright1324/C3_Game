@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour {
 
     public GameState gameState;
     public SelectState selectState;
+    public GameObject pauseUI;
     public int currentCube;
     public int[] levelUnlocks = new int[8];
     public int[] levelSelects = new int[8];
@@ -49,6 +50,43 @@ public class GameController : MonoBehaviour {
         else {
             Destroy(gameObject);
             return;
+        }
+    }
+    private void Start() {
+        pauseUI = GameObject.Find("PauseUI");
+        pauseUI.SetActive(false);
+        //DontDestroyOnLoad(pauseUI);
+    }
+    private void Update() {
+        if (Input.GetButtonDown("Cancel")) {
+            print("cancel");
+            if (gameState == GameState.GAME) {
+                print("pause");
+                pauseUI.SetActive(true);
+                gameState = GameState.PAUSED;
+                Time.timeScale = 0f;
+            }
+            else {
+                if (gameState == GameState.PAUSED) {
+                    print("unpause");
+
+                    Time.timeScale = 1f;
+                    pauseUI.SetActive(false);
+                    gameState = GameState.GAME;
+                }
+            }
+        }
+        if (Input.GetButtonDown("Action 2")) {
+            print("action 2");
+
+            if (gameState == GameState.PAUSED) {
+                print("levels");
+
+                Time.timeScale = 1f;
+                pauseUI.SetActive(false);
+                gameState = GameState.LEVEL_SELECT;
+                SceneManager.LoadScene(0);
+            }
         }
     }
     // Player completes a level
