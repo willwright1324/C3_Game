@@ -54,7 +54,6 @@ public class GameController : MonoBehaviour {
     // Player completes a level
     public void CompleteLevel() {
         gameState = GameState.LEVEL_SELECT;
-        selectState = SelectState.CUBES;
         SceneManager.LoadScene(0);
     }
     // Reset the level

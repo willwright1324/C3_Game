@@ -10,6 +10,7 @@ public class LevelSelectController : MonoBehaviour {
     public int currentCube;
     public int[] levelUnlocks = null;
     public int[] levelSelects = null;
+    public string[] cubeNames = null;
 
     GameObject colorCube;
     public GameObject[] cubes;
@@ -37,6 +38,7 @@ public class LevelSelectController : MonoBehaviour {
         selectState = GameController.Instance.selectState;
         levelUnlocks = GameController.Instance.levelUnlocks;
         levelSelects = GameController.Instance.levelSelects;
+        cubeNames = GameController.Instance.cubeNames;
 
         colorCube = GameObject.Find("ColorCube");
         cubes = GameObject.FindGameObjectsWithTag("Cube");
@@ -44,17 +46,23 @@ public class LevelSelectController : MonoBehaviour {
             cube.transform.rotation = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
 
         cubeSelectText = GameObject.Find("CubeSelect").GetComponent<Text>();
-        cubeSelectText.text = "<- " + GameController.Instance.cubeNames[0] + " ->";
         controlsText = GameObject.Find("Controls").GetComponent<Text>();
-        controlsText.text = "Z: Select \nX: Back \nLeft/Right: Change Selection";
 
         cam = GameObject.FindWithTag("MainCamera");
         camOrbit = GameObject.Find("CameraOrbit");
-        cam.transform.rotation = Quaternion.LookRotation(cubes[0].transform.position - cam.transform.position);
+
+        InitCamera();
     }
 
     // Update is called once per frame
     void Update() {
+        colorCube.transform.Rotate(Time.deltaTime * 10, Time.deltaTime * -15, Time.deltaTime * 1);
+        foreach (GameObject cube in cubes)
+            cube.transform.Rotate(Time.deltaTime * 10, Time.deltaTime * -15, Time.deltaTime * 1);
+
+        if (selectState == SelectState.CUBES)
+            WatchCube(currentCube);
+
         if (gameState == GameState.LEVEL_SELECT) {
             // Switch Cube/Level
             if (Input.GetAxisRaw("Horizontal") != 0 && selectState != SelectState.HOW_TO) {
@@ -79,8 +87,8 @@ public class LevelSelectController : MonoBehaviour {
                         StartCoroutine(HowToCamOrbit(currentCube));
                     }
                     if (Input.GetAxisRaw("Vertical") == 1 && selectState == SelectState.HOW_TO) {
-                        if (CheckIfUnlocked())
-                            StartCoroutine(FixCamRotation(levelSelects[currentCube]));
+                        CheckIfUnlocked();
+                        StartCoroutine(FixCamRotation(levelSelects[currentCube]));
                     }
                 }
             }
@@ -93,7 +101,7 @@ public class LevelSelectController : MonoBehaviour {
                         StartCoroutine(MoveToCube(currentCube));
                     }
                     else {
-                        if (selectState == SelectState.LEVELS) {
+                        if (selectState == SelectState.LEVELS && CheckIfUnlocked()) {
                             gameState = GameState.GAME;
                             SaveToGameController();
                             SceneManager.LoadScene(currentCube + 1);
@@ -104,11 +112,45 @@ public class LevelSelectController : MonoBehaviour {
 
             // Go Back
             if (Input.GetAxisRaw("Action 2") != 0) {
-                if (selectState == SelectState.LEVELS && !camIsLooking && !camIsMoving && !camIsRotating) {
+                if ((selectState == SelectState.LEVELS || selectState == SelectState.HOW_TO) && !camIsLooking && !camIsMoving && !camIsRotating) {
                     selectState = SelectState.CUBES;
                     StartCoroutine(LookAtCenter());
                 }
             }
+        }
+    }
+    // Sets camera to correct position
+    void InitCamera() {
+        switch (selectState) {
+            case SelectState.CUBES:
+                cubeSelectText.text = "<- " + cubeNames[currentCube] + " ->";
+                SetControlsText(0);
+                cam.transform.LookAt(cubes[currentCube].transform.position);
+                break;
+            case SelectState.LEVELS:
+                CheckIfUnlocked();
+                SetControlsText(1);
+                camOrbit.transform.position = cubes[currentCube].transform.position;
+                camOrbit.transform.SetParent(cubes[currentCube].transform);
+                camOrbit.transform.localRotation = Quaternion.Euler(0, levelSelects[currentCube] * -90, 0);
+                cam.transform.position = camOrbit.transform.position + camOrbit.transform.forward * camDistance;
+                cam.transform.SetParent(camOrbit.transform);
+                cam.transform.localRotation = Quaternion.Euler(0, 180, 0);
+                break;
+            case SelectState.HOW_TO:
+                cubeSelectText.text = "How To Play";
+                SetControlsText(2);
+                camOrbit.transform.position = cubes[currentCube].transform.position;
+                camOrbit.transform.SetParent(cubes[currentCube].transform);
+                Transform[] cubeChildren = cubes[currentCube].GetComponentsInChildren<Transform>();
+                cubeChildren[5].transform.localRotation = Quaternion.Euler(cubeChildren[5].transform.localRotation.eulerAngles.x,
+                                                              camOrbit.transform.localRotation.eulerAngles.y + 180,
+                                                              cubeChildren[5].transform.localRotation.eulerAngles.z);
+                camOrbit.transform.localRotation = Quaternion.Euler(90, levelSelects[currentCube] * -90, 0);
+                cam.transform.position = camOrbit.transform.position + camOrbit.transform.forward * camDistance;
+                cam.transform.SetParent(camOrbit.transform);
+                cam.transform.localRotation = Quaternion.Euler(0, 180, 0);
+                break;
         }
     }
     // Switch through cubes
@@ -118,12 +160,7 @@ public class LevelSelectController : MonoBehaviour {
         else
             currentCube = currentCube + 1 > 7 ? 0 : ++currentCube;
 
-        cubeSelectText.text = "<- " + GameController.Instance.cubeNames[currentCube] + " ->";
-
-        if (lookAtCubeCoroutine != null)
-            StopCoroutine(lookAtCubeCoroutine);
-        lookAtCubeCoroutine = LookAtCube(currentCube);
-        StartCoroutine(lookAtCubeCoroutine);
+        cubeSelectText.text = "<- " + cubeNames[currentCube] + " ->";
     }
     // Switch through levels
     void SelectLevel(float direction) {
@@ -140,28 +177,24 @@ public class LevelSelectController : MonoBehaviour {
         StartCoroutine(rotateCamOrbitCoroutine);
     }
     // Camera looks at selected cube
-    IEnumerator LookAtCube(int whichCube) {
-        camIsLooking = true;
-        Quaternion camRotation = Quaternion.LookRotation(cubes[whichCube].transform.position - cam.transform.position);
-
-        while (Quaternion.Angle(cam.transform.rotation, camRotation) > 0.1f) {
-            cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, camRotation, Time.deltaTime * camLookSpeed);
-            yield return null;
-        }
-        cam.transform.rotation = camRotation;
-        camIsLooking = false;
+    void WatchCube(int whichCube) {
+        cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, Quaternion.LookRotation(cubes[whichCube].transform.position - cam.transform.position), Time.deltaTime * camLookSpeed);
     }
     // Camera moves to selected cube
     IEnumerator MoveToCube(int whichCube) {
         camIsMoving = true;
-        camOrbit.transform.rotation = cam.transform.rotation * Quaternion.Euler(Vector3.up * 180);
+        cam.transform.SetParent(null);
+        camOrbit.transform.SetParent(null);
         camOrbit.transform.position = cubes[whichCube].transform.position;
         camOrbit.transform.SetParent(cubes[whichCube].transform);
+        camOrbit.transform.rotation = Quaternion.LookRotation(cam.transform.position - camOrbit.transform.position);
+        cam.transform.SetParent(camOrbit.transform);
 
         while (Vector3.Distance(cam.transform.position, camOrbit.transform.position) > camDistance) {
             cam.transform.position += cam.transform.forward * Time.deltaTime * camMoveSpeed;
             yield return null;
         }
+        cam.transform.localRotation = Quaternion.Euler(0, 180, 0);
         SetControlsText(1);
         CheckIfUnlocked();
         StartCoroutine(FixCamRotation(levelSelects[whichCube]));
@@ -197,7 +230,6 @@ public class LevelSelectController : MonoBehaviour {
     }
     // Orients camera to cube's last selected level
     IEnumerator FixCamRotation(int whichLevel) {
-        cam.transform.SetParent(camOrbit.transform);
         Quaternion camRotation = Quaternion.Euler(0, whichLevel * -90, 0);
 
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
@@ -223,7 +255,7 @@ public class LevelSelectController : MonoBehaviour {
         }
         camOrbit.transform.rotation = camRotation;
         SetControlsText(0);
-        cubeSelectText.text = "<- " + GameController.Instance.cubeNames[currentCube] + " ->";
+        cubeSelectText.text = "<- " + cubeNames[currentCube] + " ->";
         StartCoroutine(MoveToCenter());
     }
     // Camera moves back to center
@@ -231,7 +263,9 @@ public class LevelSelectController : MonoBehaviour {
         cam.transform.SetParent(null);
 
         while (Vector3.Distance(cam.transform.position, Vector3.zero) > 5) {
-            cam.transform.position -= cam.transform.forward * Time.deltaTime * camMoveSpeed;
+            WatchCube(currentCube);
+            cam.transform.position = Vector3.MoveTowards(cam.transform.position, Vector3.zero, Time.deltaTime * camMoveSpeed);
+            //cam.transform.position -= cam.transform.forward * Time.deltaTime * camMoveSpeed;
             yield return null;
         }
         cam.transform.position = Vector3.zero;
@@ -274,13 +308,13 @@ public class LevelSelectController : MonoBehaviour {
     void SetControlsText(int whichText) {
         switch (whichText) {
             case 0:
-                controlsText.text = "Z: Select \nX: Back \nLeft/Right: Change Selection";
+                controlsText.text = "Z: Select \nX: Back \n\nLeft/Right: Change Selection";
                 break;
             case 1:
-                controlsText.text = "Z: Select \nX: Back \nLeft/Right: Change Selection \nDown: How To Play";
+                controlsText.text = "Z: Select \nX: Back \n\nLeft/Right: Change Selection \n\nDown: How To Play";
                 break;
             case 2:
-                controlsText.text = "Z: Select \nX: Back \nUp: Level Select";
+                controlsText.text = "Z: Select \nX: Back \n\nUp: Level Select";
                 break;
         }
     }

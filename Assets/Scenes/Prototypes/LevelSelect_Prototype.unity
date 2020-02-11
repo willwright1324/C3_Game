@@ -816,9 +816,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d38daabb24be6146a47df3590ca10c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCube: 0
   gameState: 0
   selectState: 0
+  currentCube: 0
   levelUnlocks: 
   levelSelects: 
   cubes: []
