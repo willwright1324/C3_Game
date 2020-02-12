@@ -42,9 +42,11 @@ public class LevelSelectController : MonoBehaviour {
         cubeNames = GameController.Instance.cubeNames;
 
         colorCube = GameObject.Find("ColorCube");
-        cubes = GameObject.FindGameObjectsWithTag("Cube");
-        foreach (GameObject cube in cubes)
-            cube.transform.rotation = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+        cubes = new GameObject[cubeNames.Length];
+        for (int i = 0; i < cubeNames.Length; i++) {
+            cubes[i] = GameObject.Find(cubeNames[i] + "Cube");
+            cubes[i].transform.rotation = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+        }
 
         cubeSelectText = GameObject.Find("CubeSelect").GetComponent<Text>();
         controlsText = GameObject.Find("Controls").GetComponent<Text>();

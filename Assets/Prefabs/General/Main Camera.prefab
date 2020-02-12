@@ -497,6 +497,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FullLights
       objectReference: {fileID: 0}
+    - target: {fileID: 6079746952079179965, guid: 2932d6be631525b41b1eafaa1e46d548,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5926251674297550105, guid: 2932d6be631525b41b1eafaa1e46d548,
         type: 3}
       propertyPath: m_LocalPosition.x

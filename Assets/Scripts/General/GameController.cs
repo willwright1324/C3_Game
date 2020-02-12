@@ -24,7 +24,7 @@ public class GameController : MonoBehaviour {
     public int currentCube;
     public int[] levelUnlocks = new int[8];
     public int[] levelSelects = new int[8];
-    public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "Ball Bounce", "Puzzle"};
+    public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "BallBounce", "Puzzle"};
     
     // Singleton
     private static GameController instance = null;

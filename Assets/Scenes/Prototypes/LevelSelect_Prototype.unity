@@ -1587,6 +1587,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8452584802918758319, guid: 0e20f7cf022c6654487435cb2e97ff20,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8740267806910592465, guid: 0e20f7cf022c6654487435cb2e97ff20,
         type: 3}
       propertyPath: m_Name
@@ -1651,6 +1656,11 @@ PrefabInstance:
         type: 3}
       propertyPath: levelUnlocks.Array.size
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3957190224488265274, guid: 0e20f7cf022c6654487435cb2e97ff20,
+        type: 3}
+      propertyPath: cubeNames.Array.data[6]
+      value: BallBounce
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e20f7cf022c6654487435cb2e97ff20, type: 3}
