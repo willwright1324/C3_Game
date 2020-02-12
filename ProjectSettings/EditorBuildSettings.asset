@@ -32,4 +32,28 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Prototypes/Puzzle_Prototype.unity
     guid: df0a902325be8c74bb093dab0da3f527
+  - enabled: 1
+    path: Assets/Scenes/Racing_HowTo.unity
+    guid: 182dd3328ee9e5c46a56e573bc4ed317
+  - enabled: 1
+    path: Assets/Scenes/Shooter_HowTo.unity
+    guid: 6b5b32643e44a8d4c9000fe47512359a
+  - enabled: 1
+    path: Assets/Scenes/Rhythm_HowTo.unity
+    guid: 1a9f3800f6a8d9a4985baa88eda6c2f7
+  - enabled: 1
+    path: Assets/Scenes/Platformer_HowTo.unity
+    guid: ca688b3e11372394f9c4f0d5e64e59fd
+  - enabled: 1
+    path: Assets/Scenes/Gravity_HowTo.unity
+    guid: 4b0ab2b6de785d741abea9fd9d5fef08
+  - enabled: 1
+    path: Assets/Scenes/Maze_HowTo.unity
+    guid: 76bc5f973e9099a4faacb2a7254b23ce
+  - enabled: 1
+    path: Assets/Scenes/BallBounce_HowTo.unity
+    guid: 0e4b1d9a6bfb9de4cb7bd1110bde2127
+  - enabled: 1
+    path: Assets/Scenes/Puzzle_HowTo.unity
+    guid: af358f6eda0e3fc4f962e73477ff79b6
   m_configObjects: {}

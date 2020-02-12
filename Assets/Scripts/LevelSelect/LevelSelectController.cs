@@ -14,6 +14,7 @@ public class LevelSelectController : MonoBehaviour {
 
     GameObject colorCube;
     public GameObject[] cubes;
+    int[] wip = {1, 1, 1, 1, 0, 0, 1, 0 };
     Text cubeSelectText;
     Text controlsText;
     public float selectCubeCooldown;
@@ -67,8 +68,11 @@ public class LevelSelectController : MonoBehaviour {
             // Switch Cube/Level
             if (Input.GetAxisRaw("Horizontal") != 0 && selectState != SelectState.HOW_TO) {
                 if (SelectCubeCooldown() && !camIsMoving) {
-                    if (selectState == SelectState.CUBES)
+                    if (selectState == SelectState.CUBES) {
                         SelectCube(Input.GetAxisRaw("Horizontal"));
+                        if (wip[currentCube] == 1)
+                            cubeSelectText.text = "<- " + cubeNames[currentCube] + " WIP ->";
+                    }
                     if (selectState == SelectState.LEVELS)
                         SelectLevel(Input.GetAxisRaw("Horizontal"));
                 }
@@ -97,6 +101,8 @@ public class LevelSelectController : MonoBehaviour {
             if (Input.GetAxisRaw("Action 1") != 0) {
                 if (!camIsLooking && !camIsMoving && !camIsRotating) {
                     if (selectState == SelectState.CUBES) {
+                        if (wip[currentCube] == 1)
+                            return;
                         selectState = SelectState.LEVELS;
                         StartCoroutine(MoveToCube(currentCube));
                     }
@@ -105,6 +111,13 @@ public class LevelSelectController : MonoBehaviour {
                             gameState = GameState.GAME;
                             SaveToGameController();
                             SceneManager.LoadScene(currentCube + 1);
+                        }
+                        else {
+                            if (selectState == SelectState.HOW_TO) {
+                                gameState = GameState.GAME;
+                                SaveToGameController();
+                                SceneManager.LoadScene(currentCube + 9);
+                            }
                         }
                     }
                 }
@@ -123,7 +136,10 @@ public class LevelSelectController : MonoBehaviour {
     void InitCamera() {
         switch (selectState) {
             case SelectState.CUBES:
-                cubeSelectText.text = "<- " + cubeNames[currentCube] + " ->";
+                if (wip[currentCube] == 1)
+                    cubeSelectText.text = "<- " + cubeNames[currentCube] + " WIP ->";
+                else
+                    cubeSelectText.text = "<- " + cubeNames[currentCube] + " ->";
                 SetControlsText(0);
                 cam.transform.LookAt(cubes[currentCube].transform.position);
                 break;
@@ -142,11 +158,11 @@ public class LevelSelectController : MonoBehaviour {
                 SetControlsText(2);
                 camOrbit.transform.position = cubes[currentCube].transform.position;
                 camOrbit.transform.SetParent(cubes[currentCube].transform);
+                camOrbit.transform.localRotation = Quaternion.Euler(90, levelSelects[currentCube] * -90, 0);
                 Transform[] cubeChildren = cubes[currentCube].GetComponentsInChildren<Transform>();
                 cubeChildren[5].transform.localRotation = Quaternion.Euler(cubeChildren[5].transform.localRotation.eulerAngles.x,
                                                               camOrbit.transform.localRotation.eulerAngles.y + 180,
                                                               cubeChildren[5].transform.localRotation.eulerAngles.z);
-                camOrbit.transform.localRotation = Quaternion.Euler(90, levelSelects[currentCube] * -90, 0);
                 cam.transform.position = camOrbit.transform.position + camOrbit.transform.forward * camDistance;
                 cam.transform.SetParent(camOrbit.transform);
                 cam.transform.localRotation = Quaternion.Euler(0, 180, 0);
