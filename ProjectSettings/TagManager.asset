@@ -9,6 +9,8 @@ TagManager:
   - Wall
   - Spike
   - PowerCube
+  - Coin
+  - Door
   layers:
   - Default
   - TransparentFX

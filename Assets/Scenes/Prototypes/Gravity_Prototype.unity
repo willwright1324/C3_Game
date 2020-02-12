@@ -3732,7 +3732,6 @@ MonoBehaviour:
   gravity: 1000
   canFlip: 1
   flipped: 0
-  vel: {x: 0, y: 0, z: 0}
 --- !u!247 &1216295787
 ConstantForce2D:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1127019464020116567}
   m_Layer: 0
   m_Name: PowerCube
-  m_TagString: Untagged
+  m_TagString: PowerCube
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 3697425471236623759}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: PowerCube
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
