@@ -25,7 +25,7 @@ public class MazePlayer : MonoBehaviour {
         }
     }
     private void OnCollisionStay2D(Collision2D collision) {
-        if (collision.gameObject.name == "Door") {
+        if (collision.gameObject.tag == "Door") {
             if (Input.GetButtonDown("Action 1")) {
                 MazeController.Instance.OpenDoor();
             }

@@ -112,13 +112,13 @@ public class LevelSelectController : MonoBehaviour {
                         if (selectState == SelectState.LEVELS && CheckIfUnlocked()) {
                             gameState = GameState.GAME;
                             SaveToGameController();
-                            SceneManager.LoadScene(currentCube + 1);
+                            SceneManager.LoadScene(1 + (currentCube * 6) + levelSelects[currentCube]);
                         }
                         else {
                             if (selectState == SelectState.HOW_TO) {
                                 gameState = GameState.GAME;
                                 SaveToGameController();
-                                SceneManager.LoadScene(currentCube + 9);
+                                SceneManager.LoadScene(currentCube * 6);
                             }
                         }
                     }
@@ -213,6 +213,7 @@ public class LevelSelectController : MonoBehaviour {
             yield return null;
         }
         cam.transform.localRotation = Quaternion.Euler(0, 180, 0);
+        cam.transform.localPosition = new Vector3(0, 0, cam.transform.localPosition.z);
         SetControlsText(1);
         CheckIfUnlocked();
         StartCoroutine(FixCamRotation(levelSelects[whichCube]));

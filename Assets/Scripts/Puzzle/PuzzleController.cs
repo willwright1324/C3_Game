@@ -83,6 +83,8 @@ public class PuzzleController : MonoBehaviour {
     }
     // Update is called once per frame
     void Update() {
+        if (Time.timeScale == 0)
+            return;
         if (canSelect && canMove && !won) {
             if (Input.GetButtonDown("Horizontal")) {
                 canSelect = false;
@@ -129,7 +131,6 @@ public class PuzzleController : MonoBehaviour {
                     board = board.Split('|')[1];
                     string piece = puzzlePieceGrid[x, y].name;
                     piece = piece.Split('|')[1];
-                    print(boardPositionGrid[x, y].name + "|" + puzzlePieceGrid[x, y].name);
                     if (!(board.Equals(piece))) {
                         clear = false;
                         break;

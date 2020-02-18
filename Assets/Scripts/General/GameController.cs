@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public enum GameState { LEVEL_SELECT, GAME, PAUSED }
-public enum SelectState { CUBES, LEVELS, HOW_TO }
+public enum SelectState { CUBES, LEVELS, HOW_TO, BOSS }
 public class GameController : MonoBehaviour {
     /* 
      * Racing:      0
@@ -76,14 +76,14 @@ public class GameController : MonoBehaviour {
                 Time.timeScale = 1f;
                 pauseUI.SetActive(false);
                 gameState = GameState.LEVEL_SELECT;
-                SceneManager.LoadScene(0);
+                SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
             }
         }
     }
     // Player completes a level
     public void CompleteLevel() {
         gameState = GameState.LEVEL_SELECT;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
     }
     // Reset the level
     public void ResetLevel() {

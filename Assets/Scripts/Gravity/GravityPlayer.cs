@@ -48,7 +48,7 @@ public class GravityPlayer : MonoBehaviour {
         }
     }
     private void OnTriggerExit2D(Collider2D other) {
-        if (other.gameObject.name == "OutOfBounds")
+        if (other.gameObject.name == "Bounds")
             GameController.Instance.ResetLevel();
     }
 }
