@@ -12,6 +12,7 @@ TagManager:
   - Coin
   - Door
   - Block
+  - Boss
   layers:
   - Default
   - TransparentFX

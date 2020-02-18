@@ -116,10 +116,10 @@ TextureImporter:
       name: arrow_0
       rect:
         serializedVersion: 2
-        x: 51
-        y: 57
-        width: 82
-        height: 84
+        x: 57
+        y: 67
+        width: 84
+        height: 82
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -127,7 +127,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2a1eebaaf301d0847a41cab6299a052c
+      spriteID: 617fbdcba092d0249abaa151ddae51f9
       internalID: -765150924802650856
       vertices: []
       indices: 
@@ -136,7 +136,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 42bbb28ede557ea45a0aa7b091da07ba
     internalID: 0
     vertices: []
     indices: 

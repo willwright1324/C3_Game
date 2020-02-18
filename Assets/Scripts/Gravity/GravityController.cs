@@ -13,6 +13,13 @@ public class GravityController : MonoBehaviour {
     public int camDistance = 50;
     bool getComponents;
     IEnumerator flipArrowCoroutine;
+    //Boss
+    GameObject boss;
+    GameObject eyes;
+    GameObject flip;
+    int switchTime = 8;
+    int flipDirection;
+    float flipSpeed = 10;
 
     public static GravityController Instance { get; private set; } = null;
     private void Awake() { Instance = this; }
@@ -21,13 +28,23 @@ public class GravityController : MonoBehaviour {
         player  = GameObject.FindWithTag("Player");
         cam = GameObject.FindWithTag("MainCamera");
         camScroll = GameObject.Find("CamScroll");
-        arrow = GameObject.Find("Arrow");
+        arrow = GameObject.Find("Canvas/Flip/Arrow");
         powerCube = GameObject.FindWithTag("PowerCube");
 
         rb = camScroll.GetComponent<Rigidbody2D>();
         cf = camScroll.GetComponent<ConstantForce2D>();
 
         camScroll.transform.position = new Vector3(player.transform.position.x + camDistance, cam.transform.position.y, cam.transform.position.z);
+
+        boss = GameObject.FindWithTag("Boss");
+        eyes = GameObject.Find("Boss/Eyes");
+        flip = GameObject.Find("Canvas/Flip");
+
+        if (GameController.Instance.selectState == SelectState.BOSS) {
+            boss.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, player.transform.position.z + 5);
+            boss.transform.SetParent(cam.transform);
+            InvokeRepeating("DoFlipView", switchTime, switchTime);
+        }
     }
     // Update is called once per frame
     void Update() {
@@ -41,7 +58,6 @@ public class GravityController : MonoBehaviour {
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, 0, cf.force.x), rb.velocity.y);
     }
     public void DoWinTrigger(GameObject obj) {
-        //cf.enabled = false;
         StartCoroutine(WinTrigger(obj));
     }
     IEnumerator WinTrigger(GameObject obj) {
@@ -64,17 +80,54 @@ public class GravityController : MonoBehaviour {
         StartCoroutine(flipArrowCoroutine);
     }
     IEnumerator FlipArrow(bool flipped) {
-        Quaternion arrowRotation = Quaternion.Euler(Vector3.back * 90);
+        Quaternion arrowRotation = Quaternion.Euler(Vector3.zero);
         if (flipped)
-            arrowRotation = Quaternion.Euler(Vector3.forward * 90);
+            arrowRotation = Quaternion.Euler(Vector3.forward * 180);
 
-        while (Quaternion.Angle(arrow.transform.rotation, arrowRotation) > 0.1f) {
-            arrow.transform.rotation = Quaternion.Lerp(arrow.transform.rotation, arrowRotation, Time.deltaTime * 20);
-            if (Quaternion.Angle(arrow.transform.rotation, arrowRotation) <= 0.1f) {
-                arrow.transform.rotation = arrowRotation;
-                yield break;
-            }
+        while (Quaternion.Angle(arrow.transform.localRotation, arrowRotation) > 0.1f) {
+            arrow.transform.localRotation = Quaternion.Lerp(arrow.transform.localRotation, arrowRotation, Time.deltaTime * 20);
             yield return null;
         }
+        arrow.transform.localRotation = arrowRotation;
+    }
+    //Boss
+    void DoFlipView() {
+        int temp = Mathf.RoundToInt(Random.Range(0, 3));
+        while (temp == flipDirection)
+            temp = Mathf.RoundToInt(Random.Range(0, 3));
+        flipDirection = temp;
+        Vector3 eyePos = Vector3.zero;
+        switch (flipDirection) {
+            case 0:
+                eyePos = new Vector3(0, -0.2f, 0);
+                break;
+            case 1:
+                eyePos = new Vector3(-0.2f, 0, 0);
+                break;
+            case 2:
+                eyePos = new Vector3(0, 0.2f, 0);
+                break;
+            case 3:
+                eyePos = new Vector3(0.2f, 0, 0);
+                break;
+        }
+        eyes.transform.localPosition += eyePos;
+        StartCoroutine(FlipView(flipDirection));
+    }
+    IEnumerator FlipView(int direction) {
+        yield return new WaitForSeconds(1);
+        Quaternion camRotation = Quaternion.Euler(0, 0, direction * 90);
+        Quaternion flipRotation = camRotation;
+        if (direction == 1 || direction == 3)
+            flipRotation = Quaternion.Euler(0, 0, direction * 270);
+
+        while (Quaternion.Angle(cam.transform.localRotation, camRotation) > 0.1f) {
+            flip.transform.rotation = Quaternion.Slerp(flip.transform.rotation, flipRotation, Time.deltaTime * flipSpeed);
+            cam.transform.localRotation = Quaternion.Slerp(cam.transform.localRotation, camRotation, Time.deltaTime * flipSpeed);
+            yield return null;
+        }
+        flip.transform.rotation = flipRotation;
+        cam.transform.localRotation = camRotation;
+        eyes.transform.localPosition = Vector3.zero;
     }
 }

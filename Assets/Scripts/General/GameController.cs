@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour {
      */
 
     public GameState gameState;
-    public SelectState selectState;
+    public SelectState selectState = SelectState.BOSS;
     public GameObject pauseUI;
     public int currentCube;
     public int[] levelUnlocks = new int[8];

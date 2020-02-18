@@ -7,15 +7,8 @@ public class Block : MonoBehaviour {
     SpriteRenderer mat;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         mat = GetComponent<SpriteRenderer>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
     public void Break() {
         switch (--hits) {
