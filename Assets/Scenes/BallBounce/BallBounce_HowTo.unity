@@ -192,6 +192,24 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6030485049704666744, guid: c8feb9fffebecf14585a686ea4535bf2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030485049704666744, guid: c8feb9fffebecf14585a686ea4535bf2,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1051.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030485049704666746, guid: c8feb9fffebecf14585a686ea4535bf2,
+        type: 3}
+      propertyPath: m_Text
+      value: 'Press Left/Right to spin, and Z/X to use the paddles. Destroy all of
+        the blocks to win!
+
+'
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8feb9fffebecf14585a686ea4535bf2, type: 3}
 --- !u!1001 &6398876043692732427
@@ -269,18 +287,18 @@ PrefabInstance:
     - target: {fileID: 8881502447192208854, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.93333334
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8881502447192208854, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8881502447192208854, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 61c2c1a6194c2e94ebee6eaf27d87814, type: 2}
+      objectReference: {fileID: 2100000, guid: 9e931e3d97e5d4d4a98f6e16f36d0db3, type: 2}
     - target: {fileID: 6042952281593742696, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.g
@@ -289,18 +307,18 @@ PrefabInstance:
     - target: {fileID: 6042952281593742696, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.93333334
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6042952281593742696, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6042952281593742696, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 61c2c1a6194c2e94ebee6eaf27d87814, type: 2}
+      objectReference: {fileID: 2100000, guid: 9e931e3d97e5d4d4a98f6e16f36d0db3, type: 2}
     - target: {fileID: 5237718608024635041, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.g
@@ -309,18 +327,18 @@ PrefabInstance:
     - target: {fileID: 5237718608024635041, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.93333334
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5237718608024635041, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5237718608024635041, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 61c2c1a6194c2e94ebee6eaf27d87814, type: 2}
+      objectReference: {fileID: 2100000, guid: 9e931e3d97e5d4d4a98f6e16f36d0db3, type: 2}
     - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.g
@@ -329,18 +347,18 @@ PrefabInstance:
     - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.93333334
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 61c2c1a6194c2e94ebee6eaf27d87814, type: 2}
+      objectReference: {fileID: 2100000, guid: 9e931e3d97e5d4d4a98f6e16f36d0db3, type: 2}
     - target: {fileID: 6036072201628371371, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_LocalPosition.x

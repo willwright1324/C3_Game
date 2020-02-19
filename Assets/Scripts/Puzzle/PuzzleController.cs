@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PuzzleController : MonoBehaviour {
     public GameObject[,] boardPositionGrid;
@@ -10,13 +11,23 @@ public class PuzzleController : MonoBehaviour {
     GameObject cam;
     GameObject puzzlePiece;
     GameObject cursor;
+    GameObject enemy;
+    GameObject eye;
+    GameObject arm;
+    GameObject block;
+    Transform[] playerHealth;
+    public float attackTime = 3f;
+    public int healthCount;
     public int cursorX;
     public int cursorY;
     public int emptyX;
     public int emptyY;
+    int attackX;
+    int attackY;
     int boardSize = 4;
     public bool canSelect = true;
     public bool canMove = true;
+    bool isAttacking;
     bool won;
     float xMargin = 0;
     float yMargin = 0;
@@ -31,6 +42,13 @@ public class PuzzleController : MonoBehaviour {
         cam = GameObject.FindWithTag("MainCamera");
         puzzlePiece = Resources.Load("Puzzle/PuzzlePiece") as GameObject;
         cursor = GameObject.Find("Cursor");
+        enemy = GameObject.FindWithTag("Enemy");
+        eye = GameObject.Find("Enemy/Eye");
+        arm = GameObject.Find("Enemy/Eye/Arm");
+        block = GameObject.FindWithTag("Damage");
+        playerHealth = GameObject.Find("PlayerHealth").GetComponentsInChildren<Transform>();
+        healthCount = playerHealth.Length - 1;
+
         Bounds puzzleSize = (Resources.Load("Puzzle/PuzzlePiece") as GameObject).GetComponent<Renderer>().bounds;
         Vector3 camPos = cam.transform.position;
         boardPositionGrid = new GameObject[boardSize, boardSize];
@@ -53,6 +71,9 @@ public class PuzzleController : MonoBehaviour {
                 puzzlePieceGrid[x, y] = pp;
             }
         }
+        GameObject image = GameObject.Find("Canvas/Image");
+        image.GetComponent<Image>().sprite = Resources.Load<Sprite>("Puzzle/" + folderName + "/image_0");
+
         for (int y = 0; y < boardSize; y++) {
             for (int x = 0; x < boardSize; x++) {
                 GameObject p = puzzlePieceGrid[x, y];
@@ -76,6 +97,7 @@ public class PuzzleController : MonoBehaviour {
         else
             cursorX++;
         cursor.transform.position = new Vector3(boardPositionGrid[cursorX, emptyY].transform.position.x, boardPositionGrid[cursorX, emptyY].transform.position.y, cursor.transform.position.z);
+        enemy.transform.position = new Vector3(boardPositionGrid[emptyX, emptyY].transform.position.x, boardPositionGrid[emptyX, emptyY].transform.position.y, cursor.transform.position.z - 1);
         cam.transform.position = new Vector2(boardPositionGrid[0, 0].transform.position.x 
                                     - (puzzleSize.size.x / 2) + (puzzleSize.size.x * boardSize) / 2, 
                                     boardPositionGrid[0, 0].transform.position.y 
@@ -85,6 +107,26 @@ public class PuzzleController : MonoBehaviour {
     void Update() {
         if (Time.timeScale == 0)
             return;
+        if (attackTime > 0)
+            attackTime -= Time.deltaTime;
+        else {
+            if (!isAttacking) {
+                isAttacking = true;
+                int tempX = emptyX - cursorX;
+                int tempY = emptyY - cursorY;
+                attackX = cursorX;
+                attackY = cursorY;
+                if (tempX != 0) {
+                    eye.transform.localPosition = new Vector3(-0.6f * tempX, 0, 0);
+                    eye.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 90));
+                }
+                if (tempY != 0) {
+                    eye.transform.localPosition = new Vector3(0, 0.6f * tempY, 0);
+                    eye.transform.localRotation = Quaternion.Euler(Vector3.zero);
+                }
+                Invoke("DoAttack", 1);
+            }
+        }
         if (canSelect && canMove && !won) {
             if (Input.GetButtonDown("Horizontal")) {
                 canSelect = false;
@@ -96,7 +138,7 @@ public class PuzzleController : MonoBehaviour {
                     MoveY(Input.GetAxisRaw("Vertical"));
                 }
                 else {
-                    if (Input.GetButtonDown("Action 1")) {
+                    if (Input.GetButtonDown("Action 1") && !isAttacking) {
                         canSelect = false;
                         canMove = false;
                         DoMovePiece();
@@ -141,9 +183,22 @@ public class PuzzleController : MonoBehaviour {
                 break;
         }
         if (clear) {
+            Destroy(enemy);
             GameObject.FindWithTag("PowerCube").transform.position = boardPositionGrid[emptyX, emptyY].transform.position;
             won = true;
         }          
+    }
+    void DoAttack() {
+        StartCoroutine(Attack());
+    }
+    public void DamagePlayer() {
+        if (attackX == cursorX && attackY == cursorY) {
+            healthCount--;
+            if (healthCount <= 0)
+                GameController.Instance.ResetLevel();
+            else
+                Destroy(playerHealth[healthCount + 1].gameObject);
+        }
     }
     void MoveX(float direction) {
         if (direction == 0) {
@@ -216,7 +271,26 @@ public class PuzzleController : MonoBehaviour {
         emptyY = tempY;
         StartCoroutine(MovePiece());
     }
+    IEnumerator Attack() {
+        Quaternion armRotation = Quaternion.Euler(Vector2.zero);
+
+        while (Quaternion.Angle(arm.transform.localRotation, armRotation) > 0.1f) {
+            arm.transform.localRotation = Quaternion.Slerp(arm.transform.localRotation, armRotation, Time.deltaTime * 10);
+            yield return null;
+        }
+        arm.transform.localRotation = armRotation;
+        block.transform.position = boardPositionGrid[attackX, attackY].transform.position + Vector3.back * 1;
+
+        yield return new WaitForSeconds(0.5f);
+
+        block.transform.position = new Vector3(500, 500, 0);
+        arm.transform.localRotation = Quaternion.Euler(new Vector2(90, 0));
+        eye.transform.localPosition = Vector2.zero;
+        attackTime = 5f;
+        isAttacking = false;
+    }
     IEnumerator MoveCursor() {
+        enemy.transform.position = new Vector3(boardPositionGrid[emptyX, emptyY].transform.position.x, boardPositionGrid[emptyX, emptyY].transform.position.y, cursor.transform.position.z - 1);
         Vector3 cursorPosition = new Vector3(boardPositionGrid[cursorX, cursorY].transform.position.x, boardPositionGrid[cursorX, cursorY].transform.position.y, cursor.transform.position.z);
 
         while (Vector3.Distance(cursor.transform.position, cursorPosition) > 1) {
