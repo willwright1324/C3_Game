@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Other/LevelSelect_Prototype.unity
+    guid: 4bdda63a0a268664684835998d2007b9
+  - enabled: 1
     path: Assets/Scenes/Racing/Racing_HowTo.unity
     guid: 182dd3328ee9e5c46a56e573bc4ed317
   - enabled: 1
@@ -149,7 +152,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Placeholders/Placeholder 32.unity
     guid: d75b3fe27e75427469411faaa03dfa52
-  - enabled: 1
-    path: Assets/Scenes/Other/LevelSelect_Prototype.unity
-    guid: 4bdda63a0a268664684835998d2007b9
   m_configObjects: {}

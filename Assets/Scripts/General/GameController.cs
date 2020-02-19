@@ -59,6 +59,16 @@ public class GameController : MonoBehaviour {
         pauseUI.SetActive(false);
     }
     private void Update() {
+        if (Input.GetKeyDown(KeyCode.R)) {
+            gameState = GameState.LEVEL_SELECT;
+            selectState = SelectState.CUBES;
+            levelHowToBoss = new int[8, 2];
+            levelUnlocks = new int[8];
+            levelSelects = new int[8];
+            currentCube = 0;
+            pauseUI.SetActive(false);
+            SceneManager.LoadScene(0);
+        }
         if (Input.GetButtonDown("Cancel")) {
             if (gameState == GameState.GAME) {
                 pauseUI.SetActive(true);
@@ -78,13 +88,16 @@ public class GameController : MonoBehaviour {
                 Time.timeScale = 1f;
                 pauseUI.SetActive(false);
                 gameState = GameState.LEVEL_SELECT;
-                SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+                if (selectState == SelectState.BOSS) {
+                    selectState = SelectState.LEVELS;
+                }
+                SceneManager.LoadScene(0);
             }
             else {
                 if (gameState == GameState.GAME && selectState == SelectState.HOW_TO) {
                     levelHowToBoss[currentCube, 0] = 1;
                     gameState = GameState.LEVEL_SELECT;
-                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+                    SceneManager.LoadScene(0);
                 }
             }
         }
@@ -95,7 +108,7 @@ public class GameController : MonoBehaviour {
         if (selectState == SelectState.BOSS) {
             selectState = SelectState.LEVELS;
         }
-        SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+        SceneManager.LoadScene(0);
     }
     // Reset the level
     public void ResetLevel() {

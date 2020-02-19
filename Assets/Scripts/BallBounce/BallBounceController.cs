@@ -37,16 +37,16 @@ public class BallBounceController : MonoBehaviour {
 
         Bounds blockSize = (Resources.Load("BallBounce/Block") as GameObject).GetComponent<Renderer>().bounds;
 
-        StreamReader sr = new StreamReader("Assets/Resources/BallBounce/ballbounce_level" + level + ".txt");
+        TextAsset file = Resources.Load("BallBounce/ballbounce_level" + level) as TextAsset;
+        string[] lines = file.text.Split("\n"[0]);
 
         temps = new GameObject("Temps");
         blocks = new GameObject("Blocks");
         sBlocks = new GameObject("ShadowBlocks");
         int lineNum = -1;
 
-        while (!sr.EndOfStream) {
+        foreach (string line in lines) {
             lineNum++;
-            string line = sr.ReadLine();
             string[] types = line.Split(' ');
             int length = types.Length;
 
@@ -62,8 +62,8 @@ public class BallBounceController : MonoBehaviour {
                     b = Instantiate(Resources.Load("BallBounce/ShadowBlock") as GameObject);
                     b.transform.SetParent(sBlocks.transform);
                 }
-                b.transform.position = new Vector3(-((length * (blockSize.size.x + blockSpace)) / 2) + (blockSize.size.x / 2) + (i * (blockSize.size.x + blockSpace)) + 1,
-                                                       ((length * (blockSize.size.y + blockSpace)) / 2) - (blockSize.size.y / 2) - (lineNum * (blockSize.size.y + blockSpace)) - 1,
+                b.transform.position = new Vector3(-((length * (blockSize.size.x + blockSpace)) / 2) + (blockSize.size.x / 2) + (i * (blockSize.size.x + blockSpace)) + 5,
+                                                       ((length * (blockSize.size.y + blockSpace)) / 2) - (blockSize.size.y / 2) - (lineNum * (blockSize.size.y + blockSpace)) - 5,
                                                        player.transform.position.z);
 
             }

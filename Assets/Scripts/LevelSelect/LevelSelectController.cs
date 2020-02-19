@@ -118,13 +118,13 @@ public class LevelSelectController : MonoBehaviour {
                             if (levelSelects[currentCube] == 1)
                                 selectState = SelectState.BOSS;
                             SaveToGameController();
-                            SceneManager.LoadScene(1 + (currentCube * 6) + levelSelects[currentCube]);
+                            SceneManager.LoadScene(2 + (currentCube * 6) + levelSelects[currentCube]);
                         }
                         else {
                             if (selectState == SelectState.HOW_TO) {
                                 gameState = GameState.GAME;
                                 SaveToGameController();
-                                SceneManager.LoadScene(currentCube * 6);
+                                SceneManager.LoadScene(currentCube * 6 + 1);
                             }
                         }
                     }
@@ -255,6 +255,7 @@ public class LevelSelectController : MonoBehaviour {
     }
     // Orients camera to cube's last selected level
     IEnumerator FixCamRotation(int whichLevel) {
+        camIsMoving = true;
         Quaternion camRotation = Quaternion.Euler(0, whichLevel * -90, 0);
 
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
