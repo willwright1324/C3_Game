@@ -19,9 +19,10 @@ public class GameController : MonoBehaviour {
      */
 
     public GameState gameState;
-    public SelectState selectState = SelectState.BOSS;
+    public SelectState selectState;
     public GameObject pauseUI;
     public int currentCube;
+    public int[,] levelHowToBoss = new int[8, 2];
     public int[] levelUnlocks = new int[8];
     public int[] levelSelects = new int[8];
     public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "BallBounce", "Puzzle"};
@@ -53,6 +54,7 @@ public class GameController : MonoBehaviour {
         }
     }
     private void Start() {
+        levelUnlocks = new int[]{ 0, 0, 0, 0, 1, 0, 0, 0};
         pauseUI = GameObject.Find("PauseUI");
         pauseUI.SetActive(false);
     }
@@ -78,11 +80,21 @@ public class GameController : MonoBehaviour {
                 gameState = GameState.LEVEL_SELECT;
                 SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
             }
+            else {
+                if (gameState == GameState.GAME && selectState == SelectState.HOW_TO) {
+                    levelHowToBoss[currentCube, 0] = 1;
+                    gameState = GameState.LEVEL_SELECT;
+                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+                }
+            }
         }
     }
     // Player completes a level
     public void CompleteLevel() {
         gameState = GameState.LEVEL_SELECT;
+        if (selectState == SelectState.BOSS) {
+            selectState = SelectState.LEVELS;
+        }
         SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
     }
     // Reset the level

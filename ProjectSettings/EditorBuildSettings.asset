@@ -84,8 +84,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Gravity/Gravity_Prototype.unity
     guid: 58665099517630744ad776570362e8e7
   - enabled: 1
-    path: Assets/Scenes/Placeholders/Placeholder 17.unity
-    guid: e037c50d05bda6546a9442963ce37558
+    path: Assets/Scenes/Gravity/Gravity_Boss.unity
+    guid: 9c952259defc8904e86c12bc8328b5c2
   - enabled: 1
     path: Assets/Scenes/Placeholders/Placeholder 18.unity
     guid: 5a98d56a5c88b9041a1cd59eb779728b

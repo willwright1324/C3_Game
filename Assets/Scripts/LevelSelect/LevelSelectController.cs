@@ -8,13 +8,14 @@ public class LevelSelectController : MonoBehaviour {
     public GameState gameState;
     public SelectState selectState;
     public int currentCube;
+    public int[,] levelHowToBoss = null;
     public int[] levelUnlocks = null;
     public int[] levelSelects = null;
     public string[] cubeNames = null;
 
     GameObject colorCube;
     public GameObject[] cubes;
-    int[] wip = {1, 1, 1, 1, 0, 0, 1, 0 };
+    int[] wip = {1, 1, 1, 1, 0, 1, 0, 0 };
     Text cubeSelectText;
     Text controlsText;
     public float selectCubeCooldown;
@@ -37,6 +38,7 @@ public class LevelSelectController : MonoBehaviour {
         currentCube = GameController.Instance.currentCube;
         gameState = GameController.Instance.gameState;
         selectState = GameController.Instance.selectState;
+        levelHowToBoss = GameController.Instance.levelHowToBoss;
         levelUnlocks = GameController.Instance.levelUnlocks;
         levelSelects = GameController.Instance.levelSelects;
         cubeNames = GameController.Instance.cubeNames;
@@ -84,15 +86,17 @@ public class LevelSelectController : MonoBehaviour {
 
             // Switch to How To and back
             if (Input.GetAxisRaw("Vertical") != 0) {
-                if (!selectStateCooldown && !camIsLooking && !camIsMoving && !camIsRotating && (selectState == SelectState.LEVELS || selectState == SelectState.HOW_TO)) {
+                if (!selectStateCooldown && !camIsLooking && !camIsMoving && !camIsRotating && (selectState == SelectState.LEVELS || selectState == SelectState.HOW_TO) && levelHowToBoss[currentCube, 0] > 0) {
                     Invoke("SelectStateCooldown", 0.5f);
                     selectStateCooldown = true;
                     if (Input.GetAxisRaw("Vertical") == -1 && selectState == SelectState.LEVELS) {
+                        levelHowToBoss[currentCube, 0] = 1;
                         selectState = SelectState.HOW_TO;
                         cubeSelectText.text = "How To Play";
                         StartCoroutine(HowToCamOrbit(currentCube));
                     }
                     if (Input.GetAxisRaw("Vertical") == 1 && selectState == SelectState.HOW_TO) {
+                        levelHowToBoss[currentCube, 0] = 2;
                         CheckIfUnlocked();
                         StartCoroutine(FixCamRotation(levelSelects[currentCube]));
                     }
@@ -111,6 +115,8 @@ public class LevelSelectController : MonoBehaviour {
                     else {
                         if (selectState == SelectState.LEVELS && CheckIfUnlocked()) {
                             gameState = GameState.GAME;
+                            if (levelSelects[currentCube] == 1)
+                                selectState = SelectState.BOSS;
                             SaveToGameController();
                             SceneManager.LoadScene(1 + (currentCube * 6) + levelSelects[currentCube]);
                         }
@@ -261,6 +267,11 @@ public class LevelSelectController : MonoBehaviour {
             selectState = SelectState.LEVELS;
         }
         camIsMoving = false;
+        if (levelHowToBoss[currentCube, 0] < 2) {
+            selectState = SelectState.HOW_TO;
+            cubeSelectText.text = "How To Play";
+            StartCoroutine(HowToCamOrbit(currentCube));
+        }
     }
     // Camera Orbit points back to center
     IEnumerator LookAtCenter() {
@@ -334,6 +345,9 @@ public class LevelSelectController : MonoBehaviour {
                 break;
             case 2:
                 controlsText.text = "Z: Select \nX: Back \n\nUp: Level Select";
+                break;
+            case 3:
+                controlsText.text = "Z: Select \nX: Back \n\nDown: Level Select";
                 break;
         }
     }
