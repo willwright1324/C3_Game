@@ -28,7 +28,7 @@ public class GravityController : MonoBehaviour {
         player  = GameObject.FindWithTag("Player");
         cam = GameObject.FindWithTag("MainCamera");
         camScroll = GameObject.Find("CamScroll");
-        arrow = GameObject.Find("Canvas/Flip/Arrow");
+        arrow = GameObject.Find("Flip/Arrow");
         powerCube = GameObject.FindWithTag("PowerCube");
 
         rb = camScroll.GetComponent<Rigidbody2D>();
@@ -38,7 +38,7 @@ public class GravityController : MonoBehaviour {
 
         boss = GameObject.FindWithTag("Boss");
         eyes = GameObject.Find("Boss/Eyes");
-        flip = GameObject.Find("Canvas/Flip");
+        flip = GameObject.Find("Flip");
 
         if (GameController.Instance.selectState == SelectState.BOSS) {
             boss.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, player.transform.position.z + 5);

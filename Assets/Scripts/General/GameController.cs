@@ -26,7 +26,10 @@ public class GameController : MonoBehaviour {
     public int[] levelUnlocks = new int[8];
     public int[] levelSelects = new int[8];
     public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "BallBounce", "Puzzle"};
-    
+
+    Transform[] playerHealth;
+    public int healthCount;
+
     // Singleton
     private static GameController instance = null;
     public static GameController Instance {
@@ -101,6 +104,19 @@ public class GameController : MonoBehaviour {
                 }
             }
         }
+    }
+    // Initializes health when needed
+    public void InitHealth() {
+        playerHealth = GameObject.Find("PlayerHealth").GetComponentsInChildren<Transform>();
+        healthCount = playerHealth.Length - 1;
+    }
+    // Player takes damage
+    public void DamagePlayer() {
+        healthCount--;
+        if (healthCount <= 0)
+            ResetLevel();
+        else
+            Destroy(playerHealth[healthCount + 1].gameObject);
     }
     // Player completes a level
     public void CompleteLevel() {

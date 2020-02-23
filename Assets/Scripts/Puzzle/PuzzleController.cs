@@ -15,9 +15,7 @@ public class PuzzleController : MonoBehaviour {
     GameObject eye;
     GameObject arm;
     GameObject block;
-    Transform[] playerHealth;
     public float attackTime = 3f;
-    public int healthCount;
     public int cursorX;
     public int cursorY;
     public int emptyX;
@@ -37,6 +35,7 @@ public class PuzzleController : MonoBehaviour {
     private void Awake() { Instance = this; }
     // Start is called before the first frame update
     void Start() {
+        GameController.Instance.InitHealth();
         boardPositions = GameObject.Find("BoardPositions");
         puzzlePieces = GameObject.Find("PuzzlePieces");
         cam = GameObject.FindWithTag("MainCamera");
@@ -46,8 +45,6 @@ public class PuzzleController : MonoBehaviour {
         eye = GameObject.Find("Enemy/Eye");
         arm = GameObject.Find("Enemy/Eye/Arm");
         block = GameObject.FindWithTag("Damage");
-        playerHealth = GameObject.Find("PlayerHealth").GetComponentsInChildren<Transform>();
-        healthCount = playerHealth.Length - 1;
 
         Bounds puzzleSize = (Resources.Load("Puzzle/PuzzlePiece") as GameObject).GetComponent<Renderer>().bounds;
         Vector3 camPos = cam.transform.position;
@@ -71,7 +68,7 @@ public class PuzzleController : MonoBehaviour {
                 puzzlePieceGrid[x, y] = pp;
             }
         }
-        GameObject image = GameObject.Find("Canvas/Image");
+        GameObject image = GameObject.Find("Image");
         image.GetComponent<Image>().sprite = Resources.Load<Sprite>("Puzzle/" + folderName + "/image_0");
 
         int destroyX = Random.Range(0, boardSize);
@@ -211,11 +208,7 @@ public class PuzzleController : MonoBehaviour {
     }
     public void DamagePlayer() {
         if (attackX == cursorX && attackY == cursorY) {
-            healthCount--;
-            if (healthCount <= 0)
-                GameController.Instance.ResetLevel();
-            else
-                Destroy(playerHealth[healthCount + 1].gameObject);
+            GameController.Instance.DamagePlayer();
         }
     }
     void MoveX(float direction) {

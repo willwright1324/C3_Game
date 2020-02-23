@@ -339,7 +339,7 @@ public class LevelSelectController : MonoBehaviour {
     void SetControlsText(int whichText) {
         switch (whichText) {
             case 0:
-                controlsText.text = "Z: Select \nX: Back \n\nLeft/Right: Change Selection";
+                controlsText.text = "Z: Select \n\nLeft/Right: Change Selection";
                 break;
             case 1:
                 controlsText.text = "Z: Select \nX: Back \n\nLeft/Right: Change Selection \n\nDown: How To Play";
