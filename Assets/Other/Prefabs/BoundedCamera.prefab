@@ -147,9 +147,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offsetX: 0
-  offsetY: 40
+  offsetY: 0
   offsetZ: 0
-  border: 1.5
+  border: 0
   sides: 00000000000000000000000000000000
 --- !u!1 &8866854537589223991
 GameObject:

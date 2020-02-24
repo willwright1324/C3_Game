@@ -19,6 +19,8 @@ public class BoundedCamera : MonoBehaviour {
         transform.position = new Vector3(player.transform.position.x + offsetX, player.transform.position.y + offsetY, transform.position.z + offsetZ);
     }
     void LateUpdate() {
+        if (player.activeSelf == false)
+            return;
         Vector3 playerPos = player.transform.position;
         Vector3 camPos = transform.position;
 
