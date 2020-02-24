@@ -4,27 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MazeController : MonoBehaviour {
-    GameObject[] coins;
     GameObject player;
-    GameObject door;
     GameObject respawn;
     GameObject spotlight;
-    Text coinScore;
-    public int coinAmount;
 
     public static MazeController Instance { get; private set; } = null;
     private void Awake() { Instance = this; }
     // Start is called before the first frame update
     void Start() {
+        GameController.Instance.InitPlayer();
+        GameController.Instance.InitCoins();
         GameController.Instance.InitHealth();
-        coins = GameObject.FindGameObjectsWithTag("Coin");
         player = GameObject.FindWithTag("Player");
-        door = GameObject.FindWithTag("Door");
         respawn = GameObject.FindWithTag("Respawn");
         spotlight = GameObject.Find("Spot Light");
-        coinScore = GameObject.Find("CoinScore").GetComponent<Text>();
-        coinAmount = coins.Length;
-        coinScore.text = "Coins: 0 / " + coinAmount;
         InvokeRepeating("MoveRespawn", 0, 5f);
     }
     void MoveRespawn() {
@@ -41,14 +34,5 @@ public class MazeController : MonoBehaviour {
     void EnablePlayer() {
         player.SetActive(true);
         spotlight.transform.SetParent(player.transform);
-    }
-    public void CollectCoin() {
-        coinAmount--;
-        coinScore.text = "Coins: " + (coins.Length - coinAmount) + " / " + coins.Length;
-    }
-    public void OpenDoor() {
-        if (coinAmount == 0) {
-            Destroy(door);
-        }
     }
 }

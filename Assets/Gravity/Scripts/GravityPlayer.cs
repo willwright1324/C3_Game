@@ -18,7 +18,7 @@ public class GravityPlayer : MonoBehaviour {
         if (Time.timeScale == 0)
             return;
 
-        if(Input.GetButtonDown("Action 1") && canFlip) {
+        if(Input.GetButton("Action 1") && canFlip) {
             flipped = !flipped;
             canFlip = false;
             GravityController.Instance.DoFlipArrow(flipped);

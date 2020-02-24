@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class TopDownCamera : MonoBehaviour {
     GameObject player;
+    public float offsetX;
+    public float offsetY;
+    public float offsetZ;
 
     // Start is called before the first frame update
     void Start() {
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Player");      
     }
     void LateUpdate() {
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);
+        transform.position = new Vector3(player.transform.position.x + offsetX, player.transform.position.y + offsetY, transform.position.z + offsetZ);
     }
 }

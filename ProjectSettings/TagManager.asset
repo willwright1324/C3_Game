@@ -15,7 +15,9 @@ TagManager:
   - Enemy
   - Damage
   - Death
-  - Spike
+  - Platform
+  - Spring
+  - CameraBounds
   layers:
   - Default
   - TransparentFX

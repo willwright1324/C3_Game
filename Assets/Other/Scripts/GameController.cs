@@ -27,8 +27,15 @@ public class GameController : MonoBehaviour {
     public int[] levelSelects = new int[8];
     public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "BallBounce", "Puzzle"};
 
+    GameObject[] coins;
+    GameObject player;
+    GameObject door;
+    GameObject respawn;
+    Rigidbody2D rb;
     Transform[] playerHealth;
+    Text coinScore;
     public int healthCount;
+    public int coinAmount;
 
     // Singleton
     private static GameController instance = null;
@@ -57,7 +64,7 @@ public class GameController : MonoBehaviour {
         }
     }
     private void Start() {
-        levelUnlocks = new int[]{ 0, 0, 0, 0, 1, 0, 0, 0};
+        levelUnlocks = new int[] { 0, 0, 0, 0, 1, 0, 0, 0};
         pauseUI = GameObject.Find("PauseUI");
         pauseUI.SetActive(false);
     }
@@ -104,10 +111,24 @@ public class GameController : MonoBehaviour {
             }
         }
     }
+    // Initializes player and respawn when needed
+    public void InitPlayer() {
+        player = GameObject.FindWithTag("Player");
+        respawn = GameObject.FindWithTag("Respawn");
+        respawn.transform.position = player.transform.position;
+    }
     // Initializes health when needed
     public void InitHealth() {
         playerHealth = GameObject.Find("PlayerHealth").GetComponentsInChildren<Transform>();
         healthCount = playerHealth.Length - 1;
+    }
+    // Initializes coins and door when needed
+    public void InitCoins() {
+        coins = GameObject.FindGameObjectsWithTag("Coin");
+        door = GameObject.FindWithTag("Door");
+        coinScore = GameObject.Find("CoinScore").GetComponent<Text>();
+        coinAmount = coins.Length;
+        coinScore.text = "Coins: 0 / " + coinAmount;
     }
     // Player takes damage
     public void DamagePlayer() {
@@ -117,7 +138,27 @@ public class GameController : MonoBehaviour {
         else
             Destroy(playerHealth[healthCount + 1].gameObject);
     }
-    // Player completes a level
+    // Player respawns
+    public void RespawnPlayer() {
+        player.SetActive(false);
+        player.transform.position = respawn.transform.position;
+        Invoke("EnablePlayer", 1f);
+    }
+    void EnablePlayer() {
+        player.SetActive(true);
+    }
+    // Player collects coin
+    public void CollectCoin() {
+        coinAmount--;
+        coinScore.text = "Coins: " + (coins.Length - coinAmount) + " / " + coins.Length;
+    }
+    // Player opens door
+    public void OpenDoor() {
+        if (coinAmount == 0) {
+            Destroy(door);
+        }
+    }
+    // Player completes level
     public void CompleteLevel() {
         gameState = GameState.LEVEL_SELECT;
         if (selectState == SelectState.BOSS) {
@@ -125,7 +166,7 @@ public class GameController : MonoBehaviour {
         }
         SceneManager.LoadScene(0);
     }
-    // Reset the level
+    // Resets level
     public void ResetLevel() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

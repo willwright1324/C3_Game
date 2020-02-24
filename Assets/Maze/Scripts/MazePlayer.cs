@@ -32,18 +32,9 @@ public class MazePlayer : MonoBehaviour {
         else
             rb.MovePosition(transform.position + (dashDirection * dashSpeed));
     }
-    private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject.tag == "Coin") {
-            Destroy(collision.gameObject);
-            MazeController.Instance.CollectCoin();
-        }
-    }
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.name == "Crusher") {
             MazeController.Instance.Respawn();
-        }
-        if (collision.gameObject.tag == "Door") {
-            MazeController.Instance.OpenDoor();
         }
     }
     void DoneDash() {
