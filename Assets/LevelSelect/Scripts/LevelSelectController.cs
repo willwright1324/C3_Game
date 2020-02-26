@@ -15,7 +15,7 @@ public class LevelSelectController : MonoBehaviour {
 
     GameObject colorCube;
     public GameObject[] cubes;
-    int[] wip = {1, 1, 1, 0, 0, 1, 0, 0 };
+    int[] wip = {0, 1, 1, 0, 0, 0, 0, 0 };
     Text cubeSelectText;
     Text controlsText;
     public float selectCubeCooldown;

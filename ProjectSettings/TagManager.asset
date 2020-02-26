@@ -18,6 +18,8 @@ TagManager:
   - Platform
   - Spring
   - CameraBounds
+  - Track
+  - Path
   layers:
   - Default
   - TransparentFX

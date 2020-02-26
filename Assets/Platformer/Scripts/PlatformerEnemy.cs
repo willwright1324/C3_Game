@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour {
+public class PlatformerEnemy : MonoBehaviour {
     Vector3 startPos;
     Vector3 endPos;
     public float speed = 15;

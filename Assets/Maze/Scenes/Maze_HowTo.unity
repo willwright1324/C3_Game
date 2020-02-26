@@ -195,7 +195,7 @@ PrefabInstance:
     - target: {fileID: 6030485049704666746, guid: c8feb9fffebecf14585a686ea4535bf2,
         type: 3}
       propertyPath: m_Text
-      value: 'Press Z on the door once you''ve collected all the coins!
+      value: 'Collect all of the coins to pass through the door!
 
 '
       objectReference: {fileID: 0}
@@ -268,6 +268,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2fce6eaf3db977b438b4ca978a652878, type: 2}
     - target: {fileID: 8881502447192208854, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.g
@@ -324,26 +344,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5237718608024635041, guid: 3c388b5ce242d63488732ade109745b3,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 2fce6eaf3db977b438b4ca978a652878, type: 2}
-    - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 52093055408533810, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

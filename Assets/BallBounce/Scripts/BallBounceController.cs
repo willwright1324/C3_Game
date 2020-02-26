@@ -65,7 +65,6 @@ public class BallBounceController : MonoBehaviour {
                 b.transform.position = new Vector3(-((length * (blockSize.size.x + blockSpace)) / 2) + (blockSize.size.x / 2) + (i * (blockSize.size.x + blockSpace)) + 5,
                                                        ((length * (blockSize.size.y + blockSpace)) / 2) - (blockSize.size.y / 2) - (lineNum * (blockSize.size.y + blockSpace)) - 5,
                                                        player.transform.position.z);
-
             }
         }
         blockCount = blocks.GetComponentsInChildren<Transform>().Length - 1;

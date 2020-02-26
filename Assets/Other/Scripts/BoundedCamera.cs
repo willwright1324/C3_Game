@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BoundedCamera : MonoBehaviour {
     GameObject player;
-    BoxCollider2D bounds;
     public float offsetX;
     public float offsetY;
     public float offsetZ;
@@ -14,8 +13,6 @@ public class BoundedCamera : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         player = GameObject.FindWithTag("Player");
-        bounds = GetComponent<BoxCollider2D>();
-        bounds.size = Vector2.one * Camera.main.orthographicSize * border;
         transform.position = new Vector3(player.transform.position.x + offsetX, player.transform.position.y + offsetY, transform.position.z + offsetZ);
     }
     void LateUpdate() {
