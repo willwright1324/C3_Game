@@ -52,6 +52,4 @@ public class BoundedCamera : MonoBehaviour {
                 sides[3] = 0;
         }
     }
-
-
 }

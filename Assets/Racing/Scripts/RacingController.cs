@@ -1,36 +1,52 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RacingController : MonoBehaviour {
-    public int level = 1;
-    public int laps = 3;
-    int currentLap = 0;
+    public int track = 1;
+    public int laps = 0;
+    public int currentLap = 0;
+    public int currentEnemyLap;
     GameObject player;
     GameObject temps;
+    GameObject raceStart;
     GameObject trackPieces;
-    GameObject[,] tracks;
-    int[,] trackCoords = null;
+    GameObject respawn;
+    public GameObject[,] tracks;
+    public int[,] trackCoords = null;
     int startX;
     int startY;
     int trackCount;
+    public bool raceOver;
+    Text lap;
+    Text enemyLap;
 
     GameObject enemy;
     GameObject enemyPath;
+    GameObject obstacles;
 
     public static RacingController Instance { get; private set; } = null;
     private void Awake() { Instance = this; }
     // Start is called before the first frame update
     void Start() {
         player = GameObject.FindWithTag("Player");
+        raceStart = Instantiate(Resources.Load("Racing/RaceStart") as GameObject);
+        respawn = GameObject.FindWithTag("Respawn");
+        lap = GameObject.Find("MainCanvas/Lap").GetComponent<Text>();
+        enemyLap = GameObject.Find("MainCanvas/EnemyLap").GetComponent<Text>();
+        lap.text = "Lap: 0 / " + laps;
+        enemyLap.text = "EnemyLap: 0 / " + laps;
         enemy = GameObject.FindWithTag("Enemy");
-        enemyPath = GameObject.Find("EnemyPath");
+        enemyPath = GameObject.Find("EnemyPath" + track);
+        obstacles = GameObject.Find("Obstacles" + track);
 
         float trackSize = (Resources.Load("Racing/StraightTrack") as GameObject).transform.lossyScale.x;
 
-        TextAsset file = Resources.Load("Racing/racing_track" + level) as TextAsset;
+        TextAsset file = Resources.Load("Racing/racing_track" + track) as TextAsset;
         string[] lines = file.text.Split("\n"[0]);
         tracks = new GameObject[lines.Length, lines.Length];
+        trackCoords = new int[lines.Length, lines.Length];
 
         temps = new GameObject("Temps");
         trackPieces = new GameObject("Tracks");
@@ -42,8 +58,10 @@ public class RacingController : MonoBehaviour {
             string[] types = line.Split(' ');
             int length = types.Length;
             for (int i = 0; i < length; i++) {
-                if (types[i].StartsWith("0"))
+                if (types[i].StartsWith("0")) {
+                    trackCoords[i, lineNum] = -1;
                     continue;
+                }
                 GameObject t = new GameObject("Temp");
                 int rot = int.Parse(types[i].Substring(1));
                 t.transform.SetParent(temps.transform);
@@ -80,27 +98,48 @@ public class RacingController : MonoBehaviour {
         }
         GameObject start = tracks[startX, startY];
         enemy.transform.rotation = player.transform.rotation = start.transform.rotation;
-        player.transform.position = start.transform.position + Vector3.back + Vector3.left * 30;
-        enemy.transform.position = enemyPath.transform.position = player.transform.position + Vector3.right * 60;
-        trackCoords = new int[lineNum, lineNum];
+        raceStart.transform.position = start.transform.position + -start.transform.forward * 0.1f + start.transform.up * 10;
+        respawn.transform.position = player.transform.position = start.transform.position + -start.transform.forward * 2 + -start.transform.right * 30 + -start.transform.up * 15;
+        obstacles.transform.position = enemy.transform.position = enemyPath.transform.position = player.transform.position + Vector3.right * 60;
         Destroy(temps);
         trackCount = tracks.Length;
     }
-
-    // Update is called once per frame
-    void Update() {
-        
-    }
     public void CheckLap() {
-        foreach (int track in trackCoords) {
-            if (track == 0)
-                return;
+        if (raceOver)
+            return;
+        if (currentLap > 0) {
+            foreach (int track in trackCoords) {
+                if (track == 0)
+                    return;
+            }
         }
         if (currentLap < laps) {
-            currentLap++;
+            lap.text = "Lap: " + ++currentLap + " / " + laps;
+            for (int i = 0; i < trackCoords.GetLength(0); i++) {
+                for (int j = 0; j < trackCoords.GetLength(1); j++) {
+                    if (trackCoords[i, j] == 1)
+                        trackCoords[i, j] = 0;
+                }
+            }
         }
         else {
-
+            raceOver = true;
+            lap.text = "You Win!";
+            enemyLap.text = "Enemy: Lose!";
+            GameObject.FindWithTag("PowerCube").transform.position = raceStart.transform.position + -raceStart.transform.forward * 30 + raceStart.transform.up * 100;
         }
+    }
+    public void EnemyLap() {
+        if (raceOver)
+            return;
+        if (currentEnemyLap < laps) {
+            enemyLap.text = "EnemyLap: " + ++currentEnemyLap + " / " + laps;
+        }
+        else {
+            enemyLap.text = "Enemy: Win!";
+            lap.text = "You Lose!";
+            raceOver = true;
+        }
+            
     }
 }

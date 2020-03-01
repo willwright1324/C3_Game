@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RacingEnemy : MonoBehaviour {
+    public int track = 1;
     GameObject enemyPath;
     public Transform[] paths;
-    public int pathIndex = 1;
-    public float speed = 200f;
-    public float turnSpeed;
+    public int pathIndex = 0;
+    public float speed = 1000f;
+    public float turnSpeed = 200f;
     // Start is called before the first frame update
     void Start() {
-        turnSpeed = speed * 2;
-        enemyPath = GameObject.Find("EnemyPath");
+        enemyPath = GameObject.Find("EnemyPath" + track);
         paths = enemyPath.GetComponentsInChildren<Transform>();
         Transform[] tempPaths = enemyPath.GetComponentsInChildren<Transform>();
         paths = new Transform[tempPaths.Length - 1];
@@ -19,23 +19,27 @@ public class RacingEnemy : MonoBehaviour {
         for (int i = 0; i < paths.Length; i++) {
             for (int j = 0; j < tempPaths.Length; j++) {
                 string name = tempPaths[j].name;
-                if (name.Contains("" + i)) {
+                if (name.Contains("" + i) && !name.Contains("Enemy")) {
                     paths[i] = tempPaths[j];
                     break;
                 }
             }
         }
 
+        DoDrive();
+    }
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.gameObject.name == "RaceStart(Clone)")
+            RacingController.Instance.EnemyLap();
+    }
+    void DoDrive() {
+        if (RacingController.Instance.raceOver)
+            return;
         StartCoroutine(Drive());
     }
-
-    // Update is called once per frame
-    void Update() {
-        
-    }
     IEnumerator Drive() {
-        while (Vector3.Distance(transform.position, paths[pathIndex].transform.position) > 1) {
-            transform.position += transform.up * Time.deltaTime * speed;
+        while (Vector3.Distance(transform.position, paths[pathIndex].transform.position) > 5) {
+            transform.position = Vector3.LerpUnclamped(transform.position, transform.position + transform.up * 0.1f, Time.deltaTime * speed);
 
             Vector3 target = paths[pathIndex].position - transform.position;
             float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
@@ -44,6 +48,6 @@ public class RacingEnemy : MonoBehaviour {
             yield return null;
         }
         pathIndex = pathIndex + 1 >= paths.Length ? 0 : pathIndex + 1;
-        StartCoroutine(Drive());
+        DoDrive();
     }
 }

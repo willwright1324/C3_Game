@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformPlayer : MonoBehaviour {
+public class PlatformerPlayer : MonoBehaviour {
+    PlatformerCamera bcam;
     Rigidbody2D rb;
     BoxCollider2D bc;
     public float speed = 120;
@@ -14,6 +15,8 @@ public class PlatformPlayer : MonoBehaviour {
     public bool canJump;
     // Start is called before the first frame update
     void Start() {
+        bcam = Camera.main.GetComponent<PlatformerCamera>();
+
         rb = GetComponent<Rigidbody2D>();
         speedMax = speed;
         jumpForceMax = jumpForce;
@@ -30,6 +33,7 @@ public class PlatformPlayer : MonoBehaviour {
     }
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Platform" && transform.position.y > collision.gameObject.transform.position.y) {
+            bcam.followY = true;
             canJump = true;
             jumpForce = jumpForceMax;
         }
@@ -44,18 +48,30 @@ public class PlatformPlayer : MonoBehaviour {
             }
         }
     }
+    private void OnCollisionExit2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Platform") {
+            bcam.followY = false;
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.tag == "Ground") {
+            bcam.followY = true;
             canJump = true;
             jumpForce = jumpForceMax;
         }
         if (collision.gameObject.tag == "Spring") {
+            bcam.followY = true;
             jumpForce = springForce;
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Death") {
             GameController.Instance.DamagePlayer();
             GameController.Instance.RespawnPlayer();
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (collision.gameObject.tag == "Ground") {
+            bcam.followY = false;
         }
     }
     void EnablePlatform() {

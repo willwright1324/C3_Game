@@ -23,10 +23,10 @@ public class LevelSelectController : MonoBehaviour {
 
     GameObject cam;
     GameObject camOrbit;
-    public int camLookSpeed = 10;
+    public int camLookSpeed = 8;
     public int camMoveSpeed = 500;
     public int camDistance = 80;
-    public int camRotateSpeed = 10;
+    public int camRotateSpeed = 8;
     public bool camIsLooking;
     public bool camIsMoving;
     public bool camIsRotating;
@@ -61,9 +61,9 @@ public class LevelSelectController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        colorCube.transform.Rotate(Time.deltaTime * 10, Time.deltaTime * -15, Time.deltaTime * 1);
+        colorCube.transform.Rotate(Time.deltaTime * 2, Time.deltaTime * -1.5f, Time.deltaTime * 1);
         foreach (GameObject cube in cubes)
-            cube.transform.Rotate(Time.deltaTime * 10, Time.deltaTime * -15, Time.deltaTime * 1);
+            cube.transform.Rotate(Time.deltaTime * 2, Time.deltaTime * -1.5f, Time.deltaTime * 1);
 
         if (selectState == SelectState.CUBES)
             WatchCube(currentCube);
@@ -202,7 +202,7 @@ public class LevelSelectController : MonoBehaviour {
     }
     // Camera looks at selected cube
     void WatchCube(int whichCube) {
-        cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, Quaternion.LookRotation(cubes[whichCube].transform.position - cam.transform.position), Time.deltaTime * camLookSpeed);
+        cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, Quaternion.LookRotation(cubes[whichCube].transform.position - cam.transform.position), Time.smoothDeltaTime * camLookSpeed);
     }
     // Camera moves to selected cube
     IEnumerator MoveToCube(int whichCube) {
@@ -215,7 +215,7 @@ public class LevelSelectController : MonoBehaviour {
         cam.transform.SetParent(camOrbit.transform);
 
         while (Vector3.Distance(cam.transform.position, camOrbit.transform.position) > camDistance) {
-            cam.transform.position += cam.transform.forward * Time.deltaTime * camMoveSpeed;
+            cam.transform.position += cam.transform.forward * Time.smoothDeltaTime * camMoveSpeed;
             yield return null;
         }
         cam.transform.localRotation = Quaternion.Euler(0, 180, 0);
@@ -230,7 +230,7 @@ public class LevelSelectController : MonoBehaviour {
         Quaternion camRotation = Quaternion.Euler(0, whichLevel * -90, 0);
 
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
-            camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.deltaTime * camRotateSpeed);
+            camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.smoothDeltaTime * camRotateSpeed);
             yield return null;
         }
         camOrbit.transform.localRotation = camRotation;
@@ -246,7 +246,7 @@ public class LevelSelectController : MonoBehaviour {
         Quaternion camRotation = camOrbit.transform.localRotation * Quaternion.Euler(90, 0, 0);
 
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
-            camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.deltaTime * camRotateSpeed);
+            camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.smoothDeltaTime * camRotateSpeed);
             yield return null;
         }
         SetControlsText(2);
@@ -257,9 +257,12 @@ public class LevelSelectController : MonoBehaviour {
     IEnumerator FixCamRotation(int whichLevel) {
         camIsMoving = true;
         Quaternion camRotation = Quaternion.Euler(0, whichLevel * -90, 0);
+        if (levelHowToBoss[currentCube, 0] < 2) {
+            camRotation = Quaternion.Euler(90, whichLevel * -90, 0);
+        }
 
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
-            camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.deltaTime * camRotateSpeed);
+            camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.smoothDeltaTime * camRotateSpeed);
             yield return null;
         }
         camOrbit.transform.localRotation = camRotation;
@@ -271,7 +274,7 @@ public class LevelSelectController : MonoBehaviour {
         if (levelHowToBoss[currentCube, 0] < 2) {
             selectState = SelectState.HOW_TO;
             cubeSelectText.text = "How To Play";
-            StartCoroutine(HowToCamOrbit(currentCube));
+            //StartCoroutine(HowToCamOrbit(currentCube));
         }
     }
     // Camera Orbit points back to center
@@ -281,7 +284,7 @@ public class LevelSelectController : MonoBehaviour {
         Quaternion camRotation = Quaternion.LookRotation(Vector3.zero - camOrbit.transform.position);
 
         while (Quaternion.Angle(camOrbit.transform.rotation, camRotation) > 0.1f) {
-            camOrbit.transform.rotation = Quaternion.Slerp(camOrbit.transform.rotation, camRotation, Time.deltaTime * camRotateSpeed);
+            camOrbit.transform.rotation = Quaternion.Slerp(camOrbit.transform.rotation, camRotation, Time.smoothDeltaTime * camRotateSpeed);
             yield return null;
         }
         camOrbit.transform.rotation = camRotation;
@@ -295,8 +298,7 @@ public class LevelSelectController : MonoBehaviour {
 
         while (Vector3.Distance(cam.transform.position, Vector3.zero) > 5) {
             WatchCube(currentCube);
-            cam.transform.position = Vector3.MoveTowards(cam.transform.position, Vector3.zero, Time.deltaTime * camMoveSpeed);
-            //cam.transform.position -= cam.transform.forward * Time.deltaTime * camMoveSpeed;
+            cam.transform.position = Vector3.MoveTowards(cam.transform.position, Vector3.zero, Time.smoothDeltaTime * camMoveSpeed);
             yield return null;
         }
         cam.transform.position = Vector3.zero;

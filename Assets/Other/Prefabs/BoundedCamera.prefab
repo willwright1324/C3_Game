@@ -151,6 +151,11 @@ MonoBehaviour:
   offsetZ: 0
   border: 0
   sides: 00000000000000000000000000000000
+  speed: 100
+  follow: 0
+  buffer: 15
+  followSide: 0
+  followX: 0
 --- !u!1 &8866854537589223991
 GameObject:
   m_ObjectHideFlags: 0
