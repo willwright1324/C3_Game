@@ -45,6 +45,8 @@ public class GravityController : MonoBehaviour {
             boss.transform.SetParent(cam.transform);
             InvokeRepeating("DoFlipView", switchTime, switchTime);
         }
+
+        GameController.Instance.DoStartGame();
     }
     // Update is called once per frame
     void Update() {

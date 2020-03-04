@@ -19,6 +19,7 @@ public class MazeController : MonoBehaviour {
         respawn = GameObject.FindWithTag("Respawn");
         spotlight = GameObject.Find("Spot Light");
         InvokeRepeating("MoveRespawn", 0, 5f);
+        GameController.Instance.DoStartGame();
     }
     void MoveRespawn() {
         respawn.transform.position = player.transform.position;
@@ -28,11 +29,11 @@ public class MazeController : MonoBehaviour {
         spotlight.transform.SetParent(null);
         player.SetActive(false);
         player.transform.position = respawn.transform.position;
-        spotlight.transform.position = new Vector3(respawn.transform.position.x, respawn.transform.position.y, spotlight.transform.position.z);
         Invoke("EnablePlayer", 1f);
     }
     void EnablePlayer() {
         player.SetActive(true);
+        spotlight.transform.position = new Vector3(respawn.transform.position.x, respawn.transform.position.y, spotlight.transform.position.z);
         spotlight.transform.SetParent(player.transform);
     }
 }

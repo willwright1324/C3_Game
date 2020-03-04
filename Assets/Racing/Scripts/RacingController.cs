@@ -103,6 +103,8 @@ public class RacingController : MonoBehaviour {
         obstacles.transform.position = enemy.transform.position = enemyPath.transform.position = player.transform.position + Vector3.right * 60;
         Destroy(temps);
         trackCount = tracks.Length;
+
+        GameController.Instance.DoStartGame();
     }
     public void CheckLap() {
         if (raceOver)

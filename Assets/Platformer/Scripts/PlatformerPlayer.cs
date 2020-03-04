@@ -21,6 +21,16 @@ public class PlatformerPlayer : MonoBehaviour {
         speedMax = speed;
         jumpForceMax = jumpForce;
     }
+    private void Update() {
+        if (Input.GetAxisRaw("Horizontal") != 0) {
+                SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            if (Input.GetAxisRaw("Horizontal") > 0) {
+                sr.flipX = false;
+            }
+            else
+                sr.flipX = true;
+        }
+    }
     private void FixedUpdate() {
         rb.AddForce(new Vector2(Input.GetAxisRaw("Horizontal") * speed, 0), ForceMode2D.Impulse);
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -speed, speed), Mathf.Clamp(rb.velocity.y, -jumpForce, jumpForce));
@@ -67,6 +77,7 @@ public class PlatformerPlayer : MonoBehaviour {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Death") {
             GameController.Instance.DamagePlayer();
             GameController.Instance.RespawnPlayer();
+            bcam.Invoke("Refocus", 1f);
         }
     }
     private void OnTriggerExit2D(Collider2D collision) {

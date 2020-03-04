@@ -12,12 +12,10 @@ public class BallBounceController : MonoBehaviour {
     GameObject temps;
     GameObject blocks;
     GameObject sBlocks;
-    public Transform[] playerHealth;
     Rigidbody2D rb;
     public bool paddleL;
     public bool paddleR;
     bool getComponents;
-    public int healthCount;
     public int blockCount;
     public float ballAccel = 50;
     public float ballSpeedCap;
@@ -28,11 +26,10 @@ public class BallBounceController : MonoBehaviour {
     private void Awake() { Instance = this; }
     // Start is called before the first frame update
     void Start() {
+        GameController.Instance.InitHealth();
         ball = GameObject.Find("Ball");
         player = GameObject.FindWithTag("Player");
         bounds = GameObject.Find("Bounds");
-        playerHealth = GameObject.Find("PlayerHealth").GetComponentsInChildren<Transform>();
-        healthCount = playerHealth.Length - 1;
         rb = ball.GetComponent<Rigidbody2D>();
 
         Bounds blockSize = (Resources.Load("BallBounce/Block") as GameObject).GetComponent<Renderer>().bounds;
@@ -69,6 +66,8 @@ public class BallBounceController : MonoBehaviour {
         }
         blockCount = blocks.GetComponentsInChildren<Transform>().Length - 1;
         Destroy(temps);
+
+        GameController.Instance.DoStartGame();
     }
     // Update is called once per frame
     void Update() {
@@ -142,13 +141,6 @@ public class BallBounceController : MonoBehaviour {
             pc.transform.position = new Vector3(0, 0, 100);
             StartCoroutine(Win());
         }
-    }
-    public void DamagePlayer() {
-        healthCount--;
-        if (healthCount <= 0)
-            GameController.Instance.ResetLevel();
-        else
-            Destroy(playerHealth[healthCount + 1].gameObject);
     }
     IEnumerator Win() {
         GameObject pc = GameObject.FindWithTag("PowerCube");

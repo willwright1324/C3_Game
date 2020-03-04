@@ -11,7 +11,7 @@ public class Ball : MonoBehaviour {
     }
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.name == "Player")
-            BallBounceController.Instance.DamagePlayer();
+            GameController.Instance.DamagePlayer();
         if (collision.gameObject.name == "PaddleLUp"
             || collision.gameObject.name == "PaddleLDown"
             || collision.gameObject.name == "PaddleRUp"

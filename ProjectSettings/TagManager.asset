@@ -20,6 +20,8 @@ TagManager:
   - CameraBounds
   - Track
   - Path
+  - Trigger
+  - Text
   layers:
   - Default
   - TransparentFX

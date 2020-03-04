@@ -195,7 +195,9 @@ PrefabInstance:
     - target: {fileID: 6030485049704666746, guid: c8feb9fffebecf14585a686ea4535bf2,
         type: 3}
       propertyPath: m_Text
-      value: 'Collect all of the coins to pass through the door!
+      value: 'Z: Jump, Arrows: Move
+
+        Collect all of the coins to pass through the door!
 
 '
       objectReference: {fileID: 0}

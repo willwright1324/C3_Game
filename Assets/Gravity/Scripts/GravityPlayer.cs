@@ -20,6 +20,8 @@ public class GravityPlayer : MonoBehaviour {
 
         if(Input.GetButton("Action 1") && canFlip) {
             flipped = !flipped;
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            sr.flipY = flipped;
             canFlip = false;
             GravityController.Instance.DoFlipArrow(flipped);
         }
@@ -38,8 +40,10 @@ public class GravityPlayer : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Ground")
             canFlip = true;
-        if (collision.gameObject.tag == "Death")
+        if (collision.gameObject.tag == "Death") {
+            GameController.Instance.audioSound.PlayOneShot(GameController.Instance.playerHit);
             GameController.Instance.ResetLevel();
+        }
     }
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.name == "WinTrigger") {
@@ -48,7 +52,9 @@ public class GravityPlayer : MonoBehaviour {
         }
     }
     private void OnTriggerExit2D(Collider2D other) {
-        if (other.gameObject.name == "Bounds")
+        if (other.gameObject.name == "Bounds") {
+            GameController.Instance.audioSound.PlayOneShot(GameController.Instance.playerDeath);
             GameController.Instance.ResetLevel();
+        }
     }
 }

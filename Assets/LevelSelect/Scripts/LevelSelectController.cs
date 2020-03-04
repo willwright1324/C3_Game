@@ -65,6 +65,13 @@ public class LevelSelectController : MonoBehaviour {
         foreach (GameObject cube in cubes)
             cube.transform.Rotate(Time.deltaTime * 2, Time.deltaTime * -1.5f, Time.deltaTime * 1);
 
+        if (Input.GetKeyDown(KeyCode.B)) {
+            gameState = GameState.GAME;
+            SaveToGameController();
+            GameController.Instance.PlayMusic(GameController.Instance.bossMusic);
+            SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+        }
+
         if (selectState == SelectState.CUBES)
             WatchCube(currentCube);
 
@@ -72,6 +79,7 @@ public class LevelSelectController : MonoBehaviour {
             // Switch Cube/Level
             if (Input.GetAxisRaw("Horizontal") != 0 && selectState != SelectState.HOW_TO) {
                 if (SelectCubeCooldown() && !camIsMoving) {
+                    GameController.Instance.PlaySoundOnce(GameController.Instance.cameraMove);
                     if (selectState == SelectState.CUBES) {
                         SelectCube(Input.GetAxisRaw("Horizontal"));
                         if (wip[currentCube] == 1)
@@ -106,6 +114,7 @@ public class LevelSelectController : MonoBehaviour {
             // Select Cube/Level
             if (Input.GetAxisRaw("Action 1") != 0) {
                 if (!camIsLooking && !camIsMoving && !camIsRotating) {
+                    GameController.Instance.PlaySoundOnce(GameController.Instance.selectBack);
                     if (selectState == SelectState.CUBES) {
                         if (wip[currentCube] == 1)
                             return;
@@ -273,6 +282,7 @@ public class LevelSelectController : MonoBehaviour {
         camIsMoving = false;
         if (levelHowToBoss[currentCube, 0] < 2) {
             selectState = SelectState.HOW_TO;
+            SetControlsText(4);
             cubeSelectText.text = "How To Play";
             //StartCoroutine(HowToCamOrbit(currentCube));
         }
@@ -351,6 +361,9 @@ public class LevelSelectController : MonoBehaviour {
                 break;
             case 3:
                 controlsText.text = "Z: Select \nX: Back \n\nDown: Level Select";
+                break;
+            case 4:
+                controlsText.text = "Z: Select \nX: Back";
                 break;
         }
     }

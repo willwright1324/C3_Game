@@ -90,6 +90,9 @@ public class PlatformerCamera : MonoBehaviour {
                 sides[3] = 0;
         }
     }
+    public void Refocus() {
+        transform.position = new Vector3(player.transform.position.x + offsetX, player.transform.position.y + offsetY, transform.position.z + offsetZ);
+    }
 
 
 }

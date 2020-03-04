@@ -159,6 +159,8 @@ public class RacingPlayer : MonoBehaviour {
     }
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Damage") {
+            GameController.Instance.audioSound.PlayOneShot(GameController.Instance.playerHit);
+
             float bumpForce = 50 * Mathf.Abs(currentSpeed);
             if (collision.gameObject.tag == "Enemy")
                 bumpForce = 150;
@@ -195,6 +197,7 @@ public class RacingPlayer : MonoBehaviour {
         }
     }
     void Respawn() {
+        GameController.Instance.audioSound.PlayOneShot(GameController.Instance.playerDeath);
         moveRespawn = false;
         currentTurnSpeed = currentSpeed = 0;
         rb.angularVelocity = 0;

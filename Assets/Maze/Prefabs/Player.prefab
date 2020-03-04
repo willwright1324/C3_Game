@@ -156,3 +156,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1.5
+  dashSpeed: 5
+  dashLength: 0.15
+  dashCooldown: 0
