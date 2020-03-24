@@ -85,14 +85,14 @@ public class GameController : MonoBehaviour {
     }
     private void Start() {
         UnityEngine.Cursor.visible = false;
-        audioSound = GetComponent<AudioSource>();
+        /*audioSound = GetComponent<AudioSource>();
         audioMusic = GameObject.Find("Music").GetComponent<AudioSource>();
         levelUnlocks = new int[] { 0, 0, 0, 0, 1, 0, 0, 0};
         pauseUI = GameObject.Find("PauseUI");
         pauseUI.SetActive(false);
         startUI = GameObject.Find("StartUI");
         startUI.SetActive(false);
-        PlayMusic(menuMusic);
+        PlayMusic(menuMusic);*/
     }
     private void Update() {
 
@@ -166,14 +166,21 @@ public class GameController : MonoBehaviour {
         Time.timeScale = 0;
         StartCoroutine(StartGame());
     }
+    // Gives player full health
+    public void ResetHealth() {
+        healthCount = playerHealth.Length - 1;
+        foreach (Transform h in playerHealth) {
+            h.gameObject.SetActive(true);
+        }
+    }
     // Player takes damage
     public void DamagePlayer() {
-        audioSound.PlayOneShot(playerHit);
+        //audioSound.PlayOneShot(playerHit);
         healthCount--;
         if (healthCount <= 0)
             ResetLevel();
         else
-            Destroy(playerHealth[healthCount + 1].gameObject);
+            playerHealth[healthCount + 1].gameObject.SetActive(false);
     }
     // Player respawns
     public void RespawnPlayer() {
