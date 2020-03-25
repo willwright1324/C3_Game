@@ -10,7 +10,12 @@ PrefabInstance:
     - target: {fileID: 1127019464020116566, guid: 8bb5addf7b2bbf845b31356790e1193f,
         type: 3}
       propertyPath: m_Name
-      value: PowerCube
+      value: PowerCube Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 1127019464020116567, guid: 8bb5addf7b2bbf845b31356790e1193f,
+        type: 3}
+      propertyPath: m_Color.rgba
+      value: 4278221055
       objectReference: {fileID: 0}
     - target: {fileID: 1127019464020116568, guid: 8bb5addf7b2bbf845b31356790e1193f,
         type: 3}
@@ -67,5 +72,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5394248552820917659, guid: 8bb5addf7b2bbf845b31356790e1193f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: efe810352e74a2f40a87114319ba3d2f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bb5addf7b2bbf845b31356790e1193f, type: 3}
