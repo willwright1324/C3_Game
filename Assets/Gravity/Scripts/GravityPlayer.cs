@@ -41,7 +41,7 @@ public class GravityPlayer : MonoBehaviour {
         if (collision.gameObject.tag == "Ground")
             canFlip = true;
         if (collision.gameObject.tag == "Death") {
-            GameController.Instance.audioSound.PlayOneShot(GameController.Instance.playerHit);
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerDamage);
             GameController.Instance.ResetLevel();
         }
     }
@@ -53,7 +53,7 @@ public class GravityPlayer : MonoBehaviour {
     }
     private void OnTriggerExit2D(Collider2D other) {
         if (other.gameObject.name == "Bounds") {
-            GameController.Instance.audioSound.PlayOneShot(GameController.Instance.playerDeath);
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerDeath);
             GameController.Instance.ResetLevel();
         }
     }

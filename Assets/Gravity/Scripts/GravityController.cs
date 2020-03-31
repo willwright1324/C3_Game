@@ -46,7 +46,7 @@ public class GravityController : MonoBehaviour {
             InvokeRepeating("DoFlipView", switchTime, switchTime);
         }
 
-        GameController.Instance.DoStartGame();
+        GameController.Instance.DoStartGame(AudioController.Instance.gravityMusic);
     }
     // Update is called once per frame
     void Update() {

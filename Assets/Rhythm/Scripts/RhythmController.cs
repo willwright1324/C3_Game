@@ -7,13 +7,18 @@ public class RhythmController : MonoBehaviour {
     public int notefile = 1;
     public float offset;
     public float bpm = 80;
+    public float noteSpeed = 100;
     float spb;
     string[] lines = null;
+    bool started;
     int lineNum = -1;
-    public GameObject[] hitboxes = new GameObject[4];
+    GameObject[] hitboxes = new GameObject[4];
+    public GameObject[] notes = new GameObject[4];
     int waitAmount;
     GameObject player;
 
+    public static RhythmController Instance { get; private set; } = null;
+    private void Awake() { Instance = this; }
     // Start is called before the first frame update
     void Start() {
         spb = (60 / bpm) / 4;
@@ -25,8 +30,17 @@ public class RhythmController : MonoBehaviour {
         TextAsset file = Resources.Load("Rhythm/note_file" + notefile) as TextAsset;
         lines = file.text.Split("\n"[0]);
 
-        GetComponent<AudioSource>().PlayOneShot(song);
         StartCoroutine(PlayNotes());
+    }
+    public void PlaySong() {
+        if (!started) {
+            GetComponent<AudioSource>().PlayOneShot(song);
+            //Invoke("StartSong", 60 / noteSpeed);
+            started = true;
+        }
+    }
+    void StartSong() {
+        GetComponent<AudioSource>().PlayOneShot(song);
     }
     IEnumerator PlayNotes() {
         if (waitAmount > 0)

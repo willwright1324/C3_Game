@@ -38,25 +38,6 @@ public class GameController : MonoBehaviour {
     public int healthCount;
     public int coinAmount;
 
-    public AudioSource audioSound;
-    public AudioSource audioMusic;
-    public AudioClip currentMusic;
-
-    public AudioClip selectMove;
-    public AudioClip selectConfirm;
-    public AudioClip selectBack;
-    public AudioClip cameraMove;
-    public AudioClip countdown;
-
-    public AudioClip playerCollect;
-    public AudioClip playerHit;
-    public AudioClip playerDeath;
-
-    public AudioClip menuMusic;
-    public AudioClip levelMusic;
-    public AudioClip bossMusic;
-
-
     // Singleton
     private static GameController instance = null;
     public static GameController Instance {
@@ -64,9 +45,9 @@ public class GameController : MonoBehaviour {
             if (instance == null) {
                 instance = FindObjectOfType<GameController>();
                 if (instance == null) {
-                    GameObject gc = new GameObject();
-                    gc.name = "GameController";
-                    instance = gc.AddComponent<GameController>();
+                    GameObject gc = Resources.Load("General/GameController") as GameObject;
+                    gc = Instantiate(gc);
+                    instance = gc.GetComponent<GameController>();
                     DontDestroyOnLoad(gc);
                 }
             }
@@ -83,19 +64,15 @@ public class GameController : MonoBehaviour {
             return;
         }
     }
-    private void Start() {
+    private void OnEnable() {
         UnityEngine.Cursor.visible = false;
-        /*audioSound = GetComponent<AudioSource>();
-        audioMusic = GameObject.Find("Music").GetComponent<AudioSource>();
         levelUnlocks = new int[] { 0, 0, 0, 0, 1, 0, 0, 0};
         pauseUI = GameObject.Find("PauseUI");
         pauseUI.SetActive(false);
         startUI = GameObject.Find("StartUI");
         startUI.SetActive(false);
-        PlayMusic(menuMusic);*/
     }
     private void Update() {
-
         if (Input.GetKeyDown(KeyCode.R)) {
             gameState = GameState.LEVEL_SELECT;
             selectState = SelectState.CUBES;
@@ -127,14 +104,14 @@ public class GameController : MonoBehaviour {
                 if (selectState == SelectState.BOSS) {
                     selectState = SelectState.LEVELS;
                 }
-                PlayMusic(menuMusic);
+                AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
                 SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
             }
             else {
                 if (gameState == GameState.GAME && selectState == SelectState.HOW_TO) {
                     levelHowToBoss[currentCube, 0] = 1;
                     gameState = GameState.LEVEL_SELECT;
-                    PlayMusic(menuMusic);
+                    AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
                     SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
                 }
             }
@@ -160,11 +137,10 @@ public class GameController : MonoBehaviour {
         coinScore.text = "Coins: 0 / " + coinAmount;
     }
     // Countdown for game
-    public void DoStartGame() {
-        PlayMusic(levelMusic);
-        audioSound.PlayOneShot(countdown);
+    public void DoStartGame(AudioClip ac) {
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.countdown);
         Time.timeScale = 0;
-        StartCoroutine(StartGame());
+        StartCoroutine(StartGame(ac));
     }
     // Gives player full health
     public void ResetHealth() {
@@ -184,17 +160,18 @@ public class GameController : MonoBehaviour {
     }
     // Player respawns
     public void RespawnPlayer() {
-        audioSound.PlayOneShot(playerDeath);
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerDeath);
         player.SetActive(false);
         player.transform.position = respawn.transform.position;
         Invoke("EnablePlayer", 1f);
     }
     void EnablePlayer() {
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.respawn);
         player.SetActive(true);
     }
     // Player collects coin
     public void CollectCoin() {
-        audioSound.PlayOneShot(playerCollect);
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerCollect);
         coinAmount--;
         coinScore.text = "Coins: " + (coins.Length - coinAmount) + " / " + coins.Length;
     }
@@ -210,23 +187,14 @@ public class GameController : MonoBehaviour {
         if (selectState == SelectState.BOSS) {
             selectState = SelectState.LEVELS;
         }
-        PlayMusic(menuMusic);
+        AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
         SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
     }
     // Resets level
     public void ResetLevel() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    public void PlaySoundOnce(AudioClip ac) {
-        if (!audioSound.isPlaying)
-            audioSound.PlayOneShot(ac);
-    }
-    public void PlayMusic(AudioClip ac) {
-        audioMusic.Stop();
-        audioMusic.clip = ac;
-        audioMusic.Play(0);
-    }
-    IEnumerator StartGame() {
+    IEnumerator StartGame(AudioClip ac) {
         startUI.SetActive(true);
         Text countdownText = GameObject.Find("Countdown").GetComponent<Text>();
         float timer = 0;
@@ -243,5 +211,6 @@ public class GameController : MonoBehaviour {
         Time.timeScale = 1;
         countdownText.text = "3";
         startUI.SetActive(false);
+        AudioController.Instance.PlayMusic(ac);
     }
 }

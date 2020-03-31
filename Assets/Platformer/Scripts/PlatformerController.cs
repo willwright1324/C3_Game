@@ -12,6 +12,6 @@ public class PlatformerController : MonoBehaviour {
         GameController.Instance.InitPlayer();
         GameController.Instance.InitCoins();
         GameController.Instance.InitHealth();
-        GameController.Instance.DoStartGame();
+        GameController.Instance.DoStartGame(AudioController.Instance.platformerMusic);
     }
 }

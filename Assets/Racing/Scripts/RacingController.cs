@@ -104,7 +104,7 @@ public class RacingController : MonoBehaviour {
         Destroy(temps);
         trackCount = tracks.Length;
 
-        GameController.Instance.DoStartGame();
+        GameController.Instance.DoStartGame(AudioController.Instance.racingMusic);
     }
     public void CheckLap() {
         if (raceOver)

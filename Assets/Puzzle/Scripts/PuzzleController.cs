@@ -118,7 +118,7 @@ public class PuzzleController : MonoBehaviour {
                                     boardPositionGrid[0, 0].transform.position.y 
                                     + (puzzleSize.size.y / 2) - (puzzleSize.size.y * boardSize) / 2);
 
-        GameController.Instance.DoStartGame();
+        GameController.Instance.DoStartGame(AudioController.Instance.puzzleMusic);
     }
     // Update is called once per frame
     void Update() {

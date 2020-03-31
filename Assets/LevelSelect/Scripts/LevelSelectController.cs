@@ -15,7 +15,7 @@ public class LevelSelectController : MonoBehaviour {
 
     GameObject colorCube;
     public GameObject[] cubes;
-    int[] wip = {0, 1, 1, 0, 0, 0, 0, 0};
+    int[] wip = {0, 0, 1, 0, 0, 0, 0, 0};
     Text cubeSelectText;
     Text controlsText;
     public float selectCubeCooldown;
@@ -68,7 +68,7 @@ public class LevelSelectController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.B)) {
             gameState = GameState.GAME;
             SaveToGameController();
-            GameController.Instance.PlayMusic(GameController.Instance.bossMusic);
+            AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
             SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
         }
 
@@ -79,7 +79,7 @@ public class LevelSelectController : MonoBehaviour {
             // Switch Cube/Level
             if (Input.GetAxisRaw("Horizontal") != 0 && selectState != SelectState.HOW_TO) {
                 if (SelectCubeCooldown() && !camIsMoving) {
-                    GameController.Instance.PlaySoundOnce(GameController.Instance.cameraMove);
+                    AudioController.Instance.PlaySoundOnce(AudioController.Instance.cameraMove);
                     if (selectState == SelectState.CUBES) {
                         SelectCube(Input.GetAxisRaw("Horizontal"));
                         if (wip[currentCube] == 1)
@@ -114,7 +114,7 @@ public class LevelSelectController : MonoBehaviour {
             // Select Cube/Level
             if (Input.GetAxisRaw("Action 1") != 0) {
                 if (!camIsLooking && !camIsMoving && !camIsRotating) {
-                    GameController.Instance.PlaySoundOnce(GameController.Instance.selectBack);
+                    AudioController.Instance.PlaySoundOnce(AudioController.Instance.selectBack);
                     if (selectState == SelectState.CUBES) {
                         if (wip[currentCube] == 1)
                             return;

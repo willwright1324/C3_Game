@@ -67,7 +67,7 @@ public class BallBounceController : MonoBehaviour {
         blockCount = blocks.GetComponentsInChildren<Transform>().Length - 1;
         Destroy(temps);
 
-        GameController.Instance.DoStartGame();
+        GameController.Instance.DoStartGame(AudioController.Instance.ballbounceMusic);
     }
     // Update is called once per frame
     void Update() {
