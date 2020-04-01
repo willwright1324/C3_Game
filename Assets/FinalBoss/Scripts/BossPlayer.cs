@@ -21,7 +21,6 @@ public class BossPlayer : MonoBehaviour {
     Vector3 playerPos;
     Vector3 targetPos;
     Vector3 gravity;
-    bool camIsMoving;
     public bool canJump = true;
 
     IEnumerator moveCamCoroutine;
@@ -164,11 +163,9 @@ public class BossPlayer : MonoBehaviour {
         //arm.transform.localRotation = Quaternion.Euler(0, 0, 0);
     }
     IEnumerator MoveCam(Quaternion whichRotation) {
-        camIsMoving = true;
         while (Quaternion.Angle(camOrbit.transform.localRotation, whichRotation) > 0.1f) {
             transform.rotation = camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, whichRotation, Time.smoothDeltaTime * rotateSpeed);
             yield return null;
         }
-        camIsMoving = false;
     }
 }

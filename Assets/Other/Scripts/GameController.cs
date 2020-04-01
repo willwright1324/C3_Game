@@ -71,6 +71,25 @@ public class GameController : MonoBehaviour {
         pauseUI.SetActive(false);
         startUI = GameObject.Find("StartUI");
         startUI.SetActive(false);
+
+        int scene = SceneManager.GetActiveScene().buildIndex;
+        int cube = scene / 6;
+        int level = scene % 6;
+
+        if (cube > -1 && cube < 8) {
+            switch (level) {
+                case 1:
+                    selectState = SelectState.HOW_TO;
+                    break;
+                case 6:
+                    selectState = SelectState.BOSS;
+                    break;
+                default:
+                    selectState = SelectState.LEVELS;
+                    break;
+            }
+            gameState = GameState.GAME;
+        }
     }
     private void Update() {
         if (Input.GetKeyDown(KeyCode.R)) {
@@ -138,6 +157,8 @@ public class GameController : MonoBehaviour {
     }
     // Countdown for game
     public void DoStartGame(AudioClip ac) {
+        if (AudioController.Instance.audioMusic.isPlaying)
+            AudioController.Instance.audioMusic.Stop();
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.countdown);
         Time.timeScale = 0;
         StartCoroutine(StartGame(ac));

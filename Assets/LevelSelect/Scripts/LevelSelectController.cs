@@ -56,6 +56,7 @@ public class LevelSelectController : MonoBehaviour {
         cam = GameObject.FindWithTag("MainCamera");
         camOrbit = GameObject.Find("CameraOrbit");
 
+        AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
         InitCamera();
     }
 
