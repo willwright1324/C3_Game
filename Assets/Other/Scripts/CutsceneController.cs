@@ -35,7 +35,7 @@ public class CutsceneController : MonoBehaviour {
         index++;
         if (index < text.Length) {
             sceneText.text = text[index];
-            sceneText.text += "...Press Z to Continue";
+            sceneText.text += "[Press Z to Continue]";
             sceneImage.sprite = Resources.Load<Sprite>("Cutscenes/" + cutscene + "/image" + index);
         }
         else {

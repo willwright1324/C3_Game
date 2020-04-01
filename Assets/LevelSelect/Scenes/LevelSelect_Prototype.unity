@@ -618,13 +618,7 @@ MonoBehaviour:
   m_Text: 'Please press "R" when done playtesting to reset the build!
 
 
-    Playtest:
-
-    Non-WIP Level 1
-
-    Gravity Cube Level 2 (Mini Boss)
-
-    Final Boss (WIP - Only 1 attack) (Press "B" to Play)
+    Final Boss - "B"
 
 
     Use Escape to return to level select while in game.'

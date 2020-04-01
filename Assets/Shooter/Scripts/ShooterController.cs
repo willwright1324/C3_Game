@@ -40,7 +40,8 @@ public class ShooterController : MonoBehaviour {
 
         enemiesText.text = "Enemies: " + totalEnemies;
         spawnSpaces = GameObject.FindGameObjectsWithTag("Spawn");
-        Invoke("StartWave", 2f);
+        GameController.Instance.DoStartGame(AudioController.Instance.shooterMusic);
+        Invoke("StartWave", 5f);
     }
     void StartWave() {
         GameController.Instance.ResetHealth();
