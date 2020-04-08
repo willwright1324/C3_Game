@@ -38,6 +38,7 @@ public class ShooterSniper : MonoBehaviour {
                     waitLength = fireRate;
                     if (currentAmmo > 0) {
                         currentAmmo--;
+                        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.sniperShoot);
                         Instantiate(bullet, transform.position + transform.up * 10, transform.rotation);
                     }
                     else {

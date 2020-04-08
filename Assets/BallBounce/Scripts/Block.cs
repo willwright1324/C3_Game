@@ -19,6 +19,7 @@ public class Block : MonoBehaviour {
                 mat.material = Resources.Load<Material>("BallBounce/Break3");
                 break;
             case 0:
+                AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.blockBreak);
                 BallBounceController.Instance.DestroyBlock();
                 Destroy(gameObject);
                 break;

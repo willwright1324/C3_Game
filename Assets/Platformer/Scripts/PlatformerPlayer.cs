@@ -23,23 +23,24 @@ public class PlatformerPlayer : MonoBehaviour {
     }
     private void Update() {
         if (Input.GetAxisRaw("Horizontal") != 0) {
-                SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
             if (Input.GetAxisRaw("Horizontal") > 0) {
                 sr.flipX = false;
             }
             else
                 sr.flipX = true;
         }
+        if (Input.GetButton("Action 1") && canJump && Input.GetAxisRaw("Vertical") >= 0) {
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerJump);
+            bcam.followY = false;
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            canJump = false;
+        }
     }
     private void FixedUpdate() {
         rb.AddForce(new Vector2(Input.GetAxisRaw("Horizontal") * speed, 0), ForceMode2D.Impulse);
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -speed, speed), Mathf.Clamp(rb.velocity.y, -jumpForce, jumpForce));
         rb.velocity = new Vector2(rb.velocity.x / (Time.deltaTime * deceleration), rb.velocity.y);
-
-        if (Input.GetButton("Action 1") && canJump && Input.GetAxisRaw("Vertical") >= 0) {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            canJump = false;
-        }
     }
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Platform" && transform.position.y > collision.gameObject.transform.position.y) {
@@ -70,6 +71,7 @@ public class PlatformerPlayer : MonoBehaviour {
             jumpForce = jumpForceMax;
         }
         if (collision.gameObject.tag == "Spring") {
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.springBoost);
             bcam.followY = true;
             jumpForce = springForce;
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);

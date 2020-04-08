@@ -316,15 +316,16 @@ MonoBehaviour:
   bossMusic: {fileID: 8300000, guid: 83fcf3548a7d0f94b92037a1ba9e8ca4, type: 3}
   howToMusic: {fileID: 8300000, guid: 17292ff09c1113d4b9fde5d8a7890ac9, type: 3}
   menuMusic: {fileID: 8300000, guid: bebc07799aac943498ffec2e2d388fe8, type: 3}
-  racingMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
-  shooterMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
+  racingMusic: {fileID: 8300000, guid: 11849b1d845c7dd4e85b6c9487312ac4, type: 3}
+  shooterMusic: {fileID: 8300000, guid: 11849b1d845c7dd4e85b6c9487312ac4, type: 3}
   rhythmMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
-  platformerMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
-  gravityMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
+  platformerMusic: {fileID: 8300000, guid: c7134c4b788bf96489706afa7cf0632a, type: 3}
+  gravityMusic: {fileID: 8300000, guid: c7134c4b788bf96489706afa7cf0632a, type: 3}
   mazeMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
-  ballbounceMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
-  puzzleMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
+  ballbounceMusic: {fileID: 8300000, guid: a07fb17914a853446a7abbd36179f037, type: 3}
+  puzzleMusic: {fileID: 8300000, guid: a07fb17914a853446a7abbd36179f037, type: 3}
   countdown: {fileID: 8300000, guid: d81c2409301b9684d940f1d16c1bf3c3, type: 3}
+  healthReset: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
   playerCollect: {fileID: 8300000, guid: b987246b33c8f694d9418a8a085b7b90, type: 3}
   playerDamage: {fileID: 8300000, guid: ab24418d629c7704daffa1dab291d6f7, type: 3}
   playerDeath: {fileID: 8300000, guid: 2b7e093759b334c4ca1507b3562cab31, type: 3}
@@ -339,7 +340,6 @@ MonoBehaviour:
   lapComplete: {fileID: 8300000, guid: 003a03e7997d0f44896dd6ead87417fd, type: 3}
   playerBump: {fileID: 8300000, guid: b713bef9184d47244bff0bd60cea4082, type: 3}
   enemySpawn: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
-  healthReset: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
   lockAim: {fileID: 8300000, guid: 003a03e7997d0f44896dd6ead87417fd, type: 3}
   machineGunShoot: {fileID: 8300000, guid: b713bef9184d47244bff0bd60cea4082, type: 3}
   pistolShoot: {fileID: 8300000, guid: 5cb1885b52830244fbc12d378cc14bac, type: 3}
@@ -550,6 +550,7 @@ MonoBehaviour:
   - Maze
   - BallBounce
   - Puzzle
+  completedLevel: 0
   healthCount: 0
   coinAmount: 0
 --- !u!1 &8307628638033948016

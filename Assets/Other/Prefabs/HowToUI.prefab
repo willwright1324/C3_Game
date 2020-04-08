@@ -79,7 +79,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Press X To Go Back
+  m_Text: 'Press X When Ready
 
 '
 --- !u!114 &4488915199403607769

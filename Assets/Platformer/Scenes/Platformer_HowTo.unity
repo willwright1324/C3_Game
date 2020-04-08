@@ -195,7 +195,7 @@ PrefabInstance:
     - target: {fileID: 6030485049704666746, guid: c8feb9fffebecf14585a686ea4535bf2,
         type: 3}
       propertyPath: m_Text
-      value: 'Z: Jump, Arrows: Move
+      value: 'Z: Jump, Arrows: Move, Down+Z: Platform Fall
 
         Collect all of the coins to pass through the door!
 

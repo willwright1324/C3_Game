@@ -60,6 +60,9 @@ public class RhythmPlayer : MonoBehaviour {
     }
     void CheckNote(int whichHitBox) {
         if (notes[whichHitBox] != null) {
+            if (notes[whichHitBox].name.Contains("LongStart")) {
+
+            }
             Destroy(notes[whichHitBox]);
             notes[whichHitBox] = null;
         }

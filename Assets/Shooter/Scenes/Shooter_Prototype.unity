@@ -2506,6 +2506,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3756476290597914777, guid: 0b70427bc470f0748951aba30fcece16,
+        type: 3}
+      propertyPath: enemySpawns
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b70427bc470f0748951aba30fcece16, type: 3}
 --- !u!1001 &4231175404487156218
@@ -2653,6 +2658,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: speed
+      value: 800
+      objectReference: {fileID: 0}
     - target: {fileID: 2379467432887144071, guid: b6ad1e978fd515040aa182ee2f54c286,
         type: 3}
       propertyPath: m_Name
@@ -2716,15 +2725,14 @@ PrefabInstance:
     - target: {fileID: 2379467432887144066, guid: b6ad1e978fd515040aa182ee2f54c286,
         type: 3}
       propertyPath: speed
-      value: 1600
+      value: 1.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2379467432887144067, guid: b6ad1e978fd515040aa182ee2f54c286,
+    - target: {fileID: 2379467432887144074, guid: b6ad1e978fd515040aa182ee2f54c286,
         type: 3}
-      propertyPath: speed
-      value: 800
+      propertyPath: m_BodyType
+      value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2379467432887144067, guid: b6ad1e978fd515040aa182ee2f54c286, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6ad1e978fd515040aa182ee2f54c286, type: 3}
 --- !u!1001 &7509673013016030198
 PrefabInstance:

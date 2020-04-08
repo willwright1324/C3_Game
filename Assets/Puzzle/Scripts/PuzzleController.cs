@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PuzzleController : MonoBehaviour {
+    public string folderName = "Circle";
+    public int boardSize = 4;
+
     public GameObject[,] boardPositionGrid;
     public GameObject[,] puzzlePieceGrid;
     GameObject boardPositions;
@@ -22,14 +25,12 @@ public class PuzzleController : MonoBehaviour {
     public int emptyY;
     int attackX;
     int attackY;
-    int boardSize = 4;
     public bool canSelect = true;
     public bool canMove = true;
     bool isAttacking;
     bool won;
     float xMargin = 0;
     float yMargin = 0;
-    string folderName = "Circle";
 
     public static PuzzleController Instance { get; private set; } = null;
     private void Awake() { Instance = this; }
@@ -46,7 +47,10 @@ public class PuzzleController : MonoBehaviour {
         arm = GameObject.Find("Enemy/Eye/Arm");
         block = GameObject.FindWithTag("Damage");
 
-        Bounds puzzleSize = (Resources.Load("Puzzle/PuzzlePiece") as GameObject).GetComponent<Renderer>().bounds;
+        GameObject puzzleP = Resources.Load("Puzzle/PuzzlePiece") as GameObject;
+        Bounds puzzleSize = puzzleP.GetComponent<Renderer>().bounds;
+        cursor.transform.localScale = puzzleP.transform.localScale;
+
         Vector3 camPos = cam.transform.position;
         boardPositionGrid = new GameObject[boardSize, boardSize];
         puzzlePieceGrid = new GameObject[boardSize, boardSize];
@@ -291,6 +295,7 @@ public class PuzzleController : MonoBehaviour {
             arm.transform.localRotation = Quaternion.Slerp(arm.transform.localRotation, armRotation, Time.deltaTime * 10);
             yield return null;
         }
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.obstacleAppear);
         arm.transform.localRotation = armRotation;
         block.transform.position = boardPositionGrid[attackX, attackY].transform.position + Vector3.back * 1;
 
@@ -306,6 +311,7 @@ public class PuzzleController : MonoBehaviour {
         if (enemy != null)
             enemy.transform.position = new Vector3(boardPositionGrid[emptyX, emptyY].transform.position.x, boardPositionGrid[emptyX, emptyY].transform.position.y, cursor.transform.position.z - 1);
         Vector3 cursorPosition = new Vector3(boardPositionGrid[cursorX, cursorY].transform.position.x, boardPositionGrid[cursorX, cursorY].transform.position.y, cursor.transform.position.z);
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerMove);
 
         while (Vector3.Distance(cursor.transform.position, cursorPosition) > 1) {
             cursor.transform.position = Vector3.MoveTowards(cursor.transform.position, cursorPosition, Time.deltaTime * 500);
@@ -317,6 +323,7 @@ public class PuzzleController : MonoBehaviour {
     IEnumerator MovePiece() {
         Vector3 piecePosition = boardPositionGrid[cursorX, cursorY].transform.position;
         StartCoroutine(MoveCursor());
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.tileSwitch);
 
         while (Vector3.Distance(puzzlePieceGrid[emptyX, emptyY].transform.position, piecePosition) > 1) {
             puzzlePieceGrid[emptyX, emptyY].transform.position = Vector3.MoveTowards(puzzlePieceGrid[emptyX, emptyY].transform.position, piecePosition, Time.deltaTime * 500);

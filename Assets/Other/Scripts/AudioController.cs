@@ -22,12 +22,12 @@ public class AudioController : MonoBehaviour {
     public AudioClip puzzleMusic;
     [Header("General")]
     public AudioClip countdown;
+    public AudioClip healthReset;
     public AudioClip playerCollect;
     public AudioClip playerDamage;
     public AudioClip playerDeath;
     public AudioClip respawn;
     public AudioClip winTune;
-
     [Header("Level Select")]
     public AudioClip cameraMove;
     public AudioClip selectBack;
@@ -40,7 +40,6 @@ public class AudioController : MonoBehaviour {
     public AudioClip playerBump;
     [Header("Shooter")]
     public AudioClip enemySpawn;
-    public AudioClip healthReset;
     public AudioClip lockAim;
     public AudioClip machineGunShoot;
     public AudioClip pistolShoot;

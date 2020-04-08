@@ -16,6 +16,7 @@ public class PlatformerCamera : MonoBehaviour {
     public float buffer = 15;
     public float followSide;
     public float followX;
+    public float followSens = 1f;
     // Start is called before the first frame update
     void Start() {
         player = GameObject.FindWithTag("Player");
@@ -31,16 +32,19 @@ public class PlatformerCamera : MonoBehaviour {
         Vector3 camPos = transform.position;
         float camX = camPos.x;
         float camY = camPos.y;
-        if (Input.GetAxisRaw("Horizontal") != 0)
-            followX = Input.GetAxisRaw("Horizontal");
+        if (Input.GetAxisRaw("Horizontal") != 0) {
+            followX += Input.GetAxisRaw("Horizontal") * Time.deltaTime * followSens;
+            followX = Mathf.Clamp(followX, -1, 1);
+        }
+
         if (sides[0] == 0) {
-            if (followSide == 1 && followX == 1) {
+            if (followX == 1) {
                 camX = camRight.transform.position.x;
                 //transform.position = Vector3.MoveTowards(transform.position, new Vector3(camRight.transform.position.x, camPos.y, camPos.z), Time.deltaTime * speed);
             }
         }
         if (sides[2] == 0) {
-            if (followSide == -1 && followX == -1) {
+            if (followX == -1) {
                 camX = camLeft.transform.position.x;
                 //transform.position = Vector3.MoveTowards(transform.position, new Vector3(camLeft.transform.position.x, camPos.y, camPos.z), Time.deltaTime * speed);
             }

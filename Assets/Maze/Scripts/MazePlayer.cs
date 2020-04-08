@@ -9,18 +9,27 @@ public class MazePlayer : MonoBehaviour {
     public float dashLength = 0.15f;
     public bool dashCooldown = false;
     bool isDashing;
-    Vector3 dashDirection;
+    Vector2 moveDirection;
+    Vector2 dashDirection;
+
+    GameObject audioListener;
+
     // Start is called before the first frame update
     void Start() {
         rb = GetComponent<Rigidbody2D>();
+        audioListener = GameObject.Find("AudioListener");
     }
     // Update is called once per frame
     void Update() {
         if (Time.timeScale == 0)
             return;
+
+        audioListener.transform.position = transform.position;
+        moveDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
         if (Input.GetButtonDown("Action 1")) {
             if (!dashCooldown) {
-                dashDirection = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0);
+                AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerDash);
+                dashDirection = moveDirection;
                 Invoke("DoneDash", dashLength);
                 isDashing = true;
             }
@@ -28,12 +37,16 @@ public class MazePlayer : MonoBehaviour {
     }
     private void FixedUpdate() {
         if (!isDashing)
-            rb.MovePosition(new Vector2(transform.position.x + Input.GetAxis("Horizontal") * speed, transform.position.y + Input.GetAxis("Vertical") * speed));
+            rb.MovePosition((Vector2)transform.position + moveDirection * speed);
         else
-            rb.MovePosition(transform.position + (dashDirection * dashSpeed));
+            rb.MovePosition((Vector2)transform.position + dashDirection * dashSpeed);
+    }
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.tag == "Coin")
+            MazeController.Instance.MoveRespawn();
     }
     private void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.name == "Crusher") {
+        if (collision.gameObject.tag == "Damage") {
             MazeController.Instance.Respawn();
         }
     }

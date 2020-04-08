@@ -548,6 +548,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4489349186844007384, guid: 601b063bada5aa840bad6abce223385e,
+        type: 3}
+      propertyPath: folderName
+      value: Circle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489349186844007384, guid: 601b063bada5aa840bad6abce223385e,
+        type: 3}
+      propertyPath: boardSize
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 601b063bada5aa840bad6abce223385e, type: 3}
 --- !u!1001 &4557999756936148042

@@ -3,40 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Crusher : MonoBehaviour {
+    public float startDelay;
     public float crushSpeed = 30f;
     public float retractSpeed = 30f;
     public float crushPause = 0.2f;
     public float retractPause = 0.2f;
-    public float length = 20f;
-    float size;
+    float maxLength;
+    float minLength;
     Vector3 pos;
+    public AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start() {
-        size = transform.lossyScale.y;
+        maxLength = transform.lossyScale.y;
+        minLength = transform.lossyScale.x;
         pos = transform.position;
-        Invoke("DoCrush", retractPause);
+        audioSource = GetComponent<AudioSource>();
+        Invoke("DoRetract", startDelay);
     }
     void DoCrush() { StartCoroutine(Crush()); }
     void DoRetract() { StartCoroutine(Retract()); }
 
     IEnumerator Crush() {
-        while (transform.localScale.y < length) {           
+        audioSource.PlayOneShot(AudioController.Instance.crusherActivate);
+        while (transform.localScale.y < maxLength) {           
             transform.localScale += new Vector3(0, Time.deltaTime * crushSpeed, 0);
-            transform.position += new Vector3(0, Time.deltaTime * crushSpeed, 0);
+            transform.position += transform.up * Time.deltaTime * crushSpeed;
             yield return null;
         }
-        transform.localScale = new Vector3(transform.localScale.x, length, transform.localScale.z);
+        audioSource.PlayOneShot(AudioController.Instance.crusherSmash);
+        transform.position = pos;
+        transform.localScale = new Vector3(transform.localScale.x, maxLength, transform.localScale.z);
         Invoke("DoRetract", crushPause);
     }
     IEnumerator Retract() {
-        while (transform.localScale.y > size) {
+        while (transform.localScale.y > minLength) {
             transform.localScale -= new Vector3(0, Time.deltaTime * retractSpeed, 0);
-            transform.position -= new Vector3(0, Time.deltaTime * retractSpeed, 0);
+            transform.position -= transform.up * Time.deltaTime * retractSpeed;
             yield return null;
         }
-        transform.position = pos;
-        transform.localScale = new Vector3(transform.localScale.x, size, transform.localScale.z);
+        transform.localScale = new Vector3(transform.localScale.x, minLength, transform.localScale.z);
         Invoke("DoCrush", retractPause);
     }
 }

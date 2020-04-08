@@ -7,7 +7,7 @@ public class ShooterPlayer : MonoBehaviour {
     GameObject reticle;
     public GameObject currentEnemy;
     public List<GameObject> enemies = new List<GameObject>();
-    public float speed = 80f;
+    public float speed = 1.5f;
     public float rotateSpeed = 600f;
     public bool canShoot = true;
     public bool enemyLocked;
@@ -40,6 +40,7 @@ public class ShooterPlayer : MonoBehaviour {
         float vertInput = Input.GetAxisRaw("Vertical");
 
         if (Input.GetButtonDown("Action 2")) {
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerShoot);
             Instantiate(bullet, transform.position + transform.up * 8, transform.rotation);
         }
 
@@ -79,12 +80,15 @@ public class ShooterPlayer : MonoBehaviour {
                     StopCoroutine(rotateCoroutine);
                 transform.up = Vector3.Slerp(transform.up, (Vector2)currentEnemy.transform.position - (Vector2)transform.position, Time.deltaTime * rotateSpeed / 25);
                 if (!enemyLocked) {
+                    AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.lockAim);
                     reticle.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Shooter/reticle1");
                 }
                 enemyLocked = true;
             }
         }
-        rb.MovePosition((Vector2)transform.position + new Vector2(horInput, vertInput).normalized * Time.deltaTime * speed);
+    }
+    private void FixedUpdate() {
+        rb.MovePosition((Vector2)transform.position + new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * speed);
     }
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.tag == "Enemy") {

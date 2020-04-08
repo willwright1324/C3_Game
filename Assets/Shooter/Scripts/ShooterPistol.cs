@@ -38,6 +38,7 @@ public class ShooterPistol : MonoBehaviour {
                     waitLength = fireRate;
                     if (currentAmmo > 0) {
                         currentAmmo--;
+                        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.pistolShoot);
                         Instantiate(bullet, transform.position + transform.up * 10, transform.rotation);
                     }
                     else {

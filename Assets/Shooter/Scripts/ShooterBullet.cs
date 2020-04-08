@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class ShooterBullet : MonoBehaviour {
     Rigidbody2D rb;
-    public float speed = 200f;
+    public float speed = 1.7f;
 
     // Start is called before the first frame update
     void Start() {
         rb = GetComponent<Rigidbody2D>();
     }
-    // Update is called once per frame
-    void Update() {
-        rb.MovePosition(transform.position + transform.up * Time.deltaTime * speed);
+    void FixedUpdate() {
+        rb.MovePosition(transform.position + transform.up * speed);
     }
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.name == "BoundedCamera" || 

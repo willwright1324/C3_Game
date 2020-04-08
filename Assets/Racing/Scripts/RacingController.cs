@@ -116,6 +116,7 @@ public class RacingController : MonoBehaviour {
             }
         }
         if (currentLap < laps) {
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.lapComplete);
             lap.text = "Lap: " + ++currentLap + " / " + laps;
             for (int i = 0; i < trackCoords.GetLength(0); i++) {
                 for (int j = 0; j < trackCoords.GetLength(1); j++) {

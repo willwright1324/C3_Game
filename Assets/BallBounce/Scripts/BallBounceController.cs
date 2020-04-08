@@ -94,6 +94,7 @@ public class BallBounceController : MonoBehaviour {
         if (paddle.name.Contains("Up")) {
             if (paddle.name.Contains("PaddleL")) {
                 if (paddleL) {
+                    AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.ballHit);
                     ChangeBallSpeed(0);
                     rb.velocity = player.transform.parent.up.normalized * rb.velocity.magnitude * 1.2f;
                 }
@@ -103,6 +104,7 @@ public class BallBounceController : MonoBehaviour {
             }
             else {
                 if (paddleR) {
+                    AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.ballHit);
                     ChangeBallSpeed(0);
                     rb.velocity = player.transform.parent.up.normalized * rb.velocity.magnitude * 1.2f;
                 }

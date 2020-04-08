@@ -18,10 +18,10 @@ public class MazeController : MonoBehaviour {
         player = GameObject.FindWithTag("Player");
         respawn = GameObject.FindWithTag("Respawn");
         spotlight = GameObject.Find("Spot Light");
-        InvokeRepeating("MoveRespawn", 0, 5f);
+        MoveRespawn();
         GameController.Instance.DoStartGame(AudioController.Instance.mazeMusic);
     }
-    void MoveRespawn() {
+    public void MoveRespawn() {
         respawn.transform.position = player.transform.position;
     }
     public void Respawn() {

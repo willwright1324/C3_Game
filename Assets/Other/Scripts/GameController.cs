@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour {
     public int[] levelUnlocks = new int[8];
     public int[] levelSelects = new int[8];
     public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "BallBounce", "Puzzle"};
+    public bool completedLevel;
 
     GameObject[] coins;
     GameObject player;
@@ -75,7 +76,8 @@ public class GameController : MonoBehaviour {
         int scene = SceneManager.GetActiveScene().buildIndex;
         int cube = scene / 6;
         int level = scene % 6;
-
+        if (scene == 0)
+            return;
         if (cube > -1 && cube < 8) {
             switch (level) {
                 case 1:
@@ -93,6 +95,7 @@ public class GameController : MonoBehaviour {
     }
     private void Update() {
         if (Input.GetKeyDown(KeyCode.R)) {
+            AudioController.Instance.audioMusic.Stop();
             gameState = GameState.LEVEL_SELECT;
             selectState = SelectState.CUBES;
             levelHowToBoss = new int[8, 2];
@@ -129,13 +132,14 @@ public class GameController : MonoBehaviour {
             else {
                 if (gameState == GameState.GAME && selectState == SelectState.HOW_TO) {
                     levelHowToBoss[currentCube, 0] = 1;
-                    gameState = GameState.LEVEL_SELECT;
-                    AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
-                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
+                    gameState = GameState.GAME;
+                    selectState = SelectState.LEVELS;
+                    SceneManager.LoadScene(2 + (currentCube * 6) + levelSelects[currentCube]);
                 }
             }
         }
     }
+    public void Init() {}
     // Initializes player and respawn when needed
     public void InitPlayer() {
         player = GameObject.FindWithTag("Player");
@@ -165,6 +169,7 @@ public class GameController : MonoBehaviour {
     }
     // Gives player full health
     public void ResetHealth() {
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.healthReset);
         healthCount = playerHealth.Length - 1;
         foreach (Transform h in playerHealth) {
             h.gameObject.SetActive(true);
@@ -172,7 +177,7 @@ public class GameController : MonoBehaviour {
     }
     // Player takes damage
     public void DamagePlayer() {
-        //audioSound.PlayOneShot(playerHit);
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerDamage);
         healthCount--;
         if (healthCount <= 0)
             ResetLevel();
@@ -204,10 +209,12 @@ public class GameController : MonoBehaviour {
     }
     // Player completes level
     public void CompleteLevel() {
+        completedLevel = true;
         gameState = GameState.LEVEL_SELECT;
         if (selectState == SelectState.BOSS) {
             selectState = SelectState.LEVELS;
         }
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.winTune);
         AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
         SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
     }

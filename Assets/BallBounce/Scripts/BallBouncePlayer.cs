@@ -32,6 +32,9 @@ public class BallBouncePlayer : MonoBehaviour {
         }
 
         if (Input.GetButton("Action 1")) {
+            if (Input.GetButtonDown("Action 1"))
+                AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.paddleSwing);
+
             if (paddleLRot < 0) {
                 BallBounceController.Instance.paddleL = true;
                 paddleLRot += Time.deltaTime * paddleSens * 2;
@@ -47,6 +50,9 @@ public class BallBouncePlayer : MonoBehaviour {
         paddleL.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, Mathf.Clamp(paddleLRot, -paddleRest, 0)));
 
         if (Input.GetButton("Action 2")) {
+            if (Input.GetButtonDown("Action 2"))
+                AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.paddleSwing);
+
             if (paddleRRot > 0) {
                 BallBounceController.Instance.paddleR = true;
                 paddleRRot -= Time.deltaTime * paddleSens * 2;

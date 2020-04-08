@@ -38,7 +38,8 @@ public class ShooterMachineGun : MonoBehaviour {
                     waitLength = fireRate;
                     if (currentAmmo > 0) {
                         currentAmmo--;
-                        Instantiate(bullet, transform.position + transform.up * 10, transform.rotation);
+                        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.machineGunShoot);
+                        Instantiate(bullet, transform.position + transform.up * 14, transform.rotation);
                     }
                     else {
                         currentAmmo = ammoCapacity;

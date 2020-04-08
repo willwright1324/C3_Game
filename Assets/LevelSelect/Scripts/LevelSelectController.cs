@@ -84,7 +84,7 @@ public class LevelSelectController : MonoBehaviour {
                     if (selectState == SelectState.CUBES) {
                         SelectCube(Input.GetAxisRaw("Horizontal"));
                         if (wip[currentCube] == 1)
-                            cubeSelectText.text = "<- " + cubeNames[currentCube] + " WIP ->";
+                            cubeSelectText.text = "<- " + cubeNames[currentCube] + " LOCKED ->";
                     }
                     if (selectState == SelectState.LEVELS)
                         SelectLevel(Input.GetAxisRaw("Horizontal"));
@@ -155,7 +155,7 @@ public class LevelSelectController : MonoBehaviour {
         switch (selectState) {
             case SelectState.CUBES:
                 if (wip[currentCube] == 1)
-                    cubeSelectText.text = "<- " + cubeNames[currentCube] + " WIP ->";
+                    cubeSelectText.text = "<- " + cubeNames[currentCube] + " LOCKED ->";
                 else
                     cubeSelectText.text = "<- " + cubeNames[currentCube] + " ->";
                 SetControlsText(0);
@@ -174,6 +174,8 @@ public class LevelSelectController : MonoBehaviour {
             case SelectState.HOW_TO:
                 cubeSelectText.text = "How To Play";
                 SetControlsText(2);
+                if (levelHowToBoss[currentCube, 0] == 0)
+                    SetControlsText(4);
                 camOrbit.transform.position = cubes[currentCube].transform.position;
                 camOrbit.transform.SetParent(cubes[currentCube].transform);
                 camOrbit.transform.localRotation = Quaternion.Euler(90, levelSelects[currentCube] * -90, 0);
@@ -185,6 +187,10 @@ public class LevelSelectController : MonoBehaviour {
                 cam.transform.SetParent(camOrbit.transform);
                 cam.transform.localRotation = Quaternion.Euler(0, 180, 0);
                 break;
+        }
+        if (GameController.Instance.completedLevel) {
+            SelectLevel(1);
+            GameController.Instance.completedLevel = false;
         }
     }
     // Switch through cubes
@@ -255,11 +261,11 @@ public class LevelSelectController : MonoBehaviour {
                                                               cubeChildren[5].transform.localRotation.eulerAngles.z);
         Quaternion camRotation = camOrbit.transform.localRotation * Quaternion.Euler(90, 0, 0);
 
+        SetControlsText(2);
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
             camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.smoothDeltaTime * camRotateSpeed);
             yield return null;
         }
-        SetControlsText(2);
         camOrbit.transform.localRotation = camRotation;
         camIsRotating = false;
     }
@@ -269,8 +275,10 @@ public class LevelSelectController : MonoBehaviour {
         Quaternion camRotation = Quaternion.Euler(0, whichLevel * -90, 0);
         if (levelHowToBoss[currentCube, 0] < 2) {
             camRotation = Quaternion.Euler(90, whichLevel * -90, 0);
+            SetControlsText(4);
+            cubeSelectText.text = "How To Play";
+            //StartCoroutine(HowToCamOrbit(currentCube));
         }
-
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
             camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.smoothDeltaTime * camRotateSpeed);
             yield return null;
@@ -280,13 +288,10 @@ public class LevelSelectController : MonoBehaviour {
             SetControlsText(1);
             selectState = SelectState.LEVELS;
         }
-        camIsMoving = false;
         if (levelHowToBoss[currentCube, 0] < 2) {
             selectState = SelectState.HOW_TO;
-            SetControlsText(4);
-            cubeSelectText.text = "How To Play";
-            //StartCoroutine(HowToCamOrbit(currentCube));
         }
+        camIsMoving = false;
     }
     // Camera Orbit points back to center
     IEnumerator LookAtCenter() {

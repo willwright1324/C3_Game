@@ -13,6 +13,7 @@ public class CutsceneController : MonoBehaviour {
     Image sceneImage;
     // Start is called before the first frame update
     void Start() {
+        GameController.Instance.Init();
         sceneText = GameObject.Find("SceneText").GetComponent<Text>();
         sceneImage = GameObject.Find("SceneImage").GetComponent<Image>();
 
@@ -23,11 +24,13 @@ public class CutsceneController : MonoBehaviour {
 
         TextAsset file = Resources.Load("Cutscenes/" + cutscene + "/cutscene_text" + cutscene) as TextAsset;
         text = file.text.Split("\n"[0]);
+        AudioController.Instance.PlayMusic(AudioController.Instance.puzzleMusic);
         Next();
     }
     // Update is called once per frame
     void Update() {
         if (Input.GetButtonDown("Action 1")) {
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.selectConfirm);
             Next();
         }
     }

@@ -19,6 +19,7 @@ public class GravityPlayer : MonoBehaviour {
             return;
 
         if(Input.GetButton("Action 1") && canFlip) {
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.switchGravity);
             flipped = !flipped;
             SpriteRenderer sr = GetComponent<SpriteRenderer>();
             sr.flipY = flipped;

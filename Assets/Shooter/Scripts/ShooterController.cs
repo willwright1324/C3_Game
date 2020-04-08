@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ShooterController : MonoBehaviour {
-    int enemySpawns = 1;
+    public int enemySpawns = 1;
     int[,] enemies = null;
 
     public GameObject[] spawnSpaces;
@@ -45,6 +45,7 @@ public class ShooterController : MonoBehaviour {
     }
     void StartWave() {
         GameController.Instance.ResetHealth();
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.enemySpawn);
 
         List<GameObject> spawnsLeft = new List<GameObject>();
         for (int i = 0; i < spawnSpaces.Length; i++)
@@ -87,8 +88,10 @@ public class ShooterController : MonoBehaviour {
                 currentWave++;
                 Invoke("StartWave", 2f);
             }
-            else
+            else {
+                GameObject.Find("ReticleTrigger").SetActive(false);
                 GameObject.FindWithTag("PowerCube").transform.position = powerCubeSpawn.transform.position - Vector3.forward * 30;
+            }
         }
     }
 }

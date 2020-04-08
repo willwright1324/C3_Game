@@ -95,6 +95,8 @@ public class RacingPlayer : MonoBehaviour {
 
         // Drift Control
         if (currentSpeed > 0 && Input.GetButton("Action 1")) {
+            if (Input.GetButtonDown("Action 1"))
+                AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.driftSkid);
             turnSpeed = driftTurnSpeed;
             currentMultiplier = driftMultiplier;
 
@@ -143,7 +145,7 @@ public class RacingPlayer : MonoBehaviour {
             rb.MovePosition(transform.position + transform.up * currentSpeed);
         }
         else {
-            rb.velocity = Vector3.Lerp(rb.velocity, Vector2.zero, Time.fixedDeltaTime * 5);
+            rb.velocity = Vector3.Lerp(rb.velocity, Vector2.zero, Time.fixedDeltaTime * 10);
             if (rb.velocity.sqrMagnitude < 1)
                 bumped =  false;
         }
@@ -159,13 +161,13 @@ public class RacingPlayer : MonoBehaviour {
     }
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Damage") {
-            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerDamage);
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerBump);
 
-            float bumpForce = 50 * Mathf.Abs(currentSpeed);
+            float bumpForce = 25 * Mathf.Abs(currentSpeed);
             if (collision.gameObject.tag == "Enemy")
-                bumpForce = 150;
+                bumpForce = 50;
             rb.AddForce(((Vector2)transform.position - (Vector2)collision.gameObject.transform.position).normalized * bumpForce, ForceMode2D.Impulse);
-            currentSpeed = 0;
+            currentTurnSpeed = currentSpeed = 0;
             bumped = true;
         }
     }
@@ -198,6 +200,7 @@ public class RacingPlayer : MonoBehaviour {
     }
     void OffTrack() {
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerDeath);
+        lastX = -1;
         moveRespawn = false;
         currentTurnSpeed = currentSpeed = 0;
         rb.angularVelocity = 0;

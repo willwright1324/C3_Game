@@ -564,7 +564,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 690, y: -97}
+  m_AnchoredPosition: {x: 812, y: -117}
   m_SizeDelta: {x: 695.3, y: 276.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &321349051
@@ -615,13 +615,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Please press "R" when done playtesting to reset the build!
+  m_Text: 'Reset Build - R
 
+    Final Boss - B
 
-    Final Boss - "B"
-
-
-    Use Escape to return to level select while in game.'
+    Return to Level Select - Escape'
 --- !u!222 &321349053
 CanvasRenderer:
   m_ObjectHideFlags: 0
