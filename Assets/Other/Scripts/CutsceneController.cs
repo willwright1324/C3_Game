@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class CutsceneController : MonoBehaviour {
     public int cutscene = 1;
     string[] text = null;
-    public int index = -1;
+    int index = -1;
 
     Text sceneText;
     Image sceneImage;

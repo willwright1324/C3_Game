@@ -335,6 +335,10 @@ MonoBehaviour:
   selectBack: {fileID: 8300000, guid: 1808bc0242c8b6c43b3f7b40a3f10379, type: 3}
   selectConfirm: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
   selectMove: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
+  bossAttack: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
+  bossDamage: {fileID: 8300000, guid: 3d9b13e9204b5c640aaafb73b7e8bf66, type: 3}
+  bossPowerUp: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
+  cubeFlip: {fileID: 8300000, guid: 5b2e46f3c3d2938439959341e7cd52f6, type: 3}
   driftSkid: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
   drive: {fileID: 8300000, guid: 5cb1885b52830244fbc12d378cc14bac, type: 3}
   lapComplete: {fileID: 8300000, guid: 003a03e7997d0f44896dd6ead87417fd, type: 3}

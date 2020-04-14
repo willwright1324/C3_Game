@@ -585,7 +585,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cutscene: 1
-  index: -1
 --- !u!1 &2535345829175473024
 GameObject:
   m_ObjectHideFlags: 0

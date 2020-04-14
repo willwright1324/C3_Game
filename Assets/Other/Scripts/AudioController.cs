@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioController : MonoBehaviour {
-    //[HideInInspector]
+    [HideInInspector]
     public AudioSource audioSound;
-    //[HideInInspector]
+    [HideInInspector]
     public AudioSource audioMusic;
 
     [Header("Music")]
@@ -33,6 +33,11 @@ public class AudioController : MonoBehaviour {
     public AudioClip selectBack;
     public AudioClip selectConfirm;
     public AudioClip selectMove;
+    [Header("Final Boss")]
+    public AudioClip bossAttack;
+    public AudioClip bossDamage;
+    public AudioClip bossPowerUp;
+    public AudioClip cubeFlip;
     [Header("Racing")]
     public AudioClip driftSkid;
     public AudioClip drive;

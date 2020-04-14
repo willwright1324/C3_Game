@@ -13,6 +13,8 @@ public class BossController : MonoBehaviour {
     GameObject ground;
     GameObject boss;
     GameObject bossOrbit;
+    GameObject armPivotL;
+    GameObject armPivotR;
     GameObject colorCube;
     GameObject spin;
     GameObject planet;
@@ -29,6 +31,7 @@ public class BossController : MonoBehaviour {
     Vector3 spinDirection;
     public float bossSpeed = 30f;
     IEnumerator chargePlayerCoroutine;
+    IEnumerator rotateArmXCoroutine;
 
     public static BossController Instance { get; private set; } = null;
     private void Awake() { Instance = this; }
@@ -42,6 +45,8 @@ public class BossController : MonoBehaviour {
         attacks = new GameObject[4];
         boss = GameObject.FindWithTag("Enemy");
         bossOrbit = GameObject.Find("BossOrbit");
+        //armPivotL = GameObject.Find("ArmPivotL");
+        //armPivotR = GameObject.Find("ArmPivotR");
         colorCube = GameObject.Find("ColorCube");
         spin = GameObject.Find("Spin");
         planet = GameObject.Find("Planet");
@@ -65,7 +70,7 @@ public class BossController : MonoBehaviour {
                 }
             }
         }
-
+        //StartCoroutine(RotateArmX(180));
         Invoke("NextAttack", 3f);
     }
 
@@ -145,26 +150,36 @@ public class BossController : MonoBehaviour {
         else
             StartCoroutine(MoveToCube());
     }
+    void DoRotateArmX(int rotation, float speed) {
+        if (rotateArmXCoroutine != null)
+            StopCoroutine(rotateArmXCoroutine);
+        rotateArmXCoroutine = RotateArmX(rotation, speed);
+        StartCoroutine(rotateArmXCoroutine);
+    }
     IEnumerator SlamUp() {
         int oppositeSide = currentSide + 3;
         if (oppositeSide > 5)
             oppositeSide = oppositeSide - 6;
         Vector3 newPos = sidePositions[oppositeSide].position + Vector3.up * 40;
 
+        //DoRotateArmX(180, 5);
         while (Vector3.Distance(boss.transform.position, newPos) > 1) {
             boss.transform.position = Vector3.MoveTowards(boss.transform.position, newPos, Time.deltaTime * bossSpeed);
             yield return null;
         }
         boss.transform.position = newPos;
+        Vector3 cubePos = colorCube.transform.position;
+        cubePos.y = boss.transform.position.y;
+        boss.transform.LookAt(cubePos);
 
         yield return new WaitForSeconds(0.5f);
 
         StartCoroutine(SlamDown(sidePositions[oppositeSide].position));
-
     }
     IEnumerator SlamDown(Vector3 oppositeSide) {
         Vector3 slamPos = oppositeSide + Vector3.up * 10;
 
+        //DoRotateArmX(270, 10);
         while (Vector3.Distance(boss.transform.position, slamPos) > 1) {
             boss.transform.position = Vector3.MoveTowards(boss.transform.position, slamPos, Time.deltaTime * bossSpeed * 2);
             yield return null;
@@ -304,6 +319,17 @@ public class BossController : MonoBehaviour {
         bossOrbit.transform.rotation = orbitRotation;
         boss.transform.parent = null;
         StartCoroutine(MoveToTop());
+    }
+    IEnumerator RotateArmX(int rotation, float speed) {
+        Quaternion armRotation = Quaternion.Euler(rotation, 0, 0);
+
+        while (Quaternion.Angle(armPivotL.transform.localRotation, armRotation) > 0.1f) {
+            armPivotL.transform.localRotation = Quaternion.Slerp(armPivotL.transform.localRotation, armRotation, Time.deltaTime * speed);
+            armPivotR.transform.localRotation = Quaternion.Slerp(armPivotR.transform.localRotation, armRotation, Time.deltaTime * speed);
+            yield return null;
+        }
+        armPivotL.transform.localRotation = armRotation;
+        armPivotR.transform.localRotation = armRotation;
     }
 
 }
