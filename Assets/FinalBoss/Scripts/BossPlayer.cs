@@ -109,7 +109,6 @@ public class BossPlayer : MonoBehaviour {
             //transform.rotation = camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, other.gameObject.transform.localRotation, Time.smoothDeltaTime * camSpeed);
         }
         if (other.gameObject.tag == "Enemy") {
-            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.blockBreak);
             BossController.Instance.DamageBoss();
             rb.AddForce(transform.up * jumpForce / 2, ForceMode.Impulse);
         }
