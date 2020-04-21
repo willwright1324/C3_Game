@@ -80,8 +80,8 @@ public class ShooterPistol : MonoBehaviour {
         if (health > 0)
             health--;
         else {
-            player.GetComponent<ShooterPlayer>().RemoveEnemy(gameObject);
-            ShooterController.Instance.RemoveEnemy();
+            //player.GetComponent<ShooterPlayer>().RemoveEnemy(gameObject);
+            //ShooterController.Instance.RemoveEnemy();
             Destroy(gameObject);
         }
     }

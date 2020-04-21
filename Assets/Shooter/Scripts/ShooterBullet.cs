@@ -22,7 +22,5 @@ public class ShooterBullet : MonoBehaviour {
             return;
 
         Destroy(gameObject);
-        if (collision.tag == "Player")
-            GameController.Instance.DamagePlayer();
     }
 }

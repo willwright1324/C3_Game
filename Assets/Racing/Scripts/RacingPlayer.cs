@@ -48,11 +48,13 @@ public class RacingPlayer : MonoBehaviour {
         driftTurnSpeed = turnSpeed * 1.2f;
 
         normalSpeed = speed;
+
+        cam.transform.position = transform.position + Vector3.forward * -100;
     }
     // Update is called once per frame
     void Update() {
         if (onTrack <= 0 && lastX != -1)
-            OffTrack();            
+            OffTrack();
 
         if (!bumped) {
             // Speed Control
@@ -75,50 +77,50 @@ public class RacingPlayer : MonoBehaviour {
                     }
                 }
             }
-        }
 
-        // Steering Control
-        if (Input.GetAxisRaw("Horizontal") != 0) {
-            currentTurnSpeed += Input.GetAxisRaw("Horizontal") * Time.deltaTime * turnSpeed * 4 * currentMultiplier;
-        }
-        else {
-            if (currentTurnSpeed > 1)
-                currentTurnSpeed -= TURN_DECELERATION * Time.deltaTime * currentMultiplier;
+            // Steering Control
+            if (Input.GetAxisRaw("Horizontal") != 0) {
+                currentTurnSpeed += Input.GetAxisRaw("Horizontal") * Time.deltaTime * turnSpeed * 4 * currentMultiplier;
+            }
             else {
-                if (currentTurnSpeed < -1)
-                    currentTurnSpeed += TURN_DECELERATION * Time.deltaTime * currentMultiplier;
+                if (currentTurnSpeed > 1)
+                    currentTurnSpeed -= TURN_DECELERATION * Time.deltaTime * currentMultiplier;
                 else {
-                    currentTurnSpeed = 0;
+                    if (currentTurnSpeed < -1)
+                        currentTurnSpeed += TURN_DECELERATION * Time.deltaTime * currentMultiplier;
+                    else {
+                        currentTurnSpeed = 0;
+                    }
                 }
             }
-        }
 
-        // Drift Control
-        if (currentSpeed > 0 && Input.GetButton("Action 1")) {
-            if (Input.GetButtonDown("Action 1"))
-                AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.driftSkid);
-            turnSpeed = driftTurnSpeed;
-            currentMultiplier = driftMultiplier;
+            // Drift Control
+            if (currentSpeed > 0 && Input.GetButton("Action 1")) {
+                if (Input.GetButtonDown("Action 1"))
+                    AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.driftSkid);
+                turnSpeed = driftTurnSpeed;
+                currentMultiplier = driftMultiplier;
 
-            car.transform.localRotation = Quaternion.Slerp(car.transform.localRotation, Quaternion.Euler(0, 0, -currentTurnSpeed), Time.deltaTime * 10f);
-            currentTurnSpeed = Mathf.Clamp(currentTurnSpeed, -driftTurnSpeed, driftTurnSpeed);
+                car.transform.localRotation = Quaternion.Slerp(car.transform.localRotation, Quaternion.Euler(0, 0, -currentTurnSpeed / 4), Time.deltaTime * 10f);
+                currentTurnSpeed = Mathf.Clamp(currentTurnSpeed, -driftTurnSpeed, driftTurnSpeed);
 
-            if (speed > 0)
-                speed -= DECELERATION * Time.deltaTime;
-            else
-                speed = 0;
-        }
-        else {
-            speed = normalSpeed;
-            currentMultiplier = 1;
+                if (speed > 0)
+                    speed -= DECELERATION * Time.deltaTime;
+                else
+                    speed = 0;
+            }
+            else {
+                speed = normalSpeed;
+                currentMultiplier = 1;
 
-            car.transform.localRotation = Quaternion.Slerp(car.transform.localRotation, Quaternion.identity, Time.deltaTime * 5f);
+                car.transform.localRotation = Quaternion.Slerp(car.transform.localRotation, Quaternion.identity, Time.deltaTime * 5f);
 
-            if (turnSpeed > normalTurnSpeed)
-                turnSpeed -= TURN_DECELERATION * Time.deltaTime * 5;
-            else
-                turnSpeed = normalTurnSpeed;
-            currentTurnSpeed = Mathf.Clamp(currentTurnSpeed, -turnSpeed, turnSpeed);
+                if (turnSpeed > normalTurnSpeed)
+                    turnSpeed -= TURN_DECELERATION * Time.deltaTime * 5;
+                else
+                    turnSpeed = normalTurnSpeed;
+                currentTurnSpeed = Mathf.Clamp(currentTurnSpeed, -turnSpeed, turnSpeed);
+            }
         }
         if (!RacingController.Instance.raceOver)
             currentSpeed = Mathf.Clamp(currentSpeed, -speed / 2, speed);
@@ -126,9 +128,21 @@ public class RacingPlayer : MonoBehaviour {
             currentSpeed = Mathf.Clamp(currentSpeed, -speed / 2, speed / 2);
 
         if (turnSpeed <= normalTurnSpeed)
-            wheelR.transform.localRotation = wheelL.transform.localRotation = Quaternion.Euler(0, 0, -currentTurnSpeed / 2);
+            wheelR.transform.localRotation = wheelL.transform.localRotation = Quaternion.Euler(0, 0, -currentTurnSpeed / 4);
         else
-            wheelR.transform.localRotation = wheelL.transform.localRotation = Quaternion.Euler(0, 0, currentTurnSpeed / 2);
+            wheelR.transform.localRotation = wheelL.transform.localRotation = Quaternion.Euler(0, 0, currentTurnSpeed / 4);
+
+        /*
+        camY = currentSpeed * 2;
+        camY = Mathf.Clamp(camY, -camYMax / 2, camYMax);
+        Vector3 camPos = transform.position + transform.up * camY * 10;
+        camPos.z = -100;
+        cam.transform.position = Vector3.MoveTowards(cam.transform.position, camPos, Time.deltaTime * 200);
+
+        //if (Mathf.Abs(currentSpeed) > 0)
+        cam.transform.rotation = Quaternion.RotateTowards(cam.transform.rotation, transform.rotation, Time.deltaTime * 30);
+
+        //cam.transform.localRotation = Quaternion.RotateTowards(cam.transform.localRotation, Quaternion.Euler(new Vector3(0, 0, -currentTurnSpeed / 10)), Time.deltaTime * 20);*/
     }
     private void FixedUpdate() {
         if (!bumped) {
@@ -145,19 +159,26 @@ public class RacingPlayer : MonoBehaviour {
             rb.MovePosition(transform.position + transform.up * currentSpeed);
         }
         else {
-            rb.velocity = Vector3.Lerp(rb.velocity, Vector2.zero, Time.fixedDeltaTime * 10);
-            if (rb.velocity.sqrMagnitude < 1)
+            rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, Time.fixedDeltaTime * 10);
+            if (rb.velocity.sqrMagnitude < 1) {
+                rb.velocity = Vector2.zero;
                 bumped =  false;
+            }
         }
-
+        rb.angularVelocity = Mathf.Clamp(rb.angularVelocity, -80, 80);
     }
     private void LateUpdate() {
+        
         camY = currentSpeed * 2;
         camY = Mathf.Clamp(camY, -camYMax / 2, camYMax);
-        cam.transform.localPosition = Vector3.MoveTowards(cam.transform.localPosition, new Vector3(0, camY + camOffset, -100), Time.deltaTime * 10);
+        Vector3 camPos = transform.position + transform.up * camY * 10;
+        camPos.z = -100;
+        cam.transform.position = Vector3.MoveTowards(cam.transform.position, camPos, Time.deltaTime * 200);
 
-        if (Mathf.Abs(currentSpeed) > 0)
-            cam.transform.localRotation = Quaternion.RotateTowards(cam.transform.localRotation, Quaternion.Euler(new Vector3(0, 0, -currentTurnSpeed / 10)), Time.deltaTime * 20);
+        //if (Mathf.Abs(currentSpeed) > 0)
+            cam.transform.rotation = Quaternion.RotateTowards(cam.transform.rotation, transform.rotation, Time.deltaTime * 30);
+
+        //cam.transform.localRotation = Quaternion.RotateTowards(cam.transform.localRotation, Quaternion.Euler(new Vector3(0, 0, -currentTurnSpeed / 10)), Time.deltaTime * 20);*/
     }
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Damage") {
@@ -166,7 +187,13 @@ public class RacingPlayer : MonoBehaviour {
             float bumpForce = 25 * Mathf.Abs(currentSpeed);
             if (collision.gameObject.tag == "Enemy")
                 bumpForce = 50;
+            rb.angularVelocity = 0;
             rb.AddForce(((Vector2)transform.position - (Vector2)collision.gameObject.transform.position).normalized * bumpForce, ForceMode2D.Impulse);
+
+            if (collision.gameObject.tag == "Damage") {
+                StartCoroutine(EnableObstacle(collision.gameObject, 15f));
+                collision.gameObject.SetActive(false);
+            }
             currentTurnSpeed = currentSpeed = 0;
             bumped = true;
         }
@@ -211,14 +238,17 @@ public class RacingPlayer : MonoBehaviour {
     void Respawn() {
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.respawn);
         gameObject.SetActive(true);
-        cam.transform.parent = gameObject.transform;
-        cam.transform.localPosition = new Vector3(0, camOffset, -100);
-        cam.transform.localRotation = Quaternion.Euler(Vector3.zero);
         transform.position = respawn.transform.position;
         transform.rotation = respawn.transform.rotation;
+        cam.transform.position = transform.position + Vector3.forward * -100;
+        cam.transform.rotation = transform.rotation;
         Invoke("RespawnBuffer", 5);
     }
     void RespawnBuffer() {
         moveRespawn = true;
+    }
+    IEnumerator EnableObstacle(GameObject obstacle, float delay) {
+        yield return new WaitForSeconds(delay);
+        obstacle.SetActive(true);
     }
 }

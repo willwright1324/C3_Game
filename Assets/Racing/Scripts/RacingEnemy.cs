@@ -47,7 +47,7 @@ public class RacingEnemy : MonoBehaviour {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, enemyRotation, Time.deltaTime * turnSpeed);
             yield return null;
         }
-        pathIndex = pathIndex + 1 >= paths.Length ? 0 : pathIndex + 1;
+        pathIndex = pathIndex + 1 >= paths.Length ? 0 : ++pathIndex;
         DoDrive();
     }
 }

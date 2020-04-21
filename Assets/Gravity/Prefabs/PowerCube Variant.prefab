@@ -10,12 +10,12 @@ PrefabInstance:
     - target: {fileID: 1127019464020116566, guid: 8bb5addf7b2bbf845b31356790e1193f,
         type: 3}
       propertyPath: m_Name
-      value: PowerCube
+      value: PowerCube Variant
       objectReference: {fileID: 0}
     - target: {fileID: 1127019464020116568, guid: 8bb5addf7b2bbf845b31356790e1193f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 43.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1127019464020116568, guid: 8bb5addf7b2bbf845b31356790e1193f,
         type: 3}
