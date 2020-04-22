@@ -408,7 +408,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 0.259
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -543,17 +543,13 @@ MonoBehaviour:
   pauseUI: {fileID: 0}
   startUI: {fileID: 0}
   currentCube: 0
-  levelUnlocks: 0000000000000000000000000000000000000000000000000000000000000000
-  levelSelects: 0000000000000000000000000000000000000000000000000000000000000000
+  levelUnlocks: 000000000000000000000000
+  levelSelects: 000000000000000000000000
+  cubeCompletes: 000000
   cubeNames:
   - Racing
-  - Shooter
-  - Rhythm
-  - Platformer
   - Gravity
-  - Maze
-  - BallBounce
-  - Puzzle
+  - Action
   completedLevel: 0
   healthCount: 0
   coinAmount: 0
@@ -757,7 +753,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 72
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 3
     m_MaxSize: 72
     m_Alignment: 3
@@ -768,7 +764,9 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Esc: Resume
 
-    X: Return to Level Select'
+    X: Return to Level Select
+
+    Q: Quit Game'
 --- !u!114 &9010631460415783385
 MonoBehaviour:
   m_ObjectHideFlags: 0

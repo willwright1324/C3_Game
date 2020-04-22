@@ -12,150 +12,42 @@ EditorBuildSettings:
     path: Assets/Racing/Scenes/Racing_HowTo.unity
     guid: 182dd3328ee9e5c46a56e573bc4ed317
   - enabled: 1
-    path: Assets/Racing/Scenes/Racing_Prototype.unity
-    guid: 690457dcc007bc8478ee9635b38d32ac
+    path: Assets/Racing/Scenes/Racing_Level1.unity
+    guid: d519be116b212f54aa3c7da87db060b1
   - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 1.unity
-    guid: df66a9cb082878544bc36701d18758ef
+    path: Assets/Racing/Scenes/Racing_Level2.unity
+    guid: 5ecbfa43d115a44429ff13876c2bcc21
   - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 2.unity
-    guid: fda8c5d3f96df204a9329a9f5ffb2722
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 3.unity
-    guid: eb70ab4e13bb4694fa85bb3a27af6f18
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 4.unity
-    guid: 3c2284a5b158dae4fbba2b94f43f5c57
-  - enabled: 1
-    path: Assets/Shooter/Scenes/Shooter_HowTo.unity
-    guid: 6b5b32643e44a8d4c9000fe47512359a
-  - enabled: 1
-    path: Assets/Shooter/Scenes/Shooter_Prototype.unity
-    guid: b2650dd68ee59c14e9dd6752b5b77c32
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 5.unity
-    guid: 23ea611bb32e5c34789184bf5cabadc3
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 6.unity
-    guid: 4ec3a5185b69aca4e8203aa959231e1a
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 7.unity
-    guid: f244e95175291fd448c59d67cbe5c30a
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 8.unity
-    guid: 8f2564a087648d244b7127b9511c5c0c
-  - enabled: 1
-    path: Assets/Rhythm/Scenes/Rhythm_HowTo.unity
-    guid: 1a9f3800f6a8d9a4985baa88eda6c2f7
-  - enabled: 1
-    path: Assets/Rhythm/Scenes/Rhythm_Prototype.unity
-    guid: 4369d72945521ad4b8b541add2b027a8
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 9.unity
-    guid: 81397f3cde1d1c74488814fd943689ca
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 10.unity
-    guid: e5b82811bf015a248b72924084fdbc57
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 11.unity
-    guid: 1216e563a9ffada43a7e694ec0e1244b
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 12.unity
-    guid: 34a187f99206f864c82a7551b14f358a
-  - enabled: 1
-    path: Assets/Platformer/Scenes/Platformer_HowTo.unity
-    guid: ca688b3e11372394f9c4f0d5e64e59fd
-  - enabled: 1
-    path: Assets/Platformer/Scenes/Platformer_Prototype.unity
-    guid: 34c667fe346bcca4a86394fa05a9a3f8
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 13.unity
-    guid: 213bc4dd7fbe154488a02685b5b08066
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 14.unity
-    guid: 9d58c68b905f85e46888a07dc3c6857b
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 15.unity
-    guid: 253378c534747b14db109cba991261d8
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 16.unity
-    guid: a5ee699fc5a25b94b97fc15d5a287e4c
+    path: Assets/Racing/Scenes/Racing_Level3.unity
+    guid: 15434d9889ef8ec46b307e54bd2e8986
   - enabled: 1
     path: Assets/Gravity/Scenes/Gravity_HowTo.unity
     guid: 4b0ab2b6de785d741abea9fd9d5fef08
   - enabled: 1
-    path: Assets/Gravity/Scenes/Gravity_Prototype.unity
-    guid: 58665099517630744ad776570362e8e7
+    path: Assets/Gravity/Scenes/Gravity_Level1.unity
+    guid: a8d832866f9da184db7d9bbf4b7a62d7
   - enabled: 1
-    path: Assets/Gravity/Scenes/Gravity_Boss.unity
-    guid: 9c952259defc8904e86c12bc8328b5c2
+    path: Assets/Gravity/Scenes/Gravity_Level2.unity
+    guid: f08c67b6fa6d77d42b79270df9e232f3
   - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 18.unity
-    guid: 5a98d56a5c88b9041a1cd59eb779728b
+    path: Assets/Gravity/Scenes/Gravity_Level3.unity
+    guid: 5c92fdb24230f904f9677bf023b3f1ac
   - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 19.unity
-    guid: cde169863e0fec24d82dc999d8567621
+    path: Assets/Action/Scenes/Action_HowTo.unity
+    guid: cdc814997d41628409c2fe04c4bbada9
   - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 20.unity
-    guid: 54832ded4ca49af40ac67c9f6a200a08
+    path: Assets/Action/Scenes/Action_Level1.unity
+    guid: dd9bd6736ef26d34ea51db85412231e7
   - enabled: 1
-    path: Assets/Maze/Scenes/Maze_HowTo.unity
-    guid: 76bc5f973e9099a4faacb2a7254b23ce
+    path: Assets/Action/Scenes/Action_Level2.unity
+    guid: bf9aa1b56866286429521cf0e8663de0
   - enabled: 1
-    path: Assets/Maze/Scenes/Maze_Prototype.unity
-    guid: b380b33a92b121d42a192d54a01a5b11
+    path: Assets/Action/Scenes/Action_Level3.unity
+    guid: c25054c34e2427e48b128bf77d45950b
   - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 21.unity
-    guid: 08ca7ffb6da2c724a9fb9565c27b3f15
+    path: Assets/LevelSelect/Scenes/LevelSelect_PrototypeCut.unity
+    guid: a4d71bf2ba6454a459021a59e89da8ea
   - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 22.unity
-    guid: 498b4da3c3ef9dd43a88a2ca0b5c877a
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 23.unity
-    guid: a822bfc674b2d7640a382977645835f0
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 24.unity
-    guid: d96de66bb92a3de4e83f2c34178f08d6
-  - enabled: 1
-    path: Assets/BallBounce/Scenes/BallBounce_HowTo.unity
-    guid: 0e4b1d9a6bfb9de4cb7bd1110bde2127
-  - enabled: 1
-    path: Assets/BallBounce/Scenes/BallBounce_Prototype.unity
-    guid: 8a68ed53b18d4b24e942b54b17a97dfc
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 25.unity
-    guid: 1d740f496ae4fdc4f9d4606ce7725126
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 26.unity
-    guid: 2b506ea34a550ff45abe04ed00bf10a6
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 27.unity
-    guid: acebb4e0ab4df494f80d1981591f02ce
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 28.unity
-    guid: a6b9edb4ef25da245bc47bc615ef83f6
-  - enabled: 1
-    path: Assets/Puzzle/Scenes/Puzzle_HowTo.unity
-    guid: af358f6eda0e3fc4f962e73477ff79b6
-  - enabled: 1
-    path: Assets/Puzzle/Scenes/Puzzle_Prototype.unity
-    guid: df0a902325be8c74bb093dab0da3f527
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 29.unity
-    guid: c8ed5876ee3f8a24e86bf26e33a7853a
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 30.unity
-    guid: 1d4d9dcd3c3cd164195012112eff233f
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 31.unity
-    guid: f1dcaa259243f4341ac677a7339205fd
-  - enabled: 1
-    path: Assets/Other/Scenes/Placeholders/Placeholder 32.unity
-    guid: d75b3fe27e75427469411faaa03dfa52
-  - enabled: 1
-    path: Assets/LevelSelect/Scenes/LevelSelect_Prototype.unity
-    guid: 4bdda63a0a268664684835998d2007b9
-  - enabled: 1
-    path: Assets/FinalBoss/Scenes/FinalBoss.unity
-    guid: b8f2074ae8c77c64eb74ebfeff0b046a
+    path: Assets/FinalBoss/Scenes/FinalBossCut.unity
+    guid: a9ff836be751ae54b90df6cb5c667e52
   m_configObjects: {}

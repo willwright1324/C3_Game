@@ -9,13 +9,8 @@ public enum SelectState { CUBES, LEVELS, HOW_TO, BOSS }
 public class GameController : MonoBehaviour {
     /* 
      * Racing:      0
-     * Shooter:     1
-     * Rhythm:      2
-     * Platformer:  3
-     * Gravity:     4
-     * Maze:        5
-     * Ball Bounce: 6
-     * Puzzle:      7
+     * Gravity:     1
+     * Action:      2
      */
 
     public GameState gameState;
@@ -23,10 +18,17 @@ public class GameController : MonoBehaviour {
     public GameObject pauseUI;
     public GameObject startUI;
     public int currentCube;
+    public int[,] levelHowToBoss = new int[3, 2];
+    public int[] levelUnlocks = new int[3];
+    public int[] levelSelects = new int[3];
+    public bool[] cubeCompletes = new bool[3];
+    public string[] cubeNames = { "Racing", "Gravity", "Action" };
+    /*
     public int[,] levelHowToBoss = new int[8, 2];
     public int[] levelUnlocks = new int[8];
     public int[] levelSelects = new int[8];
     public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "BallBounce", "Puzzle"};
+    */
     public bool completedLevel;
 
     GameObject[] coins;
@@ -67,24 +69,21 @@ public class GameController : MonoBehaviour {
     }
     private void OnEnable() {
         UnityEngine.Cursor.visible = false;
-        levelUnlocks = new int[] { 0, 0, 0, 0, 1, 0, 0, 0};
+        //levelUnlocks = new int[] { 0, 0, 0, 0, 1, 0, 0, 0};
         pauseUI = GameObject.Find("PauseUI");
         pauseUI.SetActive(false);
         startUI = GameObject.Find("StartUI");
         startUI.SetActive(false);
 
         int scene = SceneManager.GetActiveScene().buildIndex;
-        int cube = scene / 6;
-        int level = scene % 6;
+        int cube = scene / 4;
+        int level = scene % 4;
         if (scene == 0)
             return;
-        if (cube > -1 && cube < 8) {
+        if (cube > -1 && cube < 3) {
             switch (level) {
                 case 1:
                     selectState = SelectState.HOW_TO;
-                    break;
-                case 6:
-                    selectState = SelectState.BOSS;
                     break;
                 default:
                     selectState = SelectState.LEVELS;
@@ -98,8 +97,8 @@ public class GameController : MonoBehaviour {
             AudioController.Instance.audioMusic.Stop();
             gameState = GameState.LEVEL_SELECT;
             selectState = SelectState.CUBES;
-            levelHowToBoss = new int[8, 2];
-            levelSelects = new int[8];
+            levelHowToBoss = new int[3, 2];
+            levelSelects = new int[3];
             currentCube = 0;
             pauseUI.SetActive(false);
             SceneManager.LoadScene(0);
@@ -134,9 +133,17 @@ public class GameController : MonoBehaviour {
                     levelHowToBoss[currentCube, 0] = 1;
                     gameState = GameState.GAME;
                     selectState = SelectState.LEVELS;
-                    SceneManager.LoadScene(2 + (currentCube * 6) + levelSelects[currentCube]);
+                    if (levelUnlocks[currentCube] == 0) {
+                        levelSelects[currentCube] = 1;
+                        levelUnlocks[currentCube] = 2;
+                    }
+                    SceneManager.LoadScene(1 + (currentCube * 4) + levelSelects[currentCube]);
                 }
             }
+        }
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            if (gameState == GameState.PAUSED || gameState == GameState.LEVEL_SELECT)
+                Application.Quit();
         }
     }
     public void Init() {}
@@ -214,6 +221,8 @@ public class GameController : MonoBehaviour {
         if (selectState == SelectState.BOSS) {
             selectState = SelectState.LEVELS;
         }
+        if (levelUnlocks[currentCube] == levelSelects[currentCube] && levelUnlocks[currentCube] < 3)
+            levelUnlocks[currentCube]++;
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.winTune);
         AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
         SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);

@@ -96,7 +96,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: f26bfe5278dc11e44ba205fb614686f0,
+    type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -120,7 +121,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &1065623653
+--- !u!1001 &1826623961
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -264,14 +265,18 @@ PrefabInstance:
     - target: {fileID: 6030485049704666746, guid: c8feb9fffebecf14585a686ea4535bf2,
         type: 3}
       propertyPath: m_Text
-      value: 'Arrows: Accelerate/Steer
+      value: 'Arrows: Move
 
-        Z: Drift, X: Brake
+        Z: Dash, X: Shoot
 
+        Hold X: Shoot while moving
 
-        Win the race!
-
-'
+        Collect all of the coins to pass through the door!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030485049704666746, guid: c8feb9fffebecf14585a686ea4535bf2,
+        type: 3}
+      propertyPath: m_FontData.m_BestFit
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8feb9fffebecf14585a686ea4535bf2, type: 3}
@@ -342,6 +347,51 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1318361172471529167, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 87.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1318361172471529167, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 11.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3881342687497904861, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3881342687497904861, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3881342687497904861, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Range
+      value: 22.83
+      objectReference: {fileID: 0}
+    - target: {fileID: 3881342687497904861, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_AreaSize.x
+      value: 6.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3881342687497904861, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_AreaSize.y
+      value: 33.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3881342687497904861, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3881342687497904861, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8881502447192208854, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_Color.g
@@ -436,6 +486,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6028697255194733840, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2268879400066945189, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2268879400066945189, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 0.42
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c388b5ce242d63488732ade109745b3, type: 3}
