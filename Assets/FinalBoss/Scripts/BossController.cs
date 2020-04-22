@@ -47,7 +47,7 @@ public class BossController : MonoBehaviour {
         cam = Camera.main.gameObject;
         ground = GameObject.FindWithTag("Ground");
         attacks = new GameObject[4];
-        boss = GameObject.FindWithTag("Enemy");
+        boss = GameObject.Find("Boss");
         bossOrbit = GameObject.Find("BossOrbit");
         armPivotL = GameObject.Find("ArmPivotL");
         armPivotR = GameObject.Find("ArmPivotR");
