@@ -176,7 +176,7 @@ public class RacingPlayer : MonoBehaviour {
         cam.transform.position = Vector3.MoveTowards(cam.transform.position, camPos, Time.deltaTime * 200);
 
         //if (Mathf.Abs(currentSpeed) > 0)
-            cam.transform.rotation = Quaternion.RotateTowards(cam.transform.rotation, transform.rotation, Time.deltaTime * 30);
+            //cam.transform.rotation = Quaternion.RotateTowards(cam.transform.rotation, transform.rotation, Time.deltaTime * 30);
 
         //cam.transform.localRotation = Quaternion.RotateTowards(cam.transform.localRotation, Quaternion.Euler(new Vector3(0, 0, -currentTurnSpeed / 10)), Time.deltaTime * 20);*/
     }
@@ -241,7 +241,7 @@ public class RacingPlayer : MonoBehaviour {
         transform.position = respawn.transform.position;
         transform.rotation = respawn.transform.rotation;
         cam.transform.position = transform.position + Vector3.forward * -100;
-        cam.transform.rotation = transform.rotation;
+        //cam.transform.rotation = transform.rotation;
         Invoke("RespawnBuffer", 5);
     }
     void RespawnBuffer() {

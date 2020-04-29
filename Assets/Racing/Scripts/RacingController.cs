@@ -142,7 +142,11 @@ public class RacingController : MonoBehaviour {
             enemyLap.text = "Enemy: Win!";
             lap.text = "You Lose!";
             raceOver = true;
+            Invoke("Lose", 3f);
         }
             
+    }
+    void Lose() {
+        GameController.Instance.ResetLevel();
     }
 }

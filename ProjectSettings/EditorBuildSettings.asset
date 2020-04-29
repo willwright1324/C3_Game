@@ -6,20 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Other/Scenes/CutScene.unity
-    guid: b90655c111680c84eb1faadba0225227
+    path: Assets/Other/Scenes/MainMenu.unity
+    guid: 69449caf5c41f184fa6a2cd6a1128c06
   - enabled: 1
     path: Assets/Racing/Scenes/Racing_HowTo.unity
     guid: 182dd3328ee9e5c46a56e573bc4ed317
   - enabled: 1
     path: Assets/Racing/Scenes/Racing_Level1.unity
-    guid: d519be116b212f54aa3c7da87db060b1
+    guid: 2f847b58d1646bc48afff4ecd43a61c5
   - enabled: 1
     path: Assets/Racing/Scenes/Racing_Level2.unity
-    guid: 5ecbfa43d115a44429ff13876c2bcc21
+    guid: 6230fcedd0a2c424dad0b6a163e6dd79
   - enabled: 1
     path: Assets/Racing/Scenes/Racing_Level3.unity
-    guid: 15434d9889ef8ec46b307e54bd2e8986
+    guid: 109ea2faf7eee644480cfe68544ce567
   - enabled: 1
     path: Assets/Gravity/Scenes/Gravity_HowTo.unity
     guid: 4b0ab2b6de785d741abea9fd9d5fef08
@@ -44,6 +44,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Action/Scenes/Action_Level3.unity
     guid: c25054c34e2427e48b128bf77d45950b
+  - enabled: 1
+    path: Assets/Other/Scenes/CutScene.unity
+    guid: b90655c111680c84eb1faadba0225227
   - enabled: 1
     path: Assets/LevelSelect/Scenes/LevelSelect_PrototypeCut.unity
     guid: a4d71bf2ba6454a459021a59e89da8ea

@@ -141,7 +141,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
         switch (selectState) {
             case SelectState.CUBES:
                 cubeSelectText.text = "<- " + cubeNames[currentCube] + " ->";
-                SetControlsText(0);
+                SetControlsText(1);
                 cam.transform.LookAt(cubes[currentCube].transform.position);
                 break;
             default:
@@ -271,7 +271,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
             yield return null;
         }
         camOrbit.transform.rotation = camRotation;
-        SetControlsText(0);
+        SetControlsText(1);
         cubeSelectText.text = "<- " + cubeNames[currentCube] + " ->";
         StartCoroutine(MoveToCenter());
     }
@@ -327,11 +327,14 @@ public class LevelSelectControllerCut : MonoBehaviour {
     }
     void CheckLevelType() {
         if (levelSelects[currentCube] == 0) {
-            if (levelUnlocks[currentCube] == 0)
+            if (levelUnlocks[currentCube] == 0) {
                 SetControlsText(4);
-            else
+                cubeSelectText.text = "How To Play";
+            }
+            else {
                 SetControlsText(0);
-            cubeSelectText.text = "<- How To Play ->";
+                cubeSelectText.text = "<- How To Play ->";
+            }
             selectState = SelectState.HOW_TO;
         }
         else {
@@ -343,10 +346,10 @@ public class LevelSelectControllerCut : MonoBehaviour {
     void SetControlsText(int whichText) {
         switch (whichText) {
             case 0:
-                controlsText.text = "Z: Select \n\nLeft/Right: Change Selection";
+                controlsText.text = "Z: Confirm \nX: Back \nArrows: Select";
                 break;
             case 1:
-                controlsText.text = "Z: Select \nX: Back \n\nLeft/Right: Change Selection \n\nDown: How To Play";
+                controlsText.text = "Z: Confirm \n\nArrows: Select";
                 break;
             case 2:
                 controlsText.text = "Z: Select \nX: Back \n\nUp: Level Select";
@@ -355,7 +358,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
                 controlsText.text = "Z: Select \nX: Back \n\nDown: Level Select";
                 break;
             case 4:
-                controlsText.text = "Z: Select \nX: Back";
+                controlsText.text = "Z: Confirm \nX: Back";
                 break;
         }
     }
