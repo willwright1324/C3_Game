@@ -316,11 +316,11 @@ MonoBehaviour:
   bossMusic: {fileID: 8300000, guid: 83fcf3548a7d0f94b92037a1ba9e8ca4, type: 3}
   howToMusic: {fileID: 8300000, guid: 17292ff09c1113d4b9fde5d8a7890ac9, type: 3}
   menuMusic: {fileID: 8300000, guid: bebc07799aac943498ffec2e2d388fe8, type: 3}
-  racingMusic: {fileID: 8300000, guid: 11849b1d845c7dd4e85b6c9487312ac4, type: 3}
+  racingMusic: {fileID: 8300000, guid: 60bde1e62c5f0da439bd9a358050d9f2, type: 3}
   shooterMusic: {fileID: 8300000, guid: 11849b1d845c7dd4e85b6c9487312ac4, type: 3}
   rhythmMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
   platformerMusic: {fileID: 8300000, guid: c7134c4b788bf96489706afa7cf0632a, type: 3}
-  gravityMusic: {fileID: 8300000, guid: c7134c4b788bf96489706afa7cf0632a, type: 3}
+  gravityMusic: {fileID: 8300000, guid: a07fb17914a853446a7abbd36179f037, type: 3}
   mazeMusic: {fileID: 8300000, guid: d50a5fc0a7e1f194aa99c91833e8c0d6, type: 3}
   ballbounceMusic: {fileID: 8300000, guid: a07fb17914a853446a7abbd36179f037, type: 3}
   puzzleMusic: {fileID: 8300000, guid: a07fb17914a853446a7abbd36179f037, type: 3}
