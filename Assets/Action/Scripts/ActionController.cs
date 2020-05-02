@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class ActionController : MonoBehaviour {
     GameObject player;
     GameObject respawn;
+    GameObject cam;
+    GameObject enemyTrigger;
 
     public static ActionController Instance { get; private set; } = null;
     private void Awake() { Instance = this; }
@@ -16,8 +18,13 @@ public class ActionController : MonoBehaviour {
         GameController.Instance.InitHealth();
         player = GameObject.FindWithTag("Player");
         respawn = GameObject.FindWithTag("Respawn");
+        cam = Camera.main.gameObject;
+        enemyTrigger = GameObject.Find("EnemyTrigger");
         MoveRespawn();
         GameController.Instance.DoStartGame(AudioController.Instance.mazeMusic);
+    }
+    private void Update() {
+        enemyTrigger.transform.position = cam.transform.position;
     }
     public void MoveRespawn() {
         respawn.transform.position = player.transform.position;

@@ -110,8 +110,6 @@ public class LevelSelectControllerCut : MonoBehaviour {
                     else {
                         if (selectState == SelectState.LEVELS && CheckIfUnlocked()) {
                             gameState = GameState.GAME;
-                            if (levelSelects[currentCube] == 1)
-                                selectState = SelectState.BOSS;
                             SaveToGameController();
                             SceneManager.LoadScene(1 + (currentCube * 4) + levelSelects[currentCube]);
                         }
@@ -216,6 +214,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
         camOrbit.transform.rotation = Quaternion.LookRotation(cam.transform.position - camOrbit.transform.position);
         cam.transform.SetParent(camOrbit.transform);
 
+        CheckIfUnlocked();
         while (Vector3.Distance(cam.transform.position, camOrbit.transform.position) > camDistance) {
             cam.transform.position += cam.transform.forward * Time.smoothDeltaTime * camMoveSpeed;
             yield return null;
@@ -223,7 +222,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
         cam.transform.localRotation = Quaternion.Euler(0, 180, 0);
         cam.transform.localPosition = new Vector3(0, 0, cam.transform.localPosition.z);
         //SetControlsText(1);
-        CheckIfUnlocked();
+        
         StartCoroutine(FixCamRotation(levelSelects[whichCube]));
     }
     // Camera looks at level side
@@ -231,12 +230,12 @@ public class LevelSelectControllerCut : MonoBehaviour {
         camIsRotating = true;
         Quaternion camRotation = Quaternion.Euler(0, whichLevel * -90, 0);
 
+        CheckLevelType();
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
             camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.smoothDeltaTime * camRotateSpeed);
             yield return null;
         }
         camOrbit.transform.localRotation = camRotation;
-        CheckLevelType();
         camIsRotating = false;
     }
     // Orients camera to cube's last selected level
@@ -244,12 +243,12 @@ public class LevelSelectControllerCut : MonoBehaviour {
         camIsMoving = true;
         Quaternion camRotation = Quaternion.Euler(0, whichLevel * -90, 0);
 
+        CheckLevelType();
         while (Quaternion.Angle(camOrbit.transform.localRotation, camRotation) > 0.1f) {
             camOrbit.transform.localRotation = Quaternion.Slerp(camOrbit.transform.localRotation, camRotation, Time.smoothDeltaTime * camRotateSpeed);
             yield return null;
         }
         camOrbit.transform.localRotation = camRotation;
-        CheckLevelType();
         /*
         if (selectState == SelectState.HOW_TO) {
             SetControlsText(1);

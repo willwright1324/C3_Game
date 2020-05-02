@@ -271,13 +271,39 @@ PrefabInstance:
 
         Hold X: Shoot while moving
 
+
         Collect all of the coins to pass through the door!'
       objectReference: {fileID: 0}
     - target: {fileID: 6030485049704666746, guid: c8feb9fffebecf14585a686ea4535bf2,
         type: 3}
       propertyPath: m_FontData.m_BestFit
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6030485049704666746, guid: c8feb9fffebecf14585a686ea4535bf2,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030485049704666744, guid: c8feb9fffebecf14585a686ea4535bf2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030485049704666744, guid: c8feb9fffebecf14585a686ea4535bf2,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 575.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7333482482660086116, guid: c8feb9fffebecf14585a686ea4535bf2,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7333482482524326191, guid: c8feb9fffebecf14585a686ea4535bf2,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 6845d7e0ebd9b914b920f216ebd9367d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8feb9fffebecf14585a686ea4535bf2, type: 3}
 --- !u!1001 &6398876043692732427

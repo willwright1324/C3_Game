@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
     public SelectState selectState;
     public GameObject pauseUI;
     public GameObject startUI;
+    Text countdownText;
     public int currentCube;
     public int[,] levelHowToBoss = new int[3, 2];
     public int[] levelUnlocks = new int[3];
@@ -30,6 +31,9 @@ public class GameController : MonoBehaviour {
     public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "BallBounce", "Puzzle"};
     */
     public bool completedLevel;
+    public float startTimer;
+    public AudioClip startMusic;
+    IEnumerator startGameCoroutine;
 
     GameObject[] coins;
     GameObject player;
@@ -73,6 +77,7 @@ public class GameController : MonoBehaviour {
         pauseUI = GameObject.Find("PauseUI");
         pauseUI.SetActive(false);
         startUI = GameObject.Find("StartUI");
+        countdownText = GameObject.Find("Countdown").GetComponent<Text>();
         startUI.SetActive(false);
 
         int scene = SceneManager.GetActiveScene().buildIndex;
@@ -105,13 +110,28 @@ public class GameController : MonoBehaviour {
         }
         if (Input.GetButtonDown("Cancel")) {
             if (gameState == GameState.GAME) {
-                pauseUI.SetActive(true);
-                gameState = GameState.PAUSED;
-                Time.timeScale = 0f;
+                if (selectState == SelectState.HOW_TO) {
+                    gameState = GameState.LEVEL_SELECT;
+                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
+                    AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.selectBack);
+                }
+                else {
+                    pauseUI.SetActive(true);
+                    gameState = GameState.PAUSED;
+                    AudioController.Instance.audioSound.Pause();
+                    Time.timeScale = 0f;
+                }
             }
             else {
                 if (gameState == GameState.PAUSED) {
-                    Time.timeScale = 1f;
+                    if (startTimer > 0) {
+                        if (startGameCoroutine != null)
+                            StopCoroutine(startGameCoroutine);
+                        startGameCoroutine = StartGame(startMusic, startTimer);
+                        StartCoroutine(startGameCoroutine);
+                    }
+                    else
+                        Time.timeScale = 1f;
                     pauseUI.SetActive(false);
                     gameState = GameState.GAME;
                 }
@@ -119,6 +139,14 @@ public class GameController : MonoBehaviour {
         }
         if (Input.GetButtonDown("Action 2")) {
             if (gameState == GameState.PAUSED) {
+                if (startGameCoroutine != null) {
+                    StopCoroutine(startGameCoroutine);
+                    startTimer = 0;
+                    startMusic = null;
+                    AudioController.Instance.audioSound.Stop();
+                    countdownText.text = "3";
+                    startUI.SetActive(false);
+                }
                 Time.timeScale = 1f;
                 pauseUI.SetActive(false);
                 gameState = GameState.LEVEL_SELECT;
@@ -135,9 +163,9 @@ public class GameController : MonoBehaviour {
                     selectState = SelectState.LEVELS;
                     if (levelUnlocks[currentCube] == 0) {
                         levelSelects[currentCube] = 1;
-                        levelUnlocks[currentCube] = 2;
+                        levelUnlocks[currentCube] = 1;
                     }
-                    SceneManager.LoadScene(1 + (currentCube * 4) + levelSelects[currentCube]);
+                    SceneManager.LoadScene(2 + (currentCube * 4));
                 }
             }
         }
@@ -170,9 +198,14 @@ public class GameController : MonoBehaviour {
     public void DoStartGame(AudioClip ac) {
         if (AudioController.Instance.audioMusic.isPlaying)
             AudioController.Instance.audioMusic.Stop();
+        startMusic = ac;
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.countdown);
         Time.timeScale = 0;
-        StartCoroutine(StartGame(ac));
+
+        if (startGameCoroutine != null)
+            StopCoroutine(startGameCoroutine);
+        startGameCoroutine = StartGame(ac, 0);
+        StartCoroutine(startGameCoroutine);
     }
     // Gives player full health
     public void ResetHealth() {
@@ -231,20 +264,24 @@ public class GameController : MonoBehaviour {
     public void ResetLevel() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    IEnumerator StartGame(AudioClip ac) {
+    IEnumerator StartGame(AudioClip ac, float time) {
+        AudioController.Instance.audioSound.UnPause();
         startUI.SetActive(true);
-        Text countdownText = GameObject.Find("Countdown").GetComponent<Text>();
-        float timer = 0;
-        while (timer < 4) {
-            timer += Time.unscaledDeltaTime;
-            if (timer >= 1) {
-                if (timer < 3)
-                    countdownText.text = (3 - (int)timer) + "";
-                else
-                    countdownText.text = "Go!";
+        startTimer = time;
+
+        while (startTimer < 4) {
+            if (gameState != GameState.PAUSED) {
+                startTimer += Time.unscaledDeltaTime;
+                if (startTimer >= 1) {
+                    if (startTimer < 3)
+                        countdownText.text = (3 - (int)startTimer) + "";
+                    else
+                        countdownText.text = "Go!";
+                }
             }
             yield return null;
         }
+        startTimer = 0;
         Time.timeScale = 1;
         countdownText.text = "3";
         startUI.SetActive(false);

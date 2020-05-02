@@ -259,6 +259,7 @@ GameObject:
   - component: {fileID: 269832961}
   - component: {fileID: 269832963}
   - component: {fileID: 269832962}
+  - component: {fileID: 269832964}
   m_Layer: 5
   m_Name: CreditsText
   m_TagString: Untagged
@@ -275,15 +276,15 @@ RectTransform:
   m_GameObject: {fileID: 269832960}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.1716518, y: 3.1716518, z: 3.1716518}
+  m_LocalScale: {x: 1.0689418, y: 1.0689418, z: 1.0689418}
   m_Children: []
   m_Father: {fileID: 88859149}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7, y: 43.6}
-  m_SizeDelta: {x: 177.7, y: 83.11}
+  m_AnchoredPosition: {x: -0.8, y: 37}
+  m_SizeDelta: {x: 622, y: 310.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &269832962
 MonoBehaviour:
@@ -306,8 +307,8 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 1c10051538e484e849e45b324b9b334b, type: 2}
-    m_FontSize: 0
+    m_Font: {fileID: 12800000, guid: 652f7165b7c30ab46af6c4aad90a639b, type: 2}
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -318,18 +319,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'William Wright - Programming/Game Design
-
-    Jerry Mayton - Level Design
-
-    Aaron Robley - Music/Sound Design
-
-    Briana Sykes - Story Art
-
-
-    Engine - Unity
-
-    Text Font - Tripfive by PixelMush'
+  m_Text: "William Wright - Programming/Game Design\nJerry Mayton - Level Design\nAaron
+    Robley - Music/Sound Design\nBriana Sykes - Story Art\n\nEngine - Unity\nText
+    Fonts - Tripfive by PixelMush\n\t             - Thaleah by Tiny World"
 --- !u!222 &269832963
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -338,6 +330,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 269832960}
   m_CullTransparentMesh: 0
+--- !u!114 &269832964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269832960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &352408954
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,14 +372,14 @@ RectTransform:
   m_GameObject: {fileID: 352408954}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7.2083, y: 7.2083, z: 7.2083}
+  m_LocalScale: {x: 10.278315, y: 10.278315, z: 10.278315}
   m_Children: []
   m_Father: {fileID: 2535345829175473028}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7, y: 145.9}
+  m_AnchoredPosition: {x: -7, y: 168.6}
   m_SizeDelta: {x: 74.39, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &352408956
@@ -484,11 +491,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5933393655224747214, guid: 3c388b5ce242d63488732ade109745b3,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3596057851938625869, guid: 3c388b5ce242d63488732ade109745b3,
         type: 3}
       propertyPath: m_BackGroundColor.r
@@ -503,6 +505,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_BackGroundColor.b
       value: 0.122641504
+      objectReference: {fileID: 0}
+    - target: {fileID: 5933393655224747214, guid: 3c388b5ce242d63488732ade109745b3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c388b5ce242d63488732ade109745b3, type: 3}
@@ -835,6 +842,7 @@ GameObject:
   - component: {fileID: 1219430049}
   - component: {fileID: 1219430051}
   - component: {fileID: 1219430050}
+  - component: {fileID: 1219430052}
   m_Layer: 5
   m_Name: Controls
   m_TagString: Untagged
@@ -851,15 +859,15 @@ RectTransform:
   m_GameObject: {fileID: 1219430048}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.5590982, y: 3.5590982, z: 3.5590982}
+  m_LocalScale: {x: 1.0320762, y: 1.0320762, z: 1.0320762}
   m_Children: []
   m_Father: {fileID: 2535345829175473028}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -258.3, y: -167.4}
-  m_SizeDelta: {x: 74.39, y: 26.09}
+  m_AnchoredPosition: {x: -278.8, y: -187.9}
+  m_SizeDelta: {x: 213.7, y: 97.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1219430050
 MonoBehaviour:
@@ -882,8 +890,8 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 1c10051538e484e849e45b324b9b334b, type: 2}
-    m_FontSize: 0
+    m_Font: {fileID: 12800000, guid: 652f7165b7c30ab46af6c4aad90a639b, type: 2}
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -905,6 +913,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219430048}
   m_CullTransparentMesh: 0
+--- !u!114 &1219430052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1219430048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1001 &1355918108
 PrefabInstance:
   m_ObjectHideFlags: 0
