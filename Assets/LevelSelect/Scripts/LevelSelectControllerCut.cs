@@ -13,6 +13,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
     public int[] levelSelects = null;
     public bool[] cubeCompletes = null;
     public string[] cubeNames = null;
+    public bool[] didCutscene = null;
 
     GameObject colorCube;
     public GameObject[] cubes;
@@ -33,6 +34,8 @@ public class LevelSelectControllerCut : MonoBehaviour {
     IEnumerator lookAtCubeCoroutine;
     IEnumerator rotateCamOrbitCoroutine;
 
+    GameObject devText;
+
     // Start is called before the first frame update
     void Start() {
         currentCube = GameController.Instance.currentCube;
@@ -43,6 +46,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
         levelSelects = GameController.Instance.levelSelects;
         cubeCompletes = GameController.Instance.cubeCompletes;
         cubeNames = GameController.Instance.cubeNames;
+        didCutscene = GameController.Instance.didCutscene;
 
         colorCube = GameObject.Find("ColorCube");
         cubes = new GameObject[cubeNames.Length];
@@ -51,7 +55,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
             cubes[i].transform.rotation = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
         }
         for (int i = 0; i < cubeCompletes.Length; i++) {
-            if (cubeCompletes[i])
+            if (cubeCompletes[i] || GameController.Instance.devMode)
                 CubeCompleted(i);
         }
         cubeSelectText = GameObject.Find("CubeSelect").GetComponent<Text>();
@@ -59,6 +63,10 @@ public class LevelSelectControllerCut : MonoBehaviour {
 
         cam = GameObject.FindWithTag("MainCamera");
         camOrbit = GameObject.Find("CameraOrbit");
+
+        devText = GameObject.Find("DevText");
+        if (!GameController.Instance.devMode)
+            devText.SetActive(false);
 
         AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
         InitCamera();
@@ -70,16 +78,49 @@ public class LevelSelectControllerCut : MonoBehaviour {
         foreach (GameObject cube in cubes)
             cube.transform.Rotate(Time.deltaTime * 2, Time.deltaTime * -1.5f, Time.deltaTime * 1);
 
-        if (Input.GetKeyDown(KeyCode.B)) {
-            gameState = GameState.GAME;
+        // Dev Mode
+        if (Input.GetKey(KeyCode.C) &&
+            Input.GetKey(KeyCode.U) &&
+            Input.GetKey(KeyCode.B) &&
+            Input.GetKey(KeyCode.E) &&
+            !GameController.Instance.devMode) {
+            GameController.Instance.devMode = true;
+            devText.SetActive(true);
+
+            for (int i = 0; i < levelUnlocks.GetLength(0); i++)
+                levelUnlocks[i] = 3;
+            for (int i = 0; i < cubeCompletes.Length; i++) {
+                if (!cubeCompletes[i])
+                    CubeCompleted(i);
+            }
+            for (int i = 0; i < cubes.Length; i++) {
+                Transform[] c = cubes[i].GetComponentsInChildren<Transform>();
+                for (int j = 2; j < c.Length; j++) {
+                    if (levelUnlocks[i] < j - 1)
+                        break;
+                    c[j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("General/level" + (j - 1) + "_icon");
+                }
+            }
+        }
+        if (GameController.Instance.devMode) {
+            if (Input.GetKeyDown(KeyCode.F)) {
+                gameState = GameState.GAME;
+                SaveToGameController();
+                AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
+                SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+            }
+        }
+
+        // Exit to Menu
+        if (Input.GetButtonDown("Cancel")) {
             SaveToGameController();
-            AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
-            SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+            SceneManager.LoadScene(0);
         }
 
         if (selectState == SelectState.CUBES)
             WatchCube(currentCube);
 
+        // Menu Controls
         if (gameState == GameState.LEVEL_SELECT) {
             // Switch Cube/Level
             if (Input.GetAxisRaw("Horizontal") != 0) {
@@ -173,6 +214,8 @@ public class LevelSelectControllerCut : MonoBehaviour {
                 if (b == false)
                     return;
             }
+            if (GameController.Instance.devMode)
+                return;
             gameState = GameState.GAME;
             SaveToGameController();
             AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
@@ -362,9 +405,9 @@ public class LevelSelectControllerCut : MonoBehaviour {
         }
     }
     void CubeCompleted(int whichCube) {
-        string mat = cubes[currentCube].GetComponent<MeshRenderer>().material.name;
+        string mat = cubes[whichCube].GetComponent<MeshRenderer>().material.name;
         mat = mat.Split(' ')[0];
-        cubes[currentCube].GetComponent<MeshRenderer>().material = Resources.Load<Material>("FinalBoss/" + mat + "Glow");
+        cubes[whichCube].GetComponent<MeshRenderer>().material = Resources.Load<Material>("FinalBoss/" + mat + "Glow");
     }
     // Saves relevant data to the Game Controller
     void SaveToGameController() {

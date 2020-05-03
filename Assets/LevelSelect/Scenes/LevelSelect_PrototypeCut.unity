@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 321349052}
   - component: {fileID: 321349051}
   m_Layer: 5
-  m_Name: Info
+  m_Name: DevText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -474,8 +474,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 812, y: -117}
-  m_SizeDelta: {x: 695.3, y: 276.4}
+  m_AnchoredPosition: {x: 684.9, y: -117}
+  m_SizeDelta: {x: 312.6, y: 276.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &321349051
 MonoBehaviour:
@@ -525,13 +525,12 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Reset Build - R
+  m_Text: 'Dev Mode:
 
-    Final Boss - B
 
-    Return to Level Select - Escape
+    All levels unlocked!
 
-    Quit Game - Q'
+    Final Boss - F'
 --- !u!222 &321349053
 CanvasRenderer:
   m_ObjectHideFlags: 0

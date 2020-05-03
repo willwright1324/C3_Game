@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour {
-    public GameObject[] buttons = new GameObject[2];
+    public GameObject[] buttons = new GameObject[3];
     public GameObject select;
     public GameObject creditsScreen;
+    Text selectText;
     public int selection;
     public int menuMode;
     int selectionRange;
@@ -17,6 +19,8 @@ public class MenuController : MonoBehaviour {
         select = GameObject.Find("Select");
         creditsScreen = GameObject.Find("CreditsScreen");
         creditsScreen.SetActive(false);
+
+        selectText = select.GetComponent<Text>();
 
         selectionRange = buttons.Length - 1;
         select.transform.position = buttons[0].transform.position;
@@ -36,11 +40,20 @@ public class MenuController : MonoBehaviour {
                 return;
             }
             if (buttons[selection].name == "Play") {
-                SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 3);
+                if (!GameController.Instance.didCutscene[0]) {
+                    GameController.Instance.didCutscene[0] = true;
+                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 3);
+                }
+                else
+                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
             }
             if (buttons[selection].name == "Credits") {
                 menuMode = 1;
                 creditsScreen.SetActive(true);
+            }
+            if (buttons[selection].name == "Quit") {
+                GameController.Instance.Save();
+                Application.Quit();
             }
         }
     }
@@ -50,6 +63,10 @@ public class MenuController : MonoBehaviour {
         else
             selection = selection + 1 > selectionRange ? 0 : ++selection;
 
+        selectText.text = "<";
+        for (int i = 0; i < buttons[selection].GetComponent<Text>().text.Length + 2; i++)
+            selectText.text += " ";
+        selectText.text += ">";
         select.transform.position = buttons[selection].transform.position;
     }
 }
