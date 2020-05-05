@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public enum GameState { LEVEL_SELECT, GAME, PAUSED }
 public enum SelectState { CUBES, LEVELS, HOW_TO, BOSS }
@@ -24,6 +26,9 @@ public class GameController : MonoBehaviour {
     public int[] levelSelects = new int[3];
     public bool[] cubeCompletes = new bool[3];
     public string[] cubeNames = { "Racing", "Gravity", "Action" };
+    public bool[] didCutscene = new bool[6];
+    public bool devMode;
+    GameData gd;
     /*
     public int[,] levelHowToBoss = new int[8, 2];
     public int[] levelUnlocks = new int[8];
@@ -79,6 +84,7 @@ public class GameController : MonoBehaviour {
         startUI = GameObject.Find("StartUI");
         countdownText = GameObject.Find("Countdown").GetComponent<Text>();
         startUI.SetActive(false);
+        Load();
 
         int scene = SceneManager.GetActiveScene().buildIndex;
         int cube = scene / 4;
@@ -180,6 +186,43 @@ public class GameController : MonoBehaviour {
         player = GameObject.FindWithTag("Player");
         respawn = GameObject.FindWithTag("Respawn");
         respawn.transform.position = player.transform.position;
+    }
+    public void Save() {
+        GameData gd = new GameData();
+        gd.gameState = gameState;
+        gd.selectState = selectState;
+        gd.currentCube = currentCube;
+        gd.levelHowToBoss = levelHowToBoss;
+        gd.levelUnlocks = levelUnlocks;
+        gd.levelSelects = levelSelects;
+        gd.cubeCompletes = cubeCompletes;
+        gd.didCutscene = didCutscene;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + Path.DirectorySeparatorChar + "SaveData.gd");
+        bf.Serialize(file, gd);
+        file.Close();
+    }
+    public void Load() {
+        if (File.Exists(Application.persistentDataPath + Path.DirectorySeparatorChar + "SaveData.gd")) {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + Path.DirectorySeparatorChar + "SaveData.gd", FileMode.Open);
+            GameData gd = new GameData();
+            gd = (GameData)bf.Deserialize(file);
+            file.Close();
+
+            gameState = gd.gameState;
+            selectState = gd.selectState;
+            currentCube = gd.currentCube;
+            levelHowToBoss = gd.levelHowToBoss;
+            levelUnlocks = gd.levelUnlocks;
+            levelSelects = gd.levelSelects;
+            cubeCompletes = gd.cubeCompletes;
+            didCutscene = gd.didCutscene;
+        }
+    }
+    public void DeleteSave() {
+
     }
     // Initializes health when needed
     public void InitHealth() {

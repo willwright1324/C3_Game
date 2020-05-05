@@ -215,7 +215,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.78
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -550,7 +550,11 @@ MonoBehaviour:
   - Racing
   - Gravity
   - Action
+  didCutscene: 000000000000
+  devMode: 0
   completedLevel: 0
+  startTimer: 0
+  startMusic: {fileID: 0}
   healthCount: 0
   coinAmount: 0
 --- !u!1 &8307628638033948016

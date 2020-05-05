@@ -22,6 +22,7 @@ public class BossController : MonoBehaviour {
     GameObject planet;
     GameObject cubeShadow;
     Text bossHealth;
+    public List<GameObject> healthBars = new List<GameObject>();
     public GameObject lastAttack;
     public GameObject[] attacks;
     public List<GameObject> attackList;
@@ -58,6 +59,16 @@ public class BossController : MonoBehaviour {
         planet = GameObject.Find("Planet");
 
         bossHealth = GameObject.Find("BossHealth").GetComponent<Text>();
+        RectTransform[] bh = bossHealth.gameObject.GetComponentsInChildren<RectTransform>();
+
+        foreach (string s in attackNames) {
+            foreach (RectTransform t in bh) {
+                if (t.name.Contains(s)) {
+                    healthBars.Add(t.gameObject);
+                    break;
+                }
+            }
+        }
 
         GameObject[] cubes = GameObject.FindGameObjectsWithTag("Cube");
         for (int i = 0; i < 8; i++) {
@@ -93,7 +104,22 @@ public class BossController : MonoBehaviour {
             chargePlayerCoroutine = null;
             boss.GetComponent<Renderer>().material = Resources.Load<Material>("FinalBoss/ObstacleBlack");
             Destroy(cubeShadow);
-            bossHealth.text = "Boss Health: " + (8 - attackPicks.Count);
+
+            GameObject hb = healthBars[attackList.IndexOf(lastAttack)];
+            string attackName = lastAttack.name.Split('C')[0];
+            foreach (GameObject go in healthBars) {
+                if (go.name.Contains(attackName)) {
+                    healthBars.Remove(go);
+                    break;
+                }
+            }
+            Destroy(hb);
+
+            for (int i = 0; i < healthBars.Count; i++) {
+                StartCoroutine(HealthMove(healthBars[i], 80 + (i * 45)));
+            }
+
+            //bossHealth.text = "Boss Health: " + (8 - attackPicks.Count);
             //StartCoroutine(MoveToCube());
             if (attackPicks.Count >= 8) {
                 Destroy(boss);
@@ -167,6 +193,17 @@ public class BossController : MonoBehaviour {
             StopCoroutine(rotateArmXCoroutine);
         rotateArmXCoroutine = RotateArmX(rotation, speed);
         StartCoroutine(rotateArmXCoroutine);
+    }
+    IEnumerator HealthMove(GameObject whichBar, float whichX) {
+        Transform barTransform = whichBar.GetComponent<RectTransform>().transform;
+
+        while (barTransform.localPosition.x > whichX) {
+            barTransform.localPosition -= barTransform.right * Time.deltaTime * 60;
+            yield return null;
+        }
+        Vector3 barPos = barTransform.localPosition;
+        barPos.x = whichX;
+        barTransform.localPosition = barPos;
     }
     IEnumerator SlamUp() {
         int oppositeSide = currentSide + 3;
