@@ -11,6 +11,7 @@ public class BossController : MonoBehaviour {
     GameObject camOrbit;
     GameObject cam;
     GameObject ground;
+    GameObject shadow;
     GameObject boss;
     GameObject bossOrbit;
     GameObject armPivotL;
@@ -24,12 +25,11 @@ public class BossController : MonoBehaviour {
     Text bossHealth;
     public List<GameObject> healthBars = new List<GameObject>();
     public GameObject lastAttack;
-    public GameObject[] attacks;
     public List<GameObject> attackList;
     public List<GameObject> attackPicks;
     string[] attackNames = { "Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "Ball", "Puzzle" };
     public int currentSide;
-    public float flipTime = 0.5f;
+    public float flipTime = 0.2f;
     public float flipSpeed = 500f;
     public Transform[] sidePositions = new Transform[6];
     Vector3 spinDirection;
@@ -37,6 +37,8 @@ public class BossController : MonoBehaviour {
     IEnumerator chargePlayerCoroutine;
     IEnumerator lookAtObjectCoroutine;
     IEnumerator rotateArmXCoroutine;
+    IEnumerator extendHandLCoroutine;
+    IEnumerator extendHandRCoroutine;
 
     public static BossController Instance { get; private set; } = null;
     private void Awake() { Instance = this; }
@@ -47,7 +49,7 @@ public class BossController : MonoBehaviour {
         camOrbit = GameObject.Find("CameraOrbit");
         cam = Camera.main.gameObject;
         ground = GameObject.FindWithTag("Ground");
-        attacks = new GameObject[4];
+        shadow = GameObject.Find("BossShadow");
         boss = GameObject.Find("Boss");
         bossOrbit = GameObject.Find("BossOrbit");
         armPivotL = GameObject.Find("ArmPivotL");
@@ -93,6 +95,16 @@ public class BossController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         planet.transform.Rotate(Time.deltaTime * -0.4f, Time.deltaTime * 0.6f, Time.deltaTime * -0.2f);
+
+        float shadowY = 1000;
+        RaycastHit hit;
+        if (Physics.Raycast(boss.transform.position, Vector3.down, out hit)) {
+            if (hit.collider.tag == "Ground") {
+                shadowY = ground.transform.position.y + 0.45f;
+            }
+        }
+        shadow.transform.position = new Vector3(boss.transform.position.x, shadowY, boss.transform.position.z);
+        shadow.transform.rotation = boss.transform.rotation;
     }
     void DoMoveToCube() {
         StartCoroutine(MoveToCube());
@@ -104,11 +116,13 @@ public class BossController : MonoBehaviour {
             chargePlayerCoroutine = null;
             boss.GetComponent<Renderer>().material = Resources.Load<Material>("FinalBoss/ObstacleBlack");
             Destroy(cubeShadow);
+            DoRotateArmX(180, 20);
 
-            GameObject hb = healthBars[attackList.IndexOf(lastAttack)];
+            GameObject hb = new GameObject();
             string attackName = lastAttack.name.Split('C')[0];
             foreach (GameObject go in healthBars) {
                 if (go.name.Contains(attackName)) {
+                    hb = go;
                     healthBars.Remove(go);
                     break;
                 }
@@ -182,6 +196,43 @@ public class BossController : MonoBehaviour {
         else
             StartCoroutine(MoveToCube());
     }
+    void DoAttack() {
+        int attack = Random.Range(0, 3);
+        List<GameObject> attacks = GetAttackRange();
+        switch (attack) {
+            case 0:
+                StartCoroutine(ShootAttack());
+                break;
+            case 1:
+                StartCoroutine(SpikeSpawn(attacks[0], attacks[1]));
+                break;
+            case 2:
+                StartCoroutine(CrushAttack(attacks[0], attacks[1]));
+                break;
+        }
+    }
+    List<GameObject> GetAttackRange() {
+        List<GameObject> attacks = new List<GameObject>();
+        foreach (GameObject go in attackList) {
+            if (go == lastAttack)
+                continue;
+            CubeInfo ci = go.GetComponent<CubeInfo>();
+            int[] sides = { ci.side1, ci.side2, ci.side3 };
+            foreach (int i in sides) {
+                if (i == currentSide) {
+                    attacks.Add(go);
+                }
+            }
+        }
+        Vector3 currentPos = lastAttack.transform.position;
+        foreach (GameObject go in attacks) {
+            if (currentPos.x != go.transform.position.x && currentPos.z != go.transform.position.z) {
+                attacks.Remove(go);
+                break;
+            }
+        }
+        return attacks;
+    }
     void DoLookAtObject(GameObject gObject, float speed) {
         if (lookAtObjectCoroutine != null)
             StopCoroutine(lookAtObjectCoroutine);
@@ -244,15 +295,17 @@ public class BossController : MonoBehaviour {
             flipCount += Time.deltaTime;
             yield return null;
         }
-
         Vector3 upDirection = flipDirection * 90;
-        while (Quaternion.Angle(Quaternion.Euler(spin.transform.localEulerAngles), Quaternion.Euler(upDirection)) > 0.1f) {
-            spin.transform.localRotation = Quaternion.Slerp(spin.transform.localRotation, Quaternion.Euler(upDirection), Time.deltaTime * flipSpeed);
+        /*
+        print(Quaternion.Angle(spin.transform.localRotation, Quaternion.Euler(upDirection)));
+        while (Quaternion.Angle(spin.transform.localRotation, Quaternion.Euler(upDirection)) > 0.1f) {
+            //spin.transform.localRotation *= Quaternion.Euler(flipDirection * Time.deltaTime * 350);
+            spin.transform.localRotation = Quaternion.Slerp(spin.transform.localRotation, Quaternion.Euler(upDirection), Time.deltaTime * 30);
             yield return null;
-        }
+        }*/
         spin.transform.localRotation = Quaternion.Euler(upDirection);
         colorCube.transform.SetParent(null);
-        spin.transform.localRotation = Quaternion.identity;
+        //spin.transform.localRotation = Quaternion.identity;
         ground.SetActive(true);
 
         StartCoroutine(MoveUp());
@@ -295,7 +348,7 @@ public class BossController : MonoBehaviour {
         Vector3 playerPos = player.transform.position;
         playerPos.y = boss.transform.position.y;
         boss.transform.LookAt(playerPos);
-        bossDamage = false;
+        //bossDamage = false;
         yield return new WaitForSeconds(1);
         StartCoroutine(MoveToTop());
     }
@@ -307,12 +360,14 @@ public class BossController : MonoBehaviour {
             yield return null;
         }
         DoLookAtObject(player, 10);
-        DoRotateArmX(270, 10);
+        DoRotateArmX(0, 10);
         yield return new WaitForSeconds(2);
 
-        StartCoroutine(Shoot());
+        DoAttack();
     }
-    IEnumerator Shoot() {
+    IEnumerator ShootAttack() {
+        DoRotateArmX(270, 15);
+
         float spinTime = 0;
         float shootTime = 0;
         GameObject bullet = Resources.Load("FinalBoss/Bullet") as GameObject;
@@ -333,6 +388,191 @@ public class BossController : MonoBehaviour {
         }
         StartCoroutine(StartCharge());
     }
+    IEnumerator SpikeSpawn(GameObject start, GameObject end) {
+        DoLookAtObject(start, 10);
+        DoRotateArmX(270, 15);
+        yield return new WaitForSeconds(1f);
+
+        Vector3 endPos = end.transform.position;
+        endPos.y = boss.transform.position.y;
+        Quaternion bossRotation = Quaternion.LookRotation((endPos - boss.transform.position).normalized);
+
+        float flipTime = 5f;
+        bool flipped = true;
+
+        float angleSize = 90 / 10;
+        float nextAngle = 90;
+        GameObject attackSpawn = Resources.Load("FinalBoss/AttackSpawn") as GameObject;
+        while (Quaternion.Angle(boss.transform.rotation, bossRotation) > 1f) {
+            flipTime += Time.deltaTime;
+            if (flipTime > 0.2f) {
+                if (flipped)
+                    DoRotateArmX(260, 15);
+                else
+                    DoRotateArmX(280, 15);
+                flipped = !flipped;
+
+                flipTime = 0;
+            }
+                
+            if (Quaternion.Angle(boss.transform.rotation, bossRotation) < nextAngle) {
+                GameObject a = Instantiate(attackSpawn, boss.transform.position - (Vector3.up * 4.5f) + (boss.transform.forward * Random.Range(15, 30)), boss.transform.rotation);
+                StartCoroutine(SpikeAttack(a));
+                nextAngle -= angleSize;
+            }
+            boss.transform.rotation = Quaternion.Slerp(boss.transform.rotation, bossRotation, Time.deltaTime * 2);
+            yield return null;
+        }
+        boss.transform.rotation = bossRotation;
+
+        DoRotateArmX(270, 15);
+        StartCoroutine(StartCharge());
+    }
+    IEnumerator SpikeAttack(GameObject attackSpawn) {
+        yield return new WaitForSeconds(2.5f);
+
+        Transform[] t = attackSpawn.GetComponentsInChildren<Transform>();
+        GameObject spike = null;
+        foreach (Transform tr in t) {
+            if (tr.name.Contains("Spike"))
+                spike = tr.gameObject;
+        }
+        spike.GetComponent<MeshRenderer>().enabled = true;
+        spike.GetComponent<BoxCollider>().enabled = true;
+
+        Vector3 endPos = Vector3.up * Random.Range(-2, 4);
+        while (spike.transform.localPosition.y < endPos.y) {
+            spike.transform.localPosition += Vector3.up * Time.deltaTime * 50;
+            yield return null;
+        }
+        spike.transform.localPosition = endPos;
+
+        yield return new WaitForSeconds(1f);
+        Destroy(attackSpawn, 0.2f);
+    }
+    IEnumerator CrushAttack(GameObject start, GameObject end) {
+        DoLookAtObject(start, 10);
+        DoRotateArmX(270, 15);
+        yield return new WaitForSeconds(1f);
+
+        Vector3 startPos = start.transform.position;
+        startPos.y = boss.transform.position.y;
+        Quaternion bossRotationS = Quaternion.LookRotation((startPos - boss.transform.position).normalized);
+
+        Vector3 endPos = end.transform.position;
+        endPos.y = boss.transform.position.y;
+        Quaternion bossRotationE = Quaternion.LookRotation((endPos - boss.transform.position).normalized);
+
+        Quaternion bossRotation = bossRotationE;
+
+        float handX = 0.7f;
+        float handZ = 1f;
+        while (handL.transform.localScale.x < handX && handL.transform.localScale.z < handZ) {
+            if (handL.transform.localScale.x < handX)
+                handL.transform.localScale = handR.transform.localScale += new Vector3(Time.deltaTime, 0, 0);
+            if (handL.transform.localScale.z < handZ)
+                handL.transform.localScale = handR.transform.localScale += new Vector3(0, 0, Time.deltaTime);
+            yield return null;
+        }
+        handL.transform.localScale = new Vector3(handX, handL.transform.localScale.y, handZ);
+        handR.transform.localScale = new Vector3(handX, handR.transform.localScale.y, handZ);
+
+        float extendLength = 7;
+        StartCoroutine(ExtendHand(handL, extendLength, new Vector3(-0.5f, -0.6f, 0), true));
+
+        yield return new WaitUntil(() => handL.transform.localScale.y == extendLength);
+
+        int attackCount = 0;
+        bool flipArm = true;
+        float turnTimer = 0;
+
+        while (attackCount < 3 && Quaternion.Angle(boss.transform.rotation, bossRotation) > 1f) {
+            if (flipArm) {
+                if (handL.transform.localScale.y == extendLength)
+                    StopExtendHandL(ExtendHand(handL, extendLength, new Vector3(-0.5f, -0.6f, 0), false));
+                if (handR.transform.localScale.y == 0.5f)
+                    StopExtendHandR(ExtendHand(handR, extendLength, new Vector3(0.5f, -0.6f, 0), true));
+                if (handR.transform.localScale.y == extendLength && handL.transform.localScale.y == 0.5f) {
+                    flipArm = false;
+                }
+            }
+            else {
+                if (handR.transform.localScale.y == extendLength)
+                    StopExtendHandR(ExtendHand(handR, extendLength, new Vector3(0.5f, -0.6f, 0), false));
+                if (handL.transform.localScale.y == 0.5f)
+                    StopExtendHandL(ExtendHand(handL, extendLength, new Vector3(-0.5f, -0.6f, 0), true));
+                if (handL.transform.localScale.y == extendLength && handR.transform.localScale.y == 0.5f) {
+                    flipArm = true;
+                }
+            }
+            turnTimer += Time.deltaTime;
+            if (turnTimer > 5) {
+                bossRotation = bossRotation == bossRotationE ? bossRotationS : bossRotationE;
+                attackCount++;
+                turnTimer = 0;
+            }
+            boss.transform.rotation = Quaternion.Slerp(boss.transform.rotation, bossRotation, Time.deltaTime * 0.4f);
+            yield return null;
+        }
+        StopExtendHandL(ExtendHand(handL, extendLength, new Vector3(-0.5f, -0.6f, 0), false));
+        StopExtendHandR(ExtendHand(handR, extendLength, new Vector3(0.5f, -0.6f, 0), false));
+
+        yield return new WaitUntil(() => handL.transform.localScale.y == 0.5f && handR.transform.localScale.y == 0.5f);
+
+        handX = 0.5f;
+        handZ = 0.5f;
+        while (handL.transform.localScale.x > handX && handL.transform.localScale.z > handZ) {
+            if (handL.transform.localScale.x > handX)
+                handL.transform.localScale = handR.transform.localScale -= new Vector3(Time.deltaTime, 0, 0);
+            if (handL.transform.localScale.z > handZ)
+                handL.transform.localScale = handR.transform.localScale -= new Vector3(0, 0, Time.deltaTime);
+            yield return null;
+        }
+        handL.transform.localScale = new Vector3(handX, handL.transform.localScale.y, handZ);
+        handR.transform.localScale = new Vector3(handX, handR.transform.localScale.y, handZ);
+
+        yield return new WaitForSeconds(1f);
+
+        StartCoroutine(StartCharge());
+    }
+    void StopExtendHandL(IEnumerator c) {
+        if (extendHandLCoroutine != null)
+            StopCoroutine(extendHandLCoroutine);
+        extendHandLCoroutine = c;
+        StartCoroutine(extendHandLCoroutine);
+    }
+    void StopExtendHandR(IEnumerator c) {
+        if (extendHandRCoroutine != null)
+            StopCoroutine(extendHandRCoroutine);
+        extendHandRCoroutine = c;
+        StartCoroutine(extendHandRCoroutine);
+    }
+    IEnumerator ExtendHand(GameObject hand, float maxLength, Vector3 startPos, bool extend) {
+        float extendSpeed = 5;
+        float minLength = 0.5f;
+        float extendSpeedR = 2;
+        
+        if (hand == handR)
+            extendSpeedR *= -1;
+
+        if (extend) {
+            while (hand.transform.localScale.y < maxLength) {
+                hand.transform.localScale += new Vector3(0, Time.deltaTime * extendSpeed, 0);
+                hand.transform.localPosition += hand.transform.forward * Time.deltaTime * extendSpeedR;
+                yield return null;
+            }
+            hand.transform.localScale = new Vector3(hand.transform.localScale.x, maxLength, hand.transform.localScale.z);
+        }
+        else {
+            while (hand.transform.localScale.y > minLength) {
+                hand.transform.localScale -= new Vector3(0, Time.deltaTime * extendSpeed, 0);
+                hand.transform.localPosition -= hand.transform.forward * Time.deltaTime * extendSpeedR;
+                yield return null;
+            }
+            hand.transform.localScale = new Vector3(hand.transform.localScale.x, minLength, hand.transform.localScale.z);
+            hand.transform.localPosition = startPos;
+        }
+    }
     IEnumerator StartCharge() {
         DoLookAtObject(player, 20);
         yield return new WaitForSeconds(1);
@@ -343,12 +583,13 @@ public class BossController : MonoBehaviour {
             boss.transform.position = Vector3.MoveTowards(boss.transform.position, newPos, Time.deltaTime * bossSpeed);
             yield return null;
         }
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         chargePlayerCoroutine = ChargePlayer();
         StartCoroutine(chargePlayerCoroutine);
     }
     IEnumerator ChargePlayer() {
+        bossDamage = false;
         Vector3 newPos = boss.transform.position + boss.transform.forward * 50;
 
         while (Vector3.Distance(boss.transform.position, newPos) > 1) {

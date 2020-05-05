@@ -8,6 +8,8 @@ public class BossPlayer : MonoBehaviour {
     GameObject playerTarget;
     GameObject arm;
     GameObject respawn;
+    GameObject shadow;
+    GameObject ground;
     Rigidbody rb;
     public float speed = 1f;
     float baseSpeed;
@@ -32,6 +34,8 @@ public class BossPlayer : MonoBehaviour {
         playerTarget = GameObject.Find("PlayerTarget");
         arm = GameObject.Find("PlayerModel/ArmR");
         respawn = GameObject.FindWithTag("Respawn");
+        shadow = GameObject.Find("PlayerShadow");
+        ground = GameObject.FindWithTag("Ground");
         rb = GetComponent<Rigidbody>();
         baseSpeed = speed;
     }
@@ -71,6 +75,16 @@ public class BossPlayer : MonoBehaviour {
         playerPos.y = targetPos.y = 0;
         //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPos - playerPos), Time.deltaTime * rotateSpeed);
         //transform.LookAt(targetPos);
+
+        float shadowY = 1000;
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
+            if (hit.collider.tag == "Ground") {
+                shadowY = ground.transform.position.y + 0.45f;
+            }
+        }
+        shadow.transform.position = new Vector3(transform.position.x, shadowY, transform.position.z);
+        shadow.transform.rotation = transform.rotation;
     }
     private void FixedUpdate() {
         if (!BossController.Instance.playerMove)
@@ -110,6 +124,7 @@ public class BossPlayer : MonoBehaviour {
         }
         if (other.gameObject.tag == "Enemy") {
             BossController.Instance.DamageBoss();
+            rb.velocity = Vector3.up * 10;
             rb.AddForce(transform.up * jumpForce / 2, ForceMode.Impulse);
         }
         if (other.gameObject.tag == "Damage") {
@@ -127,7 +142,7 @@ public class BossPlayer : MonoBehaviour {
         if (collision.gameObject.tag == "Cube") {
             rb.AddForce((transform.position - collision.contacts[0].point).normalized * 100, ForceMode.Impulse);
         }
-        if (collision.gameObject.tag == "Enemy") {
+        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Damage") {
             if (BossController.Instance.bossDamage)
                 GameController.Instance.DamagePlayer();
         }
