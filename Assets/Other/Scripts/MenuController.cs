@@ -5,9 +5,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour {
-    public GameObject[] buttons = new GameObject[3];
+    public GameObject[] buttons = new GameObject[4];
     public GameObject select;
     public GameObject creditsScreen;
+    GameObject confirmation;
     Text selectText;
     public int selection;
     public int menuMode;
@@ -19,6 +20,8 @@ public class MenuController : MonoBehaviour {
         select = GameObject.Find("Select");
         creditsScreen = GameObject.Find("CreditsScreen");
         creditsScreen.SetActive(false);
+        confirmation = GameObject.Find("Confirmation");
+        confirmation.SetActive(false);
 
         selectText = select.GetComponent<Text>();
 
@@ -30,12 +33,24 @@ public class MenuController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (Input.GetButtonDown("Vertical") && menuMode == 0) {
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.selectMove);
             Select(Input.GetAxisRaw("Vertical"));
         }
         if (Input.GetButtonDown("Action 1")) {
-            AudioController.Instance.PlaySoundOnce(AudioController.Instance.selectConfirm);
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.selectConfirm);
             if (menuMode == 1) {
                 creditsScreen.SetActive(false);
+                menuMode = 0;
+                return;
+            }
+            if (menuMode == 2) {
+                GameController.Instance.Save();
+                Application.Quit();
+                return;
+            }
+            if (menuMode == 3) {
+                GameController.Instance.DeleteSave();
+                confirmation.SetActive(false);
                 menuMode = 0;
                 return;
             }
@@ -51,10 +66,19 @@ public class MenuController : MonoBehaviour {
                 menuMode = 1;
                 creditsScreen.SetActive(true);
             }
-            if (buttons[selection].name == "Quit") {
-                GameController.Instance.Save();
-                Application.Quit();
+            if (buttons[selection].name == "Quit" && menuMode == 0) {
+                menuMode = 2;
+                confirmation.SetActive(true);
             }
+            if (buttons[selection].name == "Delete" && menuMode == 0) {
+                menuMode = 3;
+                confirmation.SetActive(true);
+            }
+        }
+        if (Input.GetButtonDown("Action 2") && (menuMode == 2 || menuMode == 3)) {
+            AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.selectBack);
+            confirmation.SetActive(false);
+            menuMode = 0;
         }
     }
     void Select(float direction) {

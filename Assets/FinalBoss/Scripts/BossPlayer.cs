@@ -141,6 +141,7 @@ public class BossPlayer : MonoBehaviour {
         }
         if (collision.gameObject.tag == "Cube") {
             rb.AddForce((transform.position - collision.contacts[0].point).normalized * 100, ForceMode.Impulse);
+            BossController.Instance.playerMove = false;
         }
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Damage") {
             if (BossController.Instance.bossDamage)

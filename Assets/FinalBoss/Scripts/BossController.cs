@@ -94,6 +94,8 @@ public class BossController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (boss == null)
+            return;
         planet.transform.Rotate(Time.deltaTime * -0.4f, Time.deltaTime * 0.6f, Time.deltaTime * -0.2f);
 
         float shadowY = 1000;
@@ -116,7 +118,6 @@ public class BossController : MonoBehaviour {
             chargePlayerCoroutine = null;
             boss.GetComponent<Renderer>().material = Resources.Load<Material>("FinalBoss/ObstacleBlack");
             Destroy(cubeShadow);
-            DoRotateArmX(180, 20);
 
             GameObject hb = new GameObject();
             string attackName = lastAttack.name.Split('C')[0];
@@ -137,16 +138,20 @@ public class BossController : MonoBehaviour {
             //StartCoroutine(MoveToCube());
             if (attackPicks.Count >= 8) {
                 Destroy(boss);
+                Destroy(shadow);
                 GameController.Instance.Invoke("CompleteLevel", 2f);
             }
-            else
+            else {
+                DoRotateArmX(180, 20);
                 Invoke("NextAttack", 2f);
+            }
         }
     }
     void NextAttack() {
         bossDamage = true;
 
-        Vector3 upSide = sidePositions[currentSide].position;
+        Vector3 upSide =  sidePositions[currentSide].position;
+        print(sidePositions[currentSide].name);
         Vector3 nextSide = Vector3.zero;
         spinDirection = Vector3.zero;
         GameObject attack = attackList[(Mathf.RoundToInt(Random.Range(0, 8)))];
@@ -179,12 +184,17 @@ public class BossController : MonoBehaviour {
                 }
 
                 nextSide = sidePositions[currentSide].position;
-                if (upSide.x == nextSide.x)
+                print(sidePositions[currentSide].name);
+                print(upSide + " " + nextSide + " " + Time.time);
+                if (upSide.x == nextSide.x) {
                     spinDirection = new Vector3(Mathf.Sign(upSide.z - nextSide.z), 0, 0);
-                else
+                    print("x" + Time.time);
+                }
+                else {
                     spinDirection = new Vector3(0, 0, Mathf.Sign(nextSide.x - upSide.x));
-
-                spin.transform.localRotation = Quaternion.identity;
+                    print("z" + Time.time);
+                }
+                spin.transform.rotation = Quaternion.identity;
                 colorCube.transform.SetParent(spin.transform);
             }
         }
@@ -286,12 +296,13 @@ public class BossController : MonoBehaviour {
         StartCoroutine(FlipCube(spinDirection));
     }
     IEnumerator FlipCube(Vector3 flipDirection) {
-        playerMove = false;
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.cubeFlip);
+        //playerMove = false;
         ground.SetActive(false);
 
         float flipCount = 0;
         while (flipCount < flipTime) {
-            spin.transform.localRotation *= Quaternion.Euler(flipDirection * Time.deltaTime * flipSpeed);
+            spin.transform.rotation *= Quaternion.Euler(flipDirection * Time.deltaTime * flipSpeed);
             flipCount += Time.deltaTime;
             yield return null;
         }
@@ -303,7 +314,7 @@ public class BossController : MonoBehaviour {
             spin.transform.localRotation = Quaternion.Slerp(spin.transform.localRotation, Quaternion.Euler(upDirection), Time.deltaTime * 30);
             yield return null;
         }*/
-        spin.transform.localRotation = Quaternion.Euler(upDirection);
+        spin.transform.rotation = Quaternion.Euler(upDirection);
         colorCube.transform.SetParent(null);
         //spin.transform.localRotation = Quaternion.identity;
         ground.SetActive(true);
@@ -335,6 +346,7 @@ public class BossController : MonoBehaviour {
         StartCoroutine(PowerUp());
     }
     IEnumerator PowerUp() {
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.bossPowerUp);
         Vector3 newPos = lastAttack.transform.position;
 
         DoRotateArmX(180, 15);
@@ -375,6 +387,7 @@ public class BossController : MonoBehaviour {
             spinTime += Time.deltaTime;
             shootTime += Time.deltaTime;
             if (shootTime > 0.1) {
+                AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.bossAttack);
                 GameObject b = Instantiate(bullet, handL.transform.position + handL.transform.up * -5, Quaternion.identity);
                 b.GetComponent<ConstantForce>().force = boss.transform.forward * 50;
                 Destroy(b, 10f);
@@ -440,6 +453,7 @@ public class BossController : MonoBehaviour {
         spike.GetComponent<MeshRenderer>().enabled = true;
         spike.GetComponent<BoxCollider>().enabled = true;
 
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.bossAttack);
         Vector3 endPos = Vector3.up * Random.Range(-2, 4);
         while (spike.transform.localPosition.y < endPos.y) {
             spike.transform.localPosition += Vector3.up * Time.deltaTime * 50;
@@ -481,6 +495,7 @@ public class BossController : MonoBehaviour {
         StartCoroutine(ExtendHand(handL, extendLength, new Vector3(-0.5f, -0.6f, 0), true));
 
         yield return new WaitUntil(() => handL.transform.localScale.y == extendLength);
+        AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.bossAttack);
 
         int attackCount = 0;
         bool flipArm = true;
@@ -493,6 +508,7 @@ public class BossController : MonoBehaviour {
                 if (handR.transform.localScale.y == 0.5f)
                     StopExtendHandR(ExtendHand(handR, extendLength, new Vector3(0.5f, -0.6f, 0), true));
                 if (handR.transform.localScale.y == extendLength && handL.transform.localScale.y == 0.5f) {
+                    AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.bossAttack);
                     flipArm = false;
                 }
             }
@@ -502,6 +518,7 @@ public class BossController : MonoBehaviour {
                 if (handL.transform.localScale.y == 0.5f)
                     StopExtendHandL(ExtendHand(handL, extendLength, new Vector3(-0.5f, -0.6f, 0), true));
                 if (handL.transform.localScale.y == extendLength && handR.transform.localScale.y == 0.5f) {
+                    AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.bossAttack);
                     flipArm = true;
                 }
             }
@@ -576,6 +593,7 @@ public class BossController : MonoBehaviour {
     IEnumerator StartCharge() {
         DoLookAtObject(player, 20);
         yield return new WaitForSeconds(1);
+        DoRotateArmX(160, 15);
 
         Vector3 newPos = boss.transform.position + boss.transform.forward * -5;
 
@@ -589,6 +607,7 @@ public class BossController : MonoBehaviour {
         StartCoroutine(chargePlayerCoroutine);
     }
     IEnumerator ChargePlayer() {
+        DoRotateArmX(270, 15);
         bossDamage = false;
         Vector3 newPos = boss.transform.position + boss.transform.forward * 50;
 
@@ -643,5 +662,4 @@ public class BossController : MonoBehaviour {
         armPivotL.transform.localRotation = armRotation;
         armPivotR.transform.localRotation = armRotation;
     }
-
 }

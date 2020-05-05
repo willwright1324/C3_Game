@@ -36,6 +36,7 @@ public class GameController : MonoBehaviour {
     public string[] cubeNames = {"Racing", "Shooter", "Rhythm", "Platformer", "Gravity", "Maze", "BallBounce", "Puzzle"};
     */
     public bool completedLevel;
+    public bool exitedLevel;
     public float startTimer;
     public AudioClip startMusic;
     IEnumerator startGameCoroutine;
@@ -118,8 +119,9 @@ public class GameController : MonoBehaviour {
             if (gameState == GameState.GAME) {
                 if (selectState == SelectState.HOW_TO) {
                     gameState = GameState.LEVEL_SELECT;
-                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
+                    exitedLevel = true;
                     AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.selectBack);
+                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
                 }
                 else {
                     pauseUI.SetActive(true);
@@ -159,6 +161,7 @@ public class GameController : MonoBehaviour {
                 if (selectState == SelectState.BOSS) {
                     selectState = SelectState.LEVELS;
                 }
+                exitedLevel = true;
                 AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
                 SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
             }
@@ -174,10 +177,6 @@ public class GameController : MonoBehaviour {
                     SceneManager.LoadScene(2 + (currentCube * 4));
                 }
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Q)) {
-            if (gameState == GameState.PAUSED || gameState == GameState.LEVEL_SELECT)
-                Application.Quit();
         }
     }
     public void Init() {}
@@ -222,7 +221,16 @@ public class GameController : MonoBehaviour {
         }
     }
     public void DeleteSave() {
+        gameState = GameState.LEVEL_SELECT;
+        selectState = SelectState.CUBES;
+        currentCube = 0;
+        levelHowToBoss = new int[3, 2];
+        levelUnlocks = new int[3];
+        levelSelects = new int[3];
+        cubeCompletes = new bool[3];
+        didCutscene = new bool[6];
 
+        Save();
     }
     // Initializes health when needed
     public void InitHealth() {
@@ -294,9 +302,6 @@ public class GameController : MonoBehaviour {
     public void CompleteLevel() {
         completedLevel = true;
         gameState = GameState.LEVEL_SELECT;
-        if (selectState == SelectState.BOSS) {
-            selectState = SelectState.LEVELS;
-        }
         if (levelUnlocks[currentCube] == levelSelects[currentCube] && levelUnlocks[currentCube] < 3)
             levelUnlocks[currentCube]++;
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.winTune);

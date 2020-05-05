@@ -20,7 +20,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
     Text cubeSelectText;
     Text controlsText;
     public float selectCubeCooldown;
-    public bool selectStateCooldown;
+    public bool confirmCubeCooldown;
 
     GameObject cam;
     GameObject camOrbit;
@@ -132,6 +132,10 @@ public class LevelSelectControllerCut : MonoBehaviour {
                     if (selectState == SelectState.CUBES) {
                         AudioController.Instance.PlaySoundOnce(AudioController.Instance.cameraMove);
                         SelectCube(Input.GetAxisRaw("Horizontal"));
+                        if (!confirmCubeCooldown) {
+                            Invoke("ConfirmCubeCooldown", 0.5f);
+                            confirmCubeCooldown = true;
+                        }
                     }
                     if (selectState == SelectState.LEVELS || selectState == SelectState.HOW_TO) {
                         if (levelUnlocks[currentCube] > 0) {
@@ -146,7 +150,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
 
             // Select Cube/Level
             if (Input.GetAxisRaw("Action 1") != 0) {
-                if (!camIsLooking && !camIsMoving && !camIsRotating) {
+                if (!camIsLooking && !camIsMoving && !camIsRotating && !confirmCubeCooldown) {
                     AudioController.Instance.PlaySoundOnce(AudioController.Instance.selectConfirm);
                     if (selectState == SelectState.CUBES) {
                         selectState = SelectState.LEVELS;
@@ -196,6 +200,8 @@ public class LevelSelectControllerCut : MonoBehaviour {
                 cam.transform.position = camOrbit.transform.position + camOrbit.transform.forward * camDistance;
                 cam.transform.SetParent(camOrbit.transform);
                 cam.transform.localRotation = Quaternion.Euler(0, 180, 0);
+                if (GameController.Instance.exitedLevel)
+                    StartCoroutine(LevelTransition(1, 0));
                 break;
         }
         for (int i = 0; i < cubes.Length; i++) {
@@ -206,8 +212,11 @@ public class LevelSelectControllerCut : MonoBehaviour {
                 c[j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("General/level" + (j - 1) + "_icon");
             }
         }
-        if (GameController.Instance.completedLevel) {
+        if (GameController.Instance.completedLevel && selectState != SelectState.BOSS) {
             StartCoroutine(LevelTransition(1, 0));
+        }
+        if (selectState == SelectState.BOSS) {
+            selectState = SelectState.LEVELS;
         }
     }
     void CompleteLevel() {
@@ -225,6 +234,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
         if (GameController.Instance.devMode)
             return;
         gameState = GameState.GAME;
+        selectState = SelectState.BOSS;
         SaveToGameController();
         AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
         SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
@@ -340,12 +350,12 @@ public class LevelSelectControllerCut : MonoBehaviour {
         camIsMoving = true;
         Vector3 movePositionL = transitionBGL.transform.localPosition;
         Vector3 movePositionR = transitionBGR.transform.localPosition;
+        int distance = 27;
 
         if (whichTransition == 0) {
             movePositionL.x = -7.05f;
             movePositionR.x = 7.05f;
 
-            int distance = 27;
             Vector3 camPosition = new Vector3(0, 0, distance);
 
             while (Vector3.Distance(cam.transform.localPosition, camPosition) > 0.1f) {
@@ -369,12 +379,15 @@ public class LevelSelectControllerCut : MonoBehaviour {
             SceneManager.LoadScene(whichLevel);
         }
         else {
+            cam.transform.localPosition = new Vector3(0, 0, distance);
             Vector3 startPositionL = movePositionL;
             Vector3 startPositionR = movePositionR;
             startPositionL.x = -7.05f;
             startPositionR.x = 7.05f;
             transitionBGL.transform.localPosition = startPositionL;
             transitionBGR.transform.localPosition = startPositionR;
+
+            yield return new WaitForSeconds(0.2f);
 
             while (Vector3.Distance(transitionBGL.transform.localPosition, movePositionL) > 0.1f) {
                 transitionBGL.transform.localPosition = Vector3.MoveTowards(transitionBGL.transform.localPosition, movePositionL, Time.smoothDeltaTime * 25);
@@ -395,7 +408,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
             cam.transform.localPosition = camPosition;
         }
         camIsMoving = false;
-
+        GameController.Instance.exitedLevel = false;
         if (GameController.Instance.completedLevel) {
             CompleteLevel();
         }
@@ -412,13 +425,13 @@ public class LevelSelectControllerCut : MonoBehaviour {
         }
     }
     // Prevents selection spam
-    void SelectStateCooldown() {
-        selectStateCooldown = false;
+    void ConfirmCubeCooldown() {
+        confirmCubeCooldown = false;
 
         /* Insert where needed
-        if (!selectStateCooldown) {
-            Invoke("SelectStateCooldown", 0.5f);
-            selectStateCooldown = true;
+        if (!confirmCubeCooldown) {
+            Invoke("ConfirmCubeCooldown", 0.5f);
+            confirmCubeCooldown = true;
         }
         */
     }
