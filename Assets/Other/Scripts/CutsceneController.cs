@@ -42,7 +42,20 @@ public class CutsceneController : MonoBehaviour {
             sceneImage.sprite = Resources.Load<Sprite>("Cutscenes/" + cutscene + "/image" + index);
         }
         else {
-            SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
+            if (cutscene == 1 ||
+                cutscene == 2 ||
+                cutscene == 3 ||
+                cutscene == 4) {
+                GameController.Instance.didCutscene[cutscene - 1] = true;
+                GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 2);
+            }
+            if (cutscene == 5) {
+                AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
+                SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+            }
+            if (cutscene == 6) {
+                SceneManager.LoadScene(0);
+            }
         }
     }
 }

@@ -184,15 +184,15 @@ public class BossController : MonoBehaviour {
                 }
 
                 nextSide = sidePositions[currentSide].position;
-                print(sidePositions[currentSide].name);
-                print(upSide + " " + nextSide + " " + Time.time);
+                //print(sidePositions[currentSide].name);
+                //print(upSide + " " + nextSide + " " + Time.time);
                 if (upSide.x == nextSide.x) {
                     spinDirection = new Vector3(Mathf.Sign(upSide.z - nextSide.z), 0, 0);
-                    print("x" + Time.time);
+                    //print("x" + Time.time);
                 }
                 else {
                     spinDirection = new Vector3(0, 0, Mathf.Sign(nextSide.x - upSide.x));
-                    print("z" + Time.time);
+                    //print("z" + Time.time);
                 }
                 spin.transform.rotation = Quaternion.identity;
                 colorCube.transform.SetParent(spin.transform);

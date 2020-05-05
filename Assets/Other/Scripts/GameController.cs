@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour {
     public SelectState selectState;
     public GameObject pauseUI;
     public GameObject startUI;
+    GameObject fade;
     Text countdownText;
     public int currentCube;
     public int[,] levelHowToBoss = new int[3, 2];
@@ -83,9 +84,13 @@ public class GameController : MonoBehaviour {
         pauseUI = GameObject.Find("PauseUI");
         pauseUI.SetActive(false);
         startUI = GameObject.Find("StartUI");
+        fade = GameObject.Find("Fade");
+        //fade.SetActive(false);
         countdownText = GameObject.Find("Countdown").GetComponent<Text>();
         startUI.SetActive(false);
         Load();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        StartCoroutine(StartScene());
 
         int scene = SceneManager.GetActiveScene().buildIndex;
         int cube = scene / 4;
@@ -104,7 +109,13 @@ public class GameController : MonoBehaviour {
             gameState = GameState.GAME;
         }
     }
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        StartCoroutine(StartScene());
+    }
     private void Update() {
+        if (Time.timeScale == 0)
+            return;
+
         if (Input.GetKeyDown(KeyCode.R)) {
             AudioController.Instance.audioMusic.Stop();
             gameState = GameState.LEVEL_SELECT;
@@ -113,7 +124,7 @@ public class GameController : MonoBehaviour {
             levelSelects = new int[3];
             currentCube = 0;
             pauseUI.SetActive(false);
-            SceneManager.LoadScene(0);
+            DoLoadScene(0);
         }
         if (Input.GetButtonDown("Cancel")) {
             if (gameState == GameState.GAME) {
@@ -121,7 +132,7 @@ public class GameController : MonoBehaviour {
                     gameState = GameState.LEVEL_SELECT;
                     exitedLevel = true;
                     AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.selectBack);
-                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
+                    DoLoadScene(SceneManager.sceneCountInBuildSettings - 2);
                 }
                 else {
                     pauseUI.SetActive(true);
@@ -163,7 +174,7 @@ public class GameController : MonoBehaviour {
                 }
                 exitedLevel = true;
                 AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
-                SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
+                DoLoadScene(SceneManager.sceneCountInBuildSettings - 2);
             }
             else {
                 if (gameState == GameState.GAME && selectState == SelectState.HOW_TO) {
@@ -174,7 +185,7 @@ public class GameController : MonoBehaviour {
                         levelSelects[currentCube] = 1;
                         levelUnlocks[currentCube] = 1;
                     }
-                    SceneManager.LoadScene(2 + (currentCube * 4));
+                    DoLoadScene(2 + (currentCube * 4));
                 }
             }
         }
@@ -306,11 +317,19 @@ public class GameController : MonoBehaviour {
             levelUnlocks[currentCube]++;
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.winTune);
         AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
-        SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
+        if (selectState == SelectState.BOSS) {
+            DoLoadScene(SceneManager.sceneCountInBuildSettings - 8);
+        }
+        else {
+            DoLoadScene(SceneManager.sceneCountInBuildSettings - 2);
+        }
+    }
+    public void DoLoadScene(int scene) {
+        StartCoroutine(LoadScene(scene));
     }
     // Resets level
     public void ResetLevel() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        DoLoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     IEnumerator StartGame(AudioClip ac, float time) {
         AudioController.Instance.audioSound.UnPause();
@@ -334,5 +353,34 @@ public class GameController : MonoBehaviour {
         countdownText.text = "3";
         startUI.SetActive(false);
         AudioController.Instance.PlayMusic(ac);
+    }
+    IEnumerator LoadScene(int scene) {
+        print("load");
+        fade.SetActive(true);
+        fade.transform.localPosition = Vector3.up * 540;
+        float fadeY = 0;
+        Time.timeScale = 0;
+
+        while (fade.transform.localPosition.y > fadeY) {
+            fade.transform.localPosition += Vector3.down * Time.unscaledDeltaTime * 1000;
+            yield return null;
+        }
+        fade.transform.localPosition = Vector3.zero;
+        Time.timeScale = 1;
+
+        SceneManager.LoadScene(scene);
+    }
+    IEnumerator StartScene() {
+        fade.SetActive(true);
+        fade.transform.localPosition = Vector3.zero;
+        float fadeY = -540;
+        Time.timeScale = 0;
+
+        while (fade.transform.localPosition.y > fadeY) {
+            fade.transform.localPosition += Vector3.down * Time.unscaledDeltaTime * 1000;
+            yield return null;
+        }
+        fade.transform.localPosition = Vector3.down * fadeY;
+        Time.timeScale = 1;
     }
 }

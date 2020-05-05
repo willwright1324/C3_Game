@@ -45,7 +45,22 @@ EditorBuildSettings:
     path: Assets/Action/Scenes/Action_Level3.unity
     guid: c25054c34e2427e48b128bf77d45950b
   - enabled: 1
-    path: Assets/Other/Scenes/CutScene.unity
+    path: Assets/Other/Scenes/Cutscenes/WinCutscene.unity
+    guid: 7f77384645bf4b340b5fd750acc017d2
+  - enabled: 1
+    path: Assets/Other/Scenes/Cutscenes/FinalBattleCutscene.unity
+    guid: a8f24935a4b30194bb3b55a04f67bec4
+  - enabled: 1
+    path: Assets/Other/Scenes/Cutscenes/ActionEntryCutscene.unity
+    guid: c12135f947004694695d32a37380c7f4
+  - enabled: 1
+    path: Assets/Other/Scenes/Cutscenes/GravityEntryCutscene.unity
+    guid: 33eb143bbaa7be542b5a38cc4f2dd3dd
+  - enabled: 1
+    path: Assets/Other/Scenes/Cutscenes/RacingEntryCutscene.unity
+    guid: d7f6fd60b2ede4743bed8821fee3d87f
+  - enabled: 1
+    path: Assets/Other/Scenes/Cutscenes/IntroCutscene.unity
     guid: b90655c111680c84eb1faadba0225227
   - enabled: 1
     path: Assets/LevelSelect/Scenes/LevelSelect_PrototypeCut.unity

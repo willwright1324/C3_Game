@@ -78,6 +78,9 @@ public class LevelSelectControllerCut : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (Time.timeScale == 0)
+            return;
+
         colorCube.transform.Rotate(Time.deltaTime * 2, Time.deltaTime * -1.5f, Time.deltaTime * 1);
         foreach (GameObject cube in cubes)
             cube.transform.Rotate(Time.deltaTime * 2, Time.deltaTime * -1.5f, Time.deltaTime * 1);
@@ -153,8 +156,13 @@ public class LevelSelectControllerCut : MonoBehaviour {
                 if (!camIsLooking && !camIsMoving && !camIsRotating && !confirmCubeCooldown) {
                     AudioController.Instance.PlaySoundOnce(AudioController.Instance.selectConfirm);
                     if (selectState == SelectState.CUBES) {
-                        selectState = SelectState.LEVELS;
-                        StartCoroutine(MoveToCube(currentCube));
+                        if (GameController.Instance.didCutscene[currentCube + 1]) {
+                            selectState = SelectState.LEVELS;
+                            StartCoroutine(MoveToCube(currentCube));
+                        }
+                        else {
+                            SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - (4 + currentCube));
+                        }
                     }
                     else {
                         if (selectState == SelectState.LEVELS && CheckIfUnlocked()) {
@@ -236,8 +244,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
         gameState = GameState.GAME;
         selectState = SelectState.BOSS;
         SaveToGameController();
-        AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
-        SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+        SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 7);
     }
     // Switch through cubes
     void SelectCube(float direction) {

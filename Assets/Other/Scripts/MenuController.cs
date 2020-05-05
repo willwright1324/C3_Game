@@ -55,8 +55,7 @@ public class MenuController : MonoBehaviour {
                 return;
             }
             if (buttons[selection].name == "Play") {
-                if (!GameController.Instance.didCutscene[0]) {
-                    GameController.Instance.didCutscene[0] = true;
+                if (!GameController.Instance.didCutscene[0]) {                    
                     SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 3);
                 }
                 else
