@@ -341,14 +341,14 @@ MonoBehaviour:
   cubeFlip: {fileID: 8300000, guid: 5b2e46f3c3d2938439959341e7cd52f6, type: 3}
   driftSkid: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
   drive: {fileID: 8300000, guid: 5cb1885b52830244fbc12d378cc14bac, type: 3}
-  lapComplete: {fileID: 8300000, guid: 003a03e7997d0f44896dd6ead87417fd, type: 3}
-  playerBump: {fileID: 8300000, guid: b713bef9184d47244bff0bd60cea4082, type: 3}
+  lapComplete: {fileID: 8300000, guid: 1d6a03abbd0068145b187e00b485d889, type: 3}
+  playerBump: {fileID: 8300000, guid: e4ece20ad8206504fb65fbc3e6e0f24a, type: 3}
   enemySpawn: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
   lockAim: {fileID: 8300000, guid: 003a03e7997d0f44896dd6ead87417fd, type: 3}
   machineGunShoot: {fileID: 8300000, guid: b713bef9184d47244bff0bd60cea4082, type: 3}
   pistolShoot: {fileID: 8300000, guid: 5cb1885b52830244fbc12d378cc14bac, type: 3}
-  playerShoot: {fileID: 8300000, guid: 3d9b13e9204b5c640aaafb73b7e8bf66, type: 3}
-  sniperShoot: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
+  playerShoot: {fileID: 8300000, guid: 49e5355aed0865744866a02790586be3, type: 3}
+  sniperShoot: {fileID: 8300000, guid: 71e2a6a614427df4992813bde540bf85, type: 3}
   playerHitNote: {fileID: 8300000, guid: 5cb1885b52830244fbc12d378cc14bac, type: 3}
   playerMiss: {fileID: 8300000, guid: 003a03e7997d0f44896dd6ead87417fd, type: 3}
   playerPressKey: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
@@ -553,6 +553,7 @@ MonoBehaviour:
   didCutscene: 000000000000
   devMode: 0
   completedLevel: 0
+  exitedLevel: 0
   startTimer: 0
   startMusic: {fileID: 0}
   healthCount: 0
