@@ -2865,17 +2865,17 @@ Transform:
   - {fileID: 827040460}
   - {fileID: 2047052474}
   - {fileID: 1300218421}
-  - {fileID: 1316641922}
   - {fileID: 784637106}
   - {fileID: 269661231}
+  - {fileID: 1316641922}
   - {fileID: 660586807}
   - {fileID: 1090300283}
   - {fileID: 2050873253}
-  - {fileID: 2095946448}
   - {fileID: 791900210}
-  - {fileID: 1212910992}
   - {fileID: 1878929805}
+  - {fileID: 1212910992}
   - {fileID: 1913021947}
+  - {fileID: 2095946448}
   - {fileID: 1718898841}
   m_Father: {fileID: 0}
   m_RootOrder: 13
@@ -4289,6 +4289,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MainCanvas Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033905470621403944, guid: ab07cf2a64e186440bfbe9241c679323,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab07cf2a64e186440bfbe9241c679323, type: 3}

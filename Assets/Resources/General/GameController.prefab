@@ -344,7 +344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSound: {fileID: 0}
   audioMusic: {fileID: 0}
-  bossMusic: {fileID: 8300000, guid: 83fcf3548a7d0f94b92037a1ba9e8ca4, type: 3}
+  bossMusic: {fileID: 8300000, guid: 8dcb5f2dcc06dcd4892e7cf074634ba3, type: 3}
   howToMusic: {fileID: 8300000, guid: 17292ff09c1113d4b9fde5d8a7890ac9, type: 3}
   menuMusic: {fileID: 8300000, guid: bebc07799aac943498ffec2e2d388fe8, type: 3}
   racingMusic: {fileID: 8300000, guid: 60bde1e62c5f0da439bd9a358050d9f2, type: 3}
@@ -356,36 +356,36 @@ MonoBehaviour:
   ballbounceMusic: {fileID: 8300000, guid: a07fb17914a853446a7abbd36179f037, type: 3}
   puzzleMusic: {fileID: 8300000, guid: a07fb17914a853446a7abbd36179f037, type: 3}
   countdown: {fileID: 8300000, guid: d81c2409301b9684d940f1d16c1bf3c3, type: 3}
-  healthReset: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
+  healthReset: {fileID: 8300000, guid: 600c072a026097f43a3f364d55aa3ee1, type: 3}
   playerCollect: {fileID: 8300000, guid: b987246b33c8f694d9418a8a085b7b90, type: 3}
   playerDamage: {fileID: 8300000, guid: ab24418d629c7704daffa1dab291d6f7, type: 3}
   playerDeath: {fileID: 8300000, guid: 2b7e093759b334c4ca1507b3562cab31, type: 3}
-  respawn: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
-  winTune: {fileID: 8300000, guid: 003a03e7997d0f44896dd6ead87417fd, type: 3}
+  respawn: {fileID: 8300000, guid: 89a89a6c7d821514aa0794c3b84ba348, type: 3}
+  winTune: {fileID: 8300000, guid: 568cb60520100834aae73adda100f7b2, type: 3}
   cameraMove: {fileID: 8300000, guid: 5baafc6b749882c47a3df5d2a433e0f2, type: 3}
   selectBack: {fileID: 8300000, guid: 1808bc0242c8b6c43b3f7b40a3f10379, type: 3}
   selectConfirm: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
   selectMove: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
-  bossAttack: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
-  bossDamage: {fileID: 8300000, guid: 3d9b13e9204b5c640aaafb73b7e8bf66, type: 3}
-  bossPowerUp: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
+  bossAttack: {fileID: 8300000, guid: 7683d1d5cff76ec44b6d77d13cd22143, type: 3}
+  bossDamage: {fileID: 8300000, guid: b34f18d229090d7409cf02b916817450, type: 3}
+  bossPowerUp: {fileID: 8300000, guid: 0dc244da26745b64db806faf745ca7a5, type: 3}
   cubeFlip: {fileID: 8300000, guid: 5b2e46f3c3d2938439959341e7cd52f6, type: 3}
-  driftSkid: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
-  drive: {fileID: 8300000, guid: 5cb1885b52830244fbc12d378cc14bac, type: 3}
+  driftSkid: {fileID: 8300000, guid: 218db1be7ad1b944981b292fdc092198, type: 3}
+  drive: {fileID: 8300000, guid: c431c63ed7557244fb09dbbc22b68e13, type: 3}
   lapComplete: {fileID: 8300000, guid: 1d6a03abbd0068145b187e00b485d889, type: 3}
   playerBump: {fileID: 8300000, guid: e4ece20ad8206504fb65fbc3e6e0f24a, type: 3}
-  enemySpawn: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
+  enemySpawn: {fileID: 8300000, guid: b5ceac4f403d39c44a2a943710701b7c, type: 3}
   lockAim: {fileID: 8300000, guid: 003a03e7997d0f44896dd6ead87417fd, type: 3}
-  machineGunShoot: {fileID: 8300000, guid: b713bef9184d47244bff0bd60cea4082, type: 3}
-  pistolShoot: {fileID: 8300000, guid: 5cb1885b52830244fbc12d378cc14bac, type: 3}
+  machineGunShoot: {fileID: 8300000, guid: bfc2f1be719ca71428d5ea15a00bb98a, type: 3}
+  pistolShoot: {fileID: 8300000, guid: d4c07ccc5e2b62a459d8b894779a8b6f, type: 3}
   playerShoot: {fileID: 8300000, guid: 49e5355aed0865744866a02790586be3, type: 3}
   sniperShoot: {fileID: 8300000, guid: 71e2a6a614427df4992813bde540bf85, type: 3}
   playerHitNote: {fileID: 8300000, guid: 5cb1885b52830244fbc12d378cc14bac, type: 3}
   playerMiss: {fileID: 8300000, guid: 003a03e7997d0f44896dd6ead87417fd, type: 3}
   playerPressKey: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
-  playerJump: {fileID: 8300000, guid: b713bef9184d47244bff0bd60cea4082, type: 3}
-  springBoost: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
-  switchGravity: {fileID: 8300000, guid: e9b914171fd182b4fac63f984134e6f8, type: 3}
+  playerJump: {fileID: 8300000, guid: 2e75c67657c029543b43bbd03fad2da5, type: 3}
+  springBoost: {fileID: 8300000, guid: 0e4fe99c5d4e36442b7116d1f0147242, type: 3}
+  switchGravity: {fileID: 8300000, guid: ef5775f01ee01d24fb12d94899055e75, type: 3}
   crusherActivate: {fileID: 8300000, guid: 137d3ac0641cc5f42817fd82275eb3f9, type: 3}
   crusherSmash: {fileID: 8300000, guid: 5cb1885b52830244fbc12d378cc14bac, type: 3}
   playerDash: {fileID: 8300000, guid: 3d9b13e9204b5c640aaafb73b7e8bf66, type: 3}
