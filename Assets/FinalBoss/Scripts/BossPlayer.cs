@@ -42,6 +42,9 @@ public class BossPlayer : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (Time.timeScale == 0)
+            return;
+
         if (transform.position.y < camOrbit.transform.position.y) {
             GameController.Instance.DamagePlayer();
             GameController.Instance.RespawnPlayer();

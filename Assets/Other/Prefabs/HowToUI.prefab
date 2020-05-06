@@ -79,7 +79,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Press X When Ready
+  m_Text: 'Press Z+X When Ready
 
     Press Esc to Go Back'
 --- !u!114 &4488915199403607769

@@ -95,7 +95,7 @@ public class GameController : MonoBehaviour {
         int scene = SceneManager.GetActiveScene().buildIndex;
         int cube = scene / 4;
         int level = scene % 4;
-        if (scene == 0)
+        if (scene == 0 || scene == SceneManager.sceneCountInBuildSettings - 1)
             return;
         if (cube > -1 && cube < 3) {
             switch (level) {
@@ -113,9 +113,6 @@ public class GameController : MonoBehaviour {
         StartCoroutine(StartScene());
     }
     private void Update() {
-        if (Time.timeScale == 0)
-            return;
-
         if (Input.GetKeyDown(KeyCode.R)) {
             AudioController.Instance.audioMusic.Stop();
             gameState = GameState.LEVEL_SELECT;
@@ -173,11 +170,10 @@ public class GameController : MonoBehaviour {
                     selectState = SelectState.LEVELS;
                 }
                 exitedLevel = true;
-                AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
                 DoLoadScene(SceneManager.sceneCountInBuildSettings - 2);
             }
             else {
-                if (gameState == GameState.GAME && selectState == SelectState.HOW_TO) {
+                if (gameState == GameState.GAME && selectState == SelectState.HOW_TO && Input.GetButton("Action 1")) {
                     levelHowToBoss[currentCube, 0] = 1;
                     gameState = GameState.GAME;
                     selectState = SelectState.LEVELS;
@@ -316,7 +312,6 @@ public class GameController : MonoBehaviour {
         if (levelUnlocks[currentCube] == levelSelects[currentCube] && levelUnlocks[currentCube] < 3)
             levelUnlocks[currentCube]++;
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.winTune);
-        AudioController.Instance.PlayMusic(AudioController.Instance.menuMusic);
         if (selectState == SelectState.BOSS) {
             DoLoadScene(SceneManager.sceneCountInBuildSettings - 8);
         }
@@ -331,6 +326,7 @@ public class GameController : MonoBehaviour {
     public void ResetLevel() {
         DoLoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+    // Countdown
     IEnumerator StartGame(AudioClip ac, float time) {
         AudioController.Instance.audioSound.UnPause();
         startUI.SetActive(true);
@@ -354,8 +350,8 @@ public class GameController : MonoBehaviour {
         startUI.SetActive(false);
         AudioController.Instance.PlayMusic(ac);
     }
+    // Fade Transition
     IEnumerator LoadScene(int scene) {
-        print("load");
         fade.SetActive(true);
         fade.transform.localPosition = Vector3.up * 540;
         float fadeY = 0;
@@ -381,6 +377,7 @@ public class GameController : MonoBehaviour {
             yield return null;
         }
         fade.transform.localPosition = Vector3.down * fadeY;
-        Time.timeScale = 1;
+        if (gameState != GameState.GAME || selectState == SelectState.HOW_TO || selectState == SelectState.BOSS)
+            Time.timeScale = 1;
     }
 }

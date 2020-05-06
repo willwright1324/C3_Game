@@ -14,6 +14,7 @@ public class BossController : MonoBehaviour {
     GameObject shadow;
     GameObject boss;
     GameObject bossOrbit;
+    GameObject face;
     GameObject armPivotL;
     GameObject armPivotR;
     GameObject handL;
@@ -44,6 +45,8 @@ public class BossController : MonoBehaviour {
     private void Awake() { Instance = this; }
     // Start is called before the first frame update
     void Start() {
+        GameController.Instance.gameState = GameState.GAME;
+        GameController.Instance.selectState = SelectState.BOSS;
         GameController.Instance.InitHealth();
         player = GameObject.FindWithTag("Player");
         camOrbit = GameObject.Find("CameraOrbit");
@@ -52,6 +55,7 @@ public class BossController : MonoBehaviour {
         shadow = GameObject.Find("BossShadow");
         boss = GameObject.Find("Boss");
         bossOrbit = GameObject.Find("BossOrbit");
+        face = GameObject.Find("Face");
         armPivotL = GameObject.Find("ArmPivotL");
         armPivotR = GameObject.Find("ArmPivotR");
         handL = GameObject.Find("HandL");
@@ -89,11 +93,15 @@ public class BossController : MonoBehaviour {
             }
         }
         //StartCoroutine(RotateArmX(180));
+        AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
         Invoke("NextAttack", 3f);
     }
 
     // Update is called once per frame
     void Update() {
+        if (Time.timeScale == 0)
+            return;
+
         if (boss == null)
             return;
         planet.transform.Rotate(Time.deltaTime * -0.4f, Time.deltaTime * 0.6f, Time.deltaTime * -0.2f);
@@ -114,6 +122,7 @@ public class BossController : MonoBehaviour {
     public void DamageBoss() {
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.bossDamage);
         if (chargePlayerCoroutine != null) {
+            face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face2");
             StopCoroutine(chargePlayerCoroutine);
             chargePlayerCoroutine = null;
             boss.GetComponent<Renderer>().material = Resources.Load<Material>("FinalBoss/ObstacleBlack");
@@ -148,10 +157,11 @@ public class BossController : MonoBehaviour {
         }
     }
     void NextAttack() {
+        face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face0");
         bossDamage = true;
 
         Vector3 upSide =  sidePositions[currentSide].position;
-        print(sidePositions[currentSide].name);
+        //print(sidePositions[currentSide].name);
         Vector3 nextSide = Vector3.zero;
         spinDirection = Vector3.zero;
         GameObject attack = attackList[(Mathf.RoundToInt(Random.Range(0, 8)))];
@@ -207,6 +217,7 @@ public class BossController : MonoBehaviour {
             StartCoroutine(MoveToCube());
     }
     void DoAttack() {
+        face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face1");
         int attack = Random.Range(0, 3);
         List<GameObject> attacks = GetAttackRange();
         switch (attack) {
@@ -285,6 +296,7 @@ public class BossController : MonoBehaviour {
         StartCoroutine(SlamDown(sidePositions[oppositeSide].position));
     }
     IEnumerator SlamDown(Vector3 oppositeSide) {
+        face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face1");
         Vector3 slamPos = oppositeSide + Vector3.up * 10;
 
         DoRotateArmX(270, 15);
@@ -296,6 +308,7 @@ public class BossController : MonoBehaviour {
         StartCoroutine(FlipCube(spinDirection));
     }
     IEnumerator FlipCube(Vector3 flipDirection) {
+        face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face0");
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.cubeFlip);
         //playerMove = false;
         ground.SetActive(false);
@@ -346,6 +359,7 @@ public class BossController : MonoBehaviour {
         StartCoroutine(PowerUp());
     }
     IEnumerator PowerUp() {
+        face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face1");
         AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.bossPowerUp);
         Vector3 newPos = lastAttack.transform.position;
 
@@ -365,6 +379,7 @@ public class BossController : MonoBehaviour {
         StartCoroutine(MoveToTop());
     }
     IEnumerator MoveToTop() {
+        face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face0");
         Vector3 newPos = lastAttack.transform.position + Vector3.up * 15;
 
         while (Vector3.Distance(boss.transform.position, newPos) > 1) {
@@ -594,6 +609,7 @@ public class BossController : MonoBehaviour {
         DoLookAtObject(player, 20);
         yield return new WaitForSeconds(1);
         DoRotateArmX(160, 15);
+        face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face0");
 
         Vector3 newPos = boss.transform.position + boss.transform.forward * -5;
 
@@ -607,6 +623,7 @@ public class BossController : MonoBehaviour {
         StartCoroutine(chargePlayerCoroutine);
     }
     IEnumerator ChargePlayer() {
+        face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face1");
         DoRotateArmX(270, 15);
         bossDamage = false;
         Vector3 newPos = boss.transform.position + boss.transform.forward * 50;
@@ -619,6 +636,7 @@ public class BossController : MonoBehaviour {
         StartCoroutine(MoveBack());
     }
     IEnumerator MoveBack() {
+        face.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("FinalBoss/boss_face0");
         Vector3 bossPos = boss.transform.position;
         bossPos.y = bossOrbit.transform.position.y;
         bossOrbit.transform.LookAt(bossPos);

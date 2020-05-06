@@ -29,6 +29,9 @@ public class CutsceneController : MonoBehaviour {
     }
     // Update is called once per frame
     void Update() {
+        if (Time.timeScale == 0)
+            return;
+
         if (Input.GetButtonDown("Action 1")) {
             AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.selectConfirm);
             Next();
@@ -50,11 +53,10 @@ public class CutsceneController : MonoBehaviour {
                 GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 2);
             }
             if (cutscene == 5) {
-                AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
-                SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+                GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 1);
             }
             if (cutscene == 6) {
-                SceneManager.LoadScene(0);
+                GameController.Instance.DoLoadScene(0);
             }
         }
     }

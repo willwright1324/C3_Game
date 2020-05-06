@@ -53,6 +53,9 @@ public class RacingPlayer : MonoBehaviour {
     }
     // Update is called once per frame
     void Update() {
+        if (Time.timeScale == 0)
+            return;
+
         if (onTrack <= 0 && lastX != -1)
             OffTrack();
 
@@ -128,9 +131,9 @@ public class RacingPlayer : MonoBehaviour {
             currentSpeed = Mathf.Clamp(currentSpeed, -speed / 2, speed / 2);
 
         if (turnSpeed <= normalTurnSpeed)
-            wheelR.transform.localRotation = wheelL.transform.localRotation = Quaternion.Euler(0, 0, -currentTurnSpeed / 4);
+            wheelR.transform.localRotation = wheelL.transform.localRotation = Quaternion.Euler(0, 0, -currentTurnSpeed / 8);
         else
-            wheelR.transform.localRotation = wheelL.transform.localRotation = Quaternion.Euler(0, 0, currentTurnSpeed / 4);
+            wheelR.transform.localRotation = wheelL.transform.localRotation = Quaternion.Euler(0, 0, currentTurnSpeed / 8);
 
         /*
         camY = currentSpeed * 2;

@@ -32,6 +32,9 @@ public class MenuController : MonoBehaviour {
     }
     // Update is called once per frame
     void Update() {
+        if (Time.timeScale == 0)
+            return;
+
         if (Input.GetButtonDown("Vertical") && menuMode == 0) {
             AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.selectMove);
             Select(Input.GetAxisRaw("Vertical"));
@@ -55,11 +58,11 @@ public class MenuController : MonoBehaviour {
                 return;
             }
             if (buttons[selection].name == "Play") {
-                if (!GameController.Instance.didCutscene[0]) {                    
-                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 3);
+                if (!GameController.Instance.didCutscene[0]) {
+                    GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 3);
                 }
                 else
-                    SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 2);
+                    GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 2);
             }
             if (buttons[selection].name == "Credits") {
                 menuMode = 1;

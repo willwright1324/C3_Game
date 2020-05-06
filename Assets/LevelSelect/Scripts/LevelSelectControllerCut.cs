@@ -113,15 +113,14 @@ public class LevelSelectControllerCut : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.F)) {
                 gameState = GameState.GAME;
                 SaveToGameController();
-                AudioController.Instance.PlayMusic(AudioController.Instance.bossMusic);
-                SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 1);
+                GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 1);
             }
         }
 
         // Exit to Menu
         if (Input.GetButtonDown("Cancel")) {
             SaveToGameController();
-            SceneManager.LoadScene(0);
+            GameController.Instance.DoLoadScene(0);
         }
 
         if (selectState == SelectState.CUBES)
@@ -156,12 +155,12 @@ public class LevelSelectControllerCut : MonoBehaviour {
                 if (!camIsLooking && !camIsMoving && !camIsRotating && !confirmCubeCooldown) {
                     AudioController.Instance.PlaySoundOnce(AudioController.Instance.selectConfirm);
                     if (selectState == SelectState.CUBES) {
-                        if (GameController.Instance.didCutscene[currentCube + 1]) {
+                        if (true){//GameController.Instance.didCutscene[currentCube + 1]) {
                             selectState = SelectState.LEVELS;
                             StartCoroutine(MoveToCube(currentCube));
                         }
                         else {
-                            SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - (4 + currentCube));
+                            GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - (4 + currentCube));
                         }
                     }
                     else {
@@ -241,10 +240,8 @@ public class LevelSelectControllerCut : MonoBehaviour {
         }
         if (GameController.Instance.devMode)
             return;
-        gameState = GameState.GAME;
-        selectState = SelectState.BOSS;
         SaveToGameController();
-        SceneManager.LoadScene(SceneManager.sceneCountInBuildSettings - 7);
+        GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 7);
     }
     // Switch through cubes
     void SelectCube(float direction) {
@@ -383,7 +380,7 @@ public class LevelSelectControllerCut : MonoBehaviour {
 
             yield return new WaitForSeconds(0.2f);
 
-            SceneManager.LoadScene(whichLevel);
+            GameController.Instance.DoLoadScene(whichLevel);
         }
         else {
             cam.transform.localPosition = new Vector3(0, 0, distance);
