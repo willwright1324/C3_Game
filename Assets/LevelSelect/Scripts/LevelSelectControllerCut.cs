@@ -111,9 +111,9 @@ public class LevelSelectControllerCut : MonoBehaviour {
         }
         if (GameController.Instance.devMode) {
             if (Input.GetKeyDown(KeyCode.F)) {
-                gameState = GameState.GAME;
                 SaveToGameController();
-                GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 1);
+                GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 7);
+                //GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 1);
             }
         }
 
@@ -155,11 +155,12 @@ public class LevelSelectControllerCut : MonoBehaviour {
                 if (!camIsLooking && !camIsMoving && !camIsRotating && !confirmCubeCooldown) {
                     AudioController.Instance.PlaySoundOnce(AudioController.Instance.selectConfirm);
                     if (selectState == SelectState.CUBES) {
-                        if (true){//GameController.Instance.didCutscene[currentCube + 1]) {
+                        if (GameController.Instance.didCutscene[currentCube + 1]) {
                             selectState = SelectState.LEVELS;
                             StartCoroutine(MoveToCube(currentCube));
                         }
                         else {
+                            SaveToGameController();
                             GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - (4 + currentCube));
                         }
                     }
@@ -495,7 +496,8 @@ public class LevelSelectControllerCut : MonoBehaviour {
     void CubeCompleted(int whichCube) {
         string mat = cubes[whichCube].GetComponent<MeshRenderer>().material.name;
         mat = mat.Split(' ')[0];
-        cubes[whichCube].GetComponent<MeshRenderer>().material = Resources.Load<Material>("FinalBoss/" + mat + "Glow");
+        if (!mat.Contains("Glow"))
+            cubes[whichCube].GetComponent<MeshRenderer>().material = Resources.Load<Material>("FinalBoss/" + mat + "Glow");
     }
     // Saves relevant data to the Game Controller
     void SaveToGameController() {

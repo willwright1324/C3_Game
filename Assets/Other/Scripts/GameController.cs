@@ -95,6 +95,7 @@ public class GameController : MonoBehaviour {
         int scene = SceneManager.GetActiveScene().buildIndex;
         int cube = scene / 4;
         int level = scene % 4;
+        //print(cube + " " + level);
         if (scene == 0 || scene == SceneManager.sceneCountInBuildSettings - 1)
             return;
         if (cube > -1 && cube < 3) {

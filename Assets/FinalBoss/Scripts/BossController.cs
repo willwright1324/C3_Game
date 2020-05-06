@@ -24,7 +24,7 @@ public class BossController : MonoBehaviour {
     GameObject planet;
     GameObject cubeShadow;
     Text bossHealth;
-    public List<GameObject> healthBars = new List<GameObject>();
+    public List<GameObject> healthBars;
     public GameObject lastAttack;
     public List<GameObject> attackList;
     public List<GameObject> attackPicks;
@@ -128,7 +128,7 @@ public class BossController : MonoBehaviour {
             boss.GetComponent<Renderer>().material = Resources.Load<Material>("FinalBoss/ObstacleBlack");
             Destroy(cubeShadow);
 
-            GameObject hb = new GameObject();
+            GameObject hb = null;
             string attackName = lastAttack.name.Split('C')[0];
             foreach (GameObject go in healthBars) {
                 if (go.name.Contains(attackName)) {
@@ -194,6 +194,9 @@ public class BossController : MonoBehaviour {
                 }
 
                 nextSide = sidePositions[currentSide].position;
+                spin.transform.LookAt(nextSide);
+                spinDirection = Vector3.right;
+                /*
                 //print(sidePositions[currentSide].name);
                 //print(upSide + " " + nextSide + " " + Time.time);
                 if (upSide.x == nextSide.x) {
@@ -204,7 +207,8 @@ public class BossController : MonoBehaviour {
                     spinDirection = new Vector3(0, 0, Mathf.Sign(nextSide.x - upSide.x));
                     //print("z" + Time.time);
                 }
-                spin.transform.rotation = Quaternion.identity;
+                */
+                //spin.transform.rotation = Quaternion.identity;
                 colorCube.transform.SetParent(spin.transform);
             }
         }
@@ -278,9 +282,9 @@ public class BossController : MonoBehaviour {
         barTransform.localPosition = barPos;
     }
     IEnumerator SlamUp() {
-        int oppositeSide = currentSide + 3;
-        if (oppositeSide > 5)
-            oppositeSide = oppositeSide - 6;
+        int oppositeSide = currentSide;
+        //if (oppositeSide > 5)
+          //  oppositeSide = oppositeSide - 6;
         Vector3 newPos = sidePositions[oppositeSide].position + Vector3.up * 40;
 
         DoRotateArmX(180, 5);
@@ -315,19 +319,21 @@ public class BossController : MonoBehaviour {
 
         float flipCount = 0;
         while (flipCount < flipTime) {
-            spin.transform.rotation *= Quaternion.Euler(flipDirection * Time.deltaTime * flipSpeed);
+            spin.transform.localRotation *= Quaternion.Euler(flipDirection * Time.deltaTime * flipSpeed);
             flipCount += Time.deltaTime;
             yield return null;
         }
-        Vector3 upDirection = flipDirection * 90;
-        /*
-        print(Quaternion.Angle(spin.transform.localRotation, Quaternion.Euler(upDirection)));
-        while (Quaternion.Angle(spin.transform.localRotation, Quaternion.Euler(upDirection)) > 0.1f) {
-            //spin.transform.localRotation *= Quaternion.Euler(flipDirection * Time.deltaTime * 350);
-            spin.transform.localRotation = Quaternion.Slerp(spin.transform.localRotation, Quaternion.Euler(upDirection), Time.deltaTime * 30);
+        flipCount = flipTime;
+        Vector3 upDirection = Vector3.right * -90;
+        
+        //print(Quaternion.Angle(spin.transform.localRotation, Quaternion.Euler(upDirection)));
+        while (flipCount < flipTime + 0.1f) {
+            spin.transform.localRotation *= Quaternion.Euler(flipDirection * Time.deltaTime * flipSpeed);
+            flipCount += Time.deltaTime;
+            //spin.transform.localRotation = Quaternion.Slerp(spin.transform.localRotation, Quaternion.Euler(upDirection), Time.deltaTime * 30);
             yield return null;
-        }*/
-        spin.transform.rotation = Quaternion.Euler(upDirection);
+        }
+        spin.transform.localRotation = Quaternion.Euler(upDirection);
         colorCube.transform.SetParent(null);
         //spin.transform.localRotation = Quaternion.identity;
         ground.SetActive(true);
@@ -516,7 +522,7 @@ public class BossController : MonoBehaviour {
         bool flipArm = true;
         float turnTimer = 0;
 
-        while (attackCount < 3 && Quaternion.Angle(boss.transform.rotation, bossRotation) > 1f) {
+        while (attackCount < 2 && Quaternion.Angle(boss.transform.rotation, bossRotation) > 1f) {
             if (flipArm) {
                 if (handL.transform.localScale.y == extendLength)
                     StopExtendHandL(ExtendHand(handL, extendLength, new Vector3(-0.5f, -0.6f, 0), false));

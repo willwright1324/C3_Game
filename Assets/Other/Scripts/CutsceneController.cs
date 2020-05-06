@@ -56,6 +56,8 @@ public class CutsceneController : MonoBehaviour {
                 GameController.Instance.DoLoadScene(SceneManager.sceneCountInBuildSettings - 1);
             }
             if (cutscene == 6) {
+                GameController.Instance.gameState = GameState.LEVEL_SELECT;
+                GameController.Instance.selectState = SelectState.CUBES;
                 GameController.Instance.DoLoadScene(0);
             }
         }

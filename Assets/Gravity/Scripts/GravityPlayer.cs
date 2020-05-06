@@ -4,6 +4,9 @@ using UnityEngine;
 public class GravityPlayer : MonoBehaviour {
     public Rigidbody2D rb;
     public ConstantForce2D cf;
+    Sprite up;
+    Sprite down;
+    SpriteRenderer sr;
     public float gravity = 1000;
     public bool canFlip = true;
     public bool flipped;
@@ -12,6 +15,9 @@ public class GravityPlayer : MonoBehaviour {
     void Start() {
         rb = GetComponent<Rigidbody2D>();
         cf = GetComponent<ConstantForce2D>();
+        up = Resources.Load<Sprite>("Gravity/player_flipW");
+        down = Resources.Load<Sprite>("Gravity/player_sideW");
+        sr = GetComponent<SpriteRenderer>();
     }
     // Update is called once per frame
     void Update() {
@@ -21,12 +27,14 @@ public class GravityPlayer : MonoBehaviour {
         if(Input.GetButton("Action 1") && canFlip) {
             AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.switchGravity);
             flipped = !flipped;
-            if (flipped)
+            if (flipped) {
+                sr.sprite = up;
                 rb.velocity = new Vector2(rb.velocity.x, 100);
-            else
+            }
+            else {
+                sr.sprite = down;
                 rb.velocity = new Vector2(rb.velocity.x, -100);
-            SpriteRenderer sr = GetComponent<SpriteRenderer>();
-            sr.flipY = flipped;
+            }
             canFlip = false;
             GravityController.Instance.DoFlipArrow(flipped);
         }

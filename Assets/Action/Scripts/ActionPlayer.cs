@@ -36,7 +36,7 @@ public class ActionPlayer : MonoBehaviour {
 
         if (Input.GetButtonDown("Action 2")) {
             AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerShoot);
-            Instantiate(bullet, transform.position + transform.up * 8, transform.rotation);
+            Instantiate(bullet, transform.position + (transform.up * 8 + transform.right * 6), transform.rotation);
         }
 
         if (!Input.GetButton("Action 2")) {
@@ -69,7 +69,7 @@ public class ActionPlayer : MonoBehaviour {
                 fireCooldown -= Time.deltaTime;
             else {
                 AudioController.Instance.audioSound.PlayOneShot(AudioController.Instance.playerShoot);
-                Instantiate(bullet, transform.position + transform.up * 8, transform.rotation);
+                Instantiate(bullet, transform.position + (transform.up * 8 + transform.right * 6), transform.rotation);
                 fireCooldown = fireRate;
             }
         }
