@@ -4837,6 +4837,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 722131903}
     m_Modifications:
+    - target: {fileID: 1817349275115671728, guid: 8c5b643cf64e5bd4f95a7668d894ee1d,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorLock
+      objectReference: {fileID: 0}
     - target: {fileID: 558116835131154672, guid: 8c5b643cf64e5bd4f95a7668d894ee1d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4906,11 +4911,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 2.4195
-      objectReference: {fileID: 0}
-    - target: {fileID: 1817349275115671728, guid: 8c5b643cf64e5bd4f95a7668d894ee1d,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorLock
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c5b643cf64e5bd4f95a7668d894ee1d, type: 3}
@@ -5185,6 +5185,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6033905470621403944, guid: ab07cf2a64e186440bfbe9241c679323,
+        type: 3}
+      propertyPath: m_Name
+      value: MainCanvas Variant
+      objectReference: {fileID: 0}
     - target: {fileID: 6033905470621403948, guid: ab07cf2a64e186440bfbe9241c679323,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5290,10 +5295,16 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6033905470621403944, guid: ab07cf2a64e186440bfbe9241c679323,
+    - target: {fileID: 452284200392515801, guid: ab07cf2a64e186440bfbe9241c679323,
         type: 3}
-      propertyPath: m_Name
-      value: MainCanvas Variant
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 652f7165b7c30ab46af6c4aad90a639b,
+        type: 2}
+    - target: {fileID: 452284200392515801, guid: ab07cf2a64e186440bfbe9241c679323,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 35
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab07cf2a64e186440bfbe9241c679323, type: 3}
@@ -5587,6 +5598,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4869905848014978630}
     m_Modifications:
+    - target: {fileID: 4113423765000014929, guid: 43f15a6e9a12c414982200956b16331e,
+        type: 3}
+      propertyPath: m_Name
+      value: PlayerHealth
+      objectReference: {fileID: 0}
     - target: {fileID: 3479681615650933386, guid: 43f15a6e9a12c414982200956b16331e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5691,11 +5707,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4113423765000014929, guid: 43f15a6e9a12c414982200956b16331e,
-        type: 3}
-      propertyPath: m_Name
-      value: PlayerHealth
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43f15a6e9a12c414982200956b16331e, type: 3}
