@@ -2,4 +2,4 @@
 
 First Scene: Assets -> Other -> Scenes -> MainMenu
 
-Dev Mode: Press C, U, B, and E while in level select
+Dev Mode: Type "cube" while in level select

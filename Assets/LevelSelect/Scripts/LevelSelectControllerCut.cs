@@ -37,6 +37,8 @@ public class LevelSelectControllerCut : MonoBehaviour {
     IEnumerator rotateCamOrbitCoroutine;
 
     GameObject devText;
+    public bool[] devKeys = new bool[4];
+    float keyReset;
 
     // Start is called before the first frame update
     void Start() {
@@ -76,6 +78,29 @@ public class LevelSelectControllerCut : MonoBehaviour {
         InitCamera();
     }
 
+    void CheckDevMode() {
+        foreach (bool b in devKeys) {
+            if (!b)
+                return;
+        }
+        GameController.Instance.devMode = true;
+        devText.SetActive(true);
+
+        for (int i = 0; i < levelUnlocks.GetLength(0); i++)
+            levelUnlocks[i] = 3;
+        for (int i = 0; i < cubeCompletes.Length; i++) {
+            if (!cubeCompletes[i])
+                CubeCompleted(i);
+        }
+        for (int i = 0; i < cubes.Length; i++) {
+            Transform[] c = cubes[i].GetComponentsInChildren<Transform>();
+            for (int j = 2; j < c.Length; j++) {
+                if (levelUnlocks[i] < j - 1)
+                    break;
+                c[j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("General/level" + (j - 1) + "_icon");
+            }
+        }
+    }
     // Update is called once per frame
     void Update() {
         if (Time.timeScale == 0)
@@ -86,27 +111,26 @@ public class LevelSelectControllerCut : MonoBehaviour {
             cube.transform.Rotate(Time.deltaTime * 2, Time.deltaTime * -1.5f, Time.deltaTime * 1);
 
         // Dev Mode
-        if (Input.GetKey(KeyCode.C) &&
-            Input.GetKey(KeyCode.U) &&
-            Input.GetKey(KeyCode.B) &&
-            Input.GetKey(KeyCode.E) &&
-            !GameController.Instance.devMode) {
-            GameController.Instance.devMode = true;
-            devText.SetActive(true);
-
-            for (int i = 0; i < levelUnlocks.GetLength(0); i++)
-                levelUnlocks[i] = 3;
-            for (int i = 0; i < cubeCompletes.Length; i++) {
-                if (!cubeCompletes[i])
-                    CubeCompleted(i);
+        if (!GameController.Instance.devMode) {
+            keyReset -= Time.deltaTime;
+            if (keyReset < 0) {
+                for (int i = 0; i < devKeys.Length; i++)
+                    devKeys[i] = false;
             }
-            for (int i = 0; i < cubes.Length; i++) {
-                Transform[] c = cubes[i].GetComponentsInChildren<Transform>();
-                for (int j = 2; j < c.Length; j++) {
-                    if (levelUnlocks[i] < j - 1)
-                        break;
-                    c[j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("General/level" + (j - 1) + "_icon");
-                }
+            if (Input.GetKey(KeyCode.C) ||
+                Input.GetKey(KeyCode.U) ||
+                Input.GetKey(KeyCode.B) ||
+                Input.GetKey(KeyCode.E)) {
+                if (Input.GetKey(KeyCode.C))
+                    devKeys[0] = true;
+                if (Input.GetKey(KeyCode.U))
+                    devKeys[1] = true;
+                if (Input.GetKey(KeyCode.B))
+                    devKeys[2] = true;
+                if (Input.GetKey(KeyCode.E))
+                    devKeys[3] = true;
+                keyReset = 5;
+                CheckDevMode();
             }
         }
         if (GameController.Instance.devMode) {

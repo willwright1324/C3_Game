@@ -168,7 +168,7 @@ public class GameController : MonoBehaviour {
                 pauseUI.SetActive(false);
                 gameState = GameState.LEVEL_SELECT;
                 if (selectState == SelectState.BOSS) {
-                    selectState = SelectState.LEVELS;
+                    selectState = SelectState.CUBES;
                 }
                 exitedLevel = true;
                 DoLoadScene(SceneManager.sceneCountInBuildSettings - 2);
