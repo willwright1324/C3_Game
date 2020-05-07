@@ -237,7 +237,7 @@ public class GameController : MonoBehaviour {
         levelSelects = new int[3];
         cubeCompletes = new bool[3];
         didCutscene = new bool[6];
-
+        devMode = false;
         Save();
     }
     // Initializes health when needed
